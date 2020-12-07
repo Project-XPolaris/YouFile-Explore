@@ -1,15 +1,16 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Button, Card, CardContent, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Card, CardContent, IconButton, Toolbar, Typography, Menu, MenuItem } from '@material-ui/core'
 import MinimizeSharpIcon from '@material-ui/icons/MinimizeSharp'
 import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp'
 import ClearSharpIcon from '@material-ui/icons/ClearSharp'
 import { electronApp, electronRemote } from '../../remote'
-import { FileCopy } from '@material-ui/icons'
+import { FileCopy, MoreVert } from '@material-ui/icons'
 import PopoverImageButton from '../../components/PopoverImageButton'
 import CopyPopover from './parts/CopyPopover'
 import usePopoverController from '../../hooks/PopoverController'
 import useFileModel from '../../models/file'
+import useLayoutModel from '../../models/layout'
 
 const useStyles = makeStyles((theme) => ({
   main: {},
@@ -80,6 +81,38 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
   }
   const copyPopoverController = usePopoverController()
   const fileModel = useFileModel()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const layoutModel = useLayoutModel()
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+  const moreMenu = (
+    <Menu
+      id="demo-positioned-menu"
+      anchorEl={anchorEl}
+      keepMounted
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left'
+      }}
+    >
+      <MenuItem onClick={() => {
+        handleClose()
+        layoutModel.switchDialog('global/addSMB')
+      }}>Set As SMB Directory</MenuItem>
+    </Menu>
+  )
   return (
     <div className={classes.main}>
       <div className={classes.header}>
@@ -109,6 +142,14 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
                 }} />
               </PopoverImageButton>
             }
+            <IconButton
+              onClick={handleClick}
+              aria-controls="demo-positioned-menu"
+              aria-haspopup="true"
+            >
+              <MoreVert className={classes.actionButton}/>
+            </IconButton>
+            {moreMenu}
           </Toolbar>
         </AppBar>
       </div>

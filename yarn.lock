@@ -8724,6 +8724,11 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
+react-hook-form@^6.12.2:
+  version "6.12.2"
+  resolved "https://registry.npm.taobao.org/react-hook-form/download/react-hook-form-6.12.2.tgz#aa67f47da4730a7bce44768583bdf5b749eed521"
+  integrity sha1-qmf0faRzCnvORHaFg731t0nu1SE=
+
 react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"

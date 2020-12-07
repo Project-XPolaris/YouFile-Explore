@@ -6,6 +6,8 @@ import useHomeModel from './model'
 import { Box, Paper } from '@material-ui/core'
 import FileItem from '../../components/FileItem'
 import useFileModel from '../../models/file'
+import AddSMBDialog from '../../components/AddSMBDialog'
+import useLayoutModel from '../../models/layout'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -34,6 +36,7 @@ const HomePage = ({}: HomePagePropsType) => {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
+  const layoutModel = useLayoutModel()
   useEffect(() => {
     if (homeModel.fileTree === undefined) {
       homeModel.initData()
@@ -42,6 +45,14 @@ const HomePage = ({}: HomePagePropsType) => {
   console.log(homeModel.currentPath)
   return (
     <div className={classes.main}>
+      <AddSMBDialog
+        onClose={() => layoutModel.switchDialog('global/addSMB')}
+        open={Boolean(layoutModel.dialogs['global/addSMB'])}
+        onOk={(data) => {
+          layoutModel.switchDialog('global/addSMB')
+          fileModel.addSMBFolder(data)
+        }}
+      />
       <Paper elevation={2}>
         <div className={classes.side}>
           <HomeSide />

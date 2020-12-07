@@ -6,5 +6,9 @@ const apiRequest = extend({
   timeout: 1000,
   credentials: 'omit'
 })
-
+export const yousmbRequest = extend({
+  prefix: ApplicationConfig.yousmb.apiUrl,
+  timeout: 1000,
+  credentials: 'omit'
+})
 export default apiRequest
