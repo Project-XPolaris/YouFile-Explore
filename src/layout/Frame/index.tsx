@@ -1,14 +1,18 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Button, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Card, CardContent, IconButton, Toolbar, Typography } from '@material-ui/core'
 import MinimizeSharpIcon from '@material-ui/icons/MinimizeSharp'
 import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp'
 import ClearSharpIcon from '@material-ui/icons/ClearSharp'
 import { electronApp, electronRemote } from '../../remote'
-const useStyles = makeStyles((theme) => ({
-  main: {
+import { FileCopy } from '@material-ui/icons'
+import PopoverImageButton from '../../components/PopoverImageButton'
+import CopyPopover from './parts/CopyPopover'
+import usePopoverController from '../../hooks/PopoverController'
+import useFileModel from '../../models/file'
 
-  },
+const useStyles = makeStyles((theme) => ({
+  main: {},
   root: {
     flexGrow: 1
   },
@@ -33,9 +37,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: '100%'
   },
-  statusRight: {
-
-  },
+  statusRight: {},
   windowAction: {
     color: theme.palette.primary.contrastText,
     marginRight: theme.spacing(1)
@@ -50,11 +52,14 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     position: 'fixed'
+  },
+  actionButton: {
+    color: theme.palette.primary.contrastText
   }
 }))
 
 interface FrameLayoutPropsType {
-  children?:any
+  children?: any
 }
 
 const FrameLayout = ({ children }: FrameLayoutPropsType) => {
@@ -73,27 +78,37 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
       currentWindow.maximize()
     }
   }
+  const copyPopoverController = usePopoverController()
+  const fileModel = useFileModel()
   return (
     <div className={classes.main}>
       <div className={classes.header}>
         <div className={classes.status}>
           <div className={classes.dragZone} />
-          <IconButton size="small" className={classes.windowAction} onClick={onMin}>
-            <MinimizeSharpIcon className={classes.actionIcon}/>
+          <IconButton size='small' className={classes.windowAction} onClick={onMin}>
+            <MinimizeSharpIcon className={classes.actionIcon} />
           </IconButton>
-          <IconButton size="small" className={classes.windowAction} onClick={onMax}>
-            <CheckBoxOutlineBlankSharpIcon className={classes.actionIcon}/>
+          <IconButton size='small' className={classes.windowAction} onClick={onMax}>
+            <CheckBoxOutlineBlankSharpIcon className={classes.actionIcon} />
           </IconButton>
-          <IconButton size="small" className={classes.windowAction} onClick={onClose}>
-            <ClearSharpIcon className={classes.actionIcon}/>
+          <IconButton size='small' className={classes.windowAction} onClick={onClose}>
+            <ClearSharpIcon className={classes.actionIcon} />
           </IconButton>
         </div>
-        <AppBar elevation={0} position="static">
+        <AppBar elevation={0} position='static'>
           <Toolbar>
-            <Typography variant="h6" className={classes.title} component="div">
-            YouFile
+            <Typography variant='h6' className={classes.title} component='div'>
+              YouFile
             </Typography>
-
+            {
+              fileModel.copyFile &&
+              <PopoverImageButton icon={<FileCopy className={classes.actionButton} /> } controller={copyPopoverController}>
+                <CopyPopover onPaste={() => {
+                  copyPopoverController.setAnchorEl(null)
+                  fileModel.setCopyFile(undefined)
+                }} />
+              </PopoverImageButton>
+            }
           </Toolbar>
         </AppBar>
       </div>

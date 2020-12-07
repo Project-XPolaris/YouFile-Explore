@@ -1573,10 +1573,10 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
-"@material-ui/icons@^5.0.0-alpha.15":
-  version "5.0.0-alpha.15"
-  resolved "https://registry.npm.taobao.org/@material-ui/icons/download/@material-ui/icons-5.0.0-alpha.15.tgz#585966c5eb722701b2a9ca35f4ab4d8ed05efce3"
-  integrity sha1-WFlmxetyJwGyqco19KtNjtBe/OM=
+"@material-ui/icons@^4.11.2":
+  version "4.11.2"
+  resolved "https://registry.npm.taobao.org/@material-ui/icons/download/@material-ui/icons-4.11.2.tgz#b3a7353266519cd743b6461ae9fdfcb1b25eb4c5"
+  integrity sha1-s6c1MmZRnNdDtkYa6f38sbJetMU=
   dependencies:
     "@babel/runtime" "^7.4.4"
 
@@ -3379,14 +3379,9 @@ clone-response@^1.0.2:
   dependencies:
     mimic-response "^1.0.0"
 
-clsx@^1.0.4:
+clsx@^1.0.4, clsx@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/clsx/download/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
-  integrity sha1-mLMTT5q73yOyZjSRrOE8XAOnMYg=
-
-clsx@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npm.taobao.org/clsx/download/clsx-1.1.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fclsx%2Fdownload%2Fclsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
   integrity sha1-mLMTT5q73yOyZjSRrOE8XAOnMYg=
 
 co@^4.6.0:

@@ -5,6 +5,7 @@ import HomeSide from './side'
 import useHomeModel from './model'
 import { Box, Paper } from '@material-ui/core'
 import FileItem from '../../components/FileItem'
+import useFileModel from '../../models/file'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -32,11 +33,13 @@ interface HomePagePropsType {
 const HomePage = ({}: HomePagePropsType) => {
   const classes = useStyles()
   const homeModel = useHomeModel()
+  const fileModel = useFileModel()
   useEffect(() => {
-    if (homeModel.fileTree === undefined){
+    if (homeModel.fileTree === undefined) {
       homeModel.initData()
     }
-  },[])
+  }, [])
+  console.log(homeModel.currentPath)
   return (
     <div className={classes.main}>
       <Paper elevation={2}>
@@ -47,7 +50,17 @@ const HomePage = ({}: HomePagePropsType) => {
       <div className={classes.container}>
         {
           homeModel.fileList.map((item) => (
-            <FileItem file={item} key={item.path} onClick={() => homeModel.loadFile(item)}/>
+            <FileItem
+              file={item}
+              key={item.path}
+              onClick={() => homeModel.loadFile(item)}
+              onCopy={() => {
+                fileModel.setCopyFile({
+                  name: item.name,
+                  path: item.path
+                })
+              }}
+            />
           ))
         }
       </div>
