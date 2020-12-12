@@ -11,7 +11,8 @@ import CopyPopover from './parts/CopyPopover'
 import usePopoverController from '../../hooks/PopoverController'
 import useFileModel from '../../models/file'
 import useLayoutModel from '../../models/layout'
-
+import TaskDrawer from './parts/TaskDrawer'
+import AssignmentIcon from '@material-ui/icons/Assignment'
 const useStyles = makeStyles((theme) => ({
   main: {},
   root: {
@@ -28,7 +29,8 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(4),
     backgroundColor: theme.palette.primary.dark,
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    zIndex:1500
   },
   windowTitle: {
     color: theme.palette.primary.contrastText
@@ -56,6 +58,17 @@ const useStyles = makeStyles((theme) => ({
   },
   actionButton: {
     color: theme.palette.primary.contrastText
+  },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '8px'
+    },
+    '*::-webkit-scrollbar-track': {
+      background: 'rgba(0,0,0,0)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: '#b7b7b7'
+    }
   }
 }))
 
@@ -115,6 +128,10 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
   )
   return (
     <div className={classes.main}>
+      <TaskDrawer
+        onClose={() => layoutModel.switchDialog('global/taskDrawer')}
+        open={layoutModel.dialogs['global/taskDrawer']}
+      />
       <div className={classes.header}>
         <div className={classes.status}>
           <div className={classes.dragZone} />
@@ -142,6 +159,11 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
                 }} />
               </PopoverImageButton>
             }
+            <IconButton
+              onClick={() => layoutModel.switchDialog('global/taskDrawer')}
+            >
+              <AssignmentIcon className={classes.actionButton}/>
+            </IconButton>
             <IconButton
               onClick={handleClick}
               aria-controls="demo-positioned-menu"

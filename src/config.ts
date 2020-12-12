@@ -1,7 +1,8 @@
 export const ApplicationConfig = {
-  apiUrl: 'http://192.168.31.186:8300',
+  apiUrl: 'http://localhost:8300',
   apiPaths: {
-    readdir: '/path/read'
+    readdir: '/path/read',
+    getAllTasks: '/task/all'
   },
   yousmb: {
     apiUrl: 'http://192.168.31.186:8200',

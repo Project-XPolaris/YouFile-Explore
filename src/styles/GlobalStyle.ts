@@ -6,4 +6,10 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
+  *, *::after, *::before {
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+   
+
+  }
 `

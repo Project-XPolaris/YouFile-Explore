@@ -22,14 +22,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const CustomTreeItem = (props: TreeItemProps & {node : File, onLoadContent:() => void}) => {
+const CustomTreeItem = (props: TreeItemProps & {node : File, onLoadContent:() => void, onExpand:() => void}) => {
   const useStyles = makeStyles(theme => ({
     icon: {
       color: '#8E8E8E',
       fontSize: 20
     }
   }))
-  const { onLoadContent, node, ...other } = props
+  const { onLoadContent,onExpand, node, ...other } = props
   const customClasses = useStyles()
   const renderIcon = () => {
     if (node.type === 'Directory') {
@@ -75,6 +75,7 @@ const CustomTreeItem = (props: TreeItemProps & {node : File, onLoadContent:() =>
     const handleExpansionClick = (
       event: React.MouseEvent<HTMLDivElement, MouseEvent>
     ) => {
+      onExpand()
       handleExpansion(event)
     }
 
@@ -118,7 +119,7 @@ const CustomTreeItem = (props: TreeItemProps & {node : File, onLoadContent:() =>
 const HomeSide = ():React.ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
-
+  console.log(homeModel.getExpandNode())
   const renderFileTreeItem = (fileItem:any) => {
     return (
       <CustomTreeItem
@@ -130,6 +131,7 @@ const HomeSide = ():React.ReactElement => {
         key={fileItem.path}
         node={fileItem}
         onLoadContent={() => homeModel.loadFile(fileItem)}
+        onExpand={() => homeModel.switchExpandNode(fileItem.path)}
       >
         {
           fileItem.children &&
@@ -146,6 +148,7 @@ const HomeSide = ():React.ReactElement => {
           className={classes.tree}
           defaultExpanded={['/']}
           selected={homeModel.currentPath}
+          expanded={homeModel.getExpandNode()}
         >
           {renderFileTreeItem(homeModel.fileTree)}
         </TreeView>

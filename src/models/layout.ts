@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createModel } from 'hox'
 
-export type DialogKey = 'global/addSMB'
+export type DialogKey = 'global/addSMB' | 'global/taskDrawer'
 const LayoutModel = () => {
   const [dialogs, setDialogs] = useState< { [key:string]:boolean }>({})
   const switchDialog = (dialogKey:DialogKey) => {
