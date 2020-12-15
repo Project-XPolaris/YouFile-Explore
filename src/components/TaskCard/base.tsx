@@ -4,12 +4,13 @@ import React from 'react'
 
 export const TaskCard = ({
   task,
-  className
-}: { task: Task<any>, className?: any }) => {
+  className,
+  cardProps
+}: { task: Task<any>, className?: any,cardProps:any }) => {
   switch (task.type) {
     case 'Copy':
       return (
-        <CopyFileTaskCard task={task} className={className} />
+        <CopyFileTaskCard task={task} className={className} {...cardProps} />
       )
     default:
       return null

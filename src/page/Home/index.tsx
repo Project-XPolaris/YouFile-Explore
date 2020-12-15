@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { TreeItem, TreeView } from '@material-ui/lab'
 import HomeSide from './side'
 import useHomeModel from './model'
 import { Box, Paper } from '@material-ui/core'
@@ -8,6 +7,8 @@ import FileItem from '../../components/FileItem'
 import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
+import { AutoSizer, List } from 'react-virtualized'
+import 'react-virtualized/styles.css'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -23,8 +24,9 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     backgroundColor: '#EEEEEE',
-    flex: 1,
-    overflowX: 'hidden'
+    width: '100%',
+    overflowX: 'hidden',
+    height: '100%'
   }
 }))
 
@@ -43,6 +45,32 @@ const HomePage = ({}: HomePagePropsType) => {
     }
   }, [])
   console.log(homeModel.currentPath)
+
+  function rowRenderer ({
+    key, // Unique key within array of rows
+    index, // Index of row within collection
+    isScrolling, // The List is currently being scrolled
+    isVisible, // This row is visible within the List (eg it is not an overscanned row)
+    style // Style object to be applied to row (to position it)
+  }) {
+    const item = homeModel.fileList[index]
+    return (
+      <FileItem
+        file={item}
+        key={key}
+        style={style}
+        onClick={() => homeModel.loadFile(item)}
+        onCopy={() => {
+          fileModel.setCopyFile({
+            name: item.name,
+            path: item.path
+          })
+        }}
+      />
+    )
+  }
+
+  console.log(homeModel.fileList.length)
   return (
     <div className={classes.main}>
       <AddSMBDialog
@@ -59,21 +87,21 @@ const HomePage = ({}: HomePagePropsType) => {
         </div>
       </Paper>
       <div className={classes.container}>
-        {
-          homeModel.fileList.map((item) => (
-            <FileItem
-              file={item}
-              key={item.path}
-              onClick={() => homeModel.loadFile(item)}
-              onCopy={() => {
-                fileModel.setCopyFile({
-                  name: item.name,
-                  path: item.path
-                })
-              }}
+        <AutoSizer>
+          {({
+            height,
+            width
+          }) => (
+            <List
+              width={width}
+              height={height}
+              rowCount={homeModel.fileList.length}
+              rowHeight={64}
+              rowRenderer={rowRenderer}
             />
-          ))
-        }
+          )}
+        </AutoSizer>
+
       </div>
     </div>
   )

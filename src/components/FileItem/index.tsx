@@ -45,10 +45,11 @@ const useStyles = makeStyles(theme => ({
 interface FileItemPropsType {
   file:File
   onClick:() => void
-  onCopy:() => void
+  onCopy:() => void,
+  style?:any
 }
 
-const FileItem = ({ file, onClick,onCopy }: FileItemPropsType):React.ReactElement => {
+const FileItem = ({ file, onClick, onCopy, style }: FileItemPropsType):React.ReactElement => {
   const classes = useStyles()
   const renderIcon = () => {
     if (file.type === 'Directory') {
@@ -59,7 +60,7 @@ const FileItem = ({ file, onClick,onCopy }: FileItemPropsType):React.ReactElemen
     }
   }
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={style}>
       <ButtonBase className={classes.main} onClick={onClick}>
         <Avatar className={classes.avatar}>
           {renderIcon()}

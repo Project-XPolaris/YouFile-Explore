@@ -8,8 +8,12 @@ import FolderIcon from '@material-ui/icons/Folder'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import { Typography } from '@material-ui/core'
 import clsx from 'clsx'
+import Tree, { Expandable } from 'react-virtualized-tree'
 const useStyles = makeStyles(theme => ({
-  main: {},
+  main: {
+    width: '100%',
+    height: '100%'
+  },
   tree: {
     width: '100%'
   },
@@ -29,7 +33,7 @@ const CustomTreeItem = (props: TreeItemProps & {node : File, onLoadContent:() =>
       fontSize: 20
     }
   }))
-  const { onLoadContent,onExpand, node, ...other } = props
+  const { onLoadContent, onExpand, node, ...other } = props
   const customClasses = useStyles()
   const renderIcon = () => {
     if (node.type === 'Directory') {
@@ -142,7 +146,7 @@ const HomeSide = ():React.ReactElement => {
   }
   return (
     <div className={classes.main}>
-      {
+       {
         homeModel.fileTree &&
         <TreeView
           className={classes.tree}
@@ -152,7 +156,7 @@ const HomeSide = ():React.ReactElement => {
         >
           {renderFileTreeItem(homeModel.fileTree)}
         </TreeView>
-      }
+       }
     </div>
   )
 }

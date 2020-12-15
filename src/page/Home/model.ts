@@ -1,8 +1,11 @@
 import { createModel } from 'hox'
 import { FileItem, readDir } from '../../api/dir'
 import { useState } from 'react'
+import { convertSlash } from '../../utils/path'
+import { Node } from 'react-virtualized-tree'
 
 export interface File {
+  id : string
   name: string
   path: string
   type: string
@@ -10,27 +13,30 @@ export interface File {
 }
 
 const HomeModel = () => {
-  const [fileTree, setFileTree] = useState<File | undefined>(undefined)
+  const [fileTree, setFileTree] = useState<File & Node | undefined>(undefined)
   const [fileList, setFileList] = useState<File[]>([])
   const [currentPath, setCurrentPath] = useState<string>('/')
   const [expanded, setExpanded] = useState<string[]>(['/'])
   const initData = async (dirPath = '/') => {
     const result = await readDir(dirPath)
     const root = {
+      id: '/',
       name: 'root',
       path: '/',
       type: 'Directory',
       children: result.filter(it => it.type === 'Directory').map((it: FileItem) => ({
+        id: it.path,
         name: it.name,
-        path: it.path,
+        path: convertSlash(it.path),
         children: undefined,
         type: it.type
       }))
     }
     setFileTree(root)
     setFileList(result.map(it => ({
+      id: it.path,
       name: it.name,
-      path: it.path,
+      path: convertSlash(it.path),
       children: undefined,
       type: it.type
     })))
@@ -50,10 +56,10 @@ const HomeModel = () => {
     if (node) {
       if (node.type === 'Directory' && node.children === undefined) {
         const result = await readDir(node.path)
-        console.log(result)
         node.children = result.map(it => ({
+          id: it.path,
           name: it.name,
-          path: it.path,
+          path: convertSlash(it.path),
           children: undefined,
           type: it.type
         }))

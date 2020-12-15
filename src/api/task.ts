@@ -20,3 +20,11 @@ export interface Task<T> {
 export const getTaskList = ():Promise<{result:Task<any>[]}> => {
   return apiRequest.get(ApplicationConfig.apiPaths.getAllTasks)
 }
+
+export const stopTask = async (id:string):Promise<any> => {
+  return apiRequest.post(ApplicationConfig.apiPaths.stopTask, {
+    params: {
+      taskId: id
+    }
+  })
+}

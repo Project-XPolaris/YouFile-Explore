@@ -1,17 +1,17 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Avatar, LinearProgress, Paper } from '@material-ui/core'
+import { Avatar, IconButton, LinearProgress, Menu, MenuItem, Paper } from '@material-ui/core'
 import theme from '../../theme'
 import clsx from 'clsx'
-import { FileCopy } from '@material-ui/icons'
+import { FileCopy, MoreVert } from '@material-ui/icons'
 import { CopyFileOutput, Task } from '../../api/task'
-import {fileSize} from 'humanize-plus'
+import { fileSize } from 'humanize-plus'
 import { getPathBasename } from '../../utils/path'
 const useStyles = makeStyles({
   main: {
     width: '100%',
     borderRadius: theme.spacing(1),
-    height: theme.spacing(25),
+    // height: theme.spacing(25),
     padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column'
@@ -27,9 +27,12 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     alignItems: 'center'
   },
+  titleWrap: {
+    flex: 1
+  },
   title: {
     ...theme.typography.subtitle1,
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   subtitle: {
     ...theme.typography.subtitle2,
@@ -46,7 +49,8 @@ const useStyles = makeStyles({
     flex: 1
   },
   text: {
-    ...theme.typography.body1
+    ...theme.typography.body1,
+    overflow: 'hidden'
   },
   field: {
     display: 'flex'
@@ -64,18 +68,46 @@ const useStyles = makeStyles({
 interface CopyFileTaskCardPropsType {
   className?: any
   task:Task<CopyFileOutput>
+  onStop:() => void
 }
 
-const CopyFileTaskCard = ({ className,task }: CopyFileTaskCardPropsType): React.ReactElement => {
+const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType): React.ReactElement => {
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+  const renderMoreMenu = () => {
+    return (
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => {
+          handleClose()
+          onStop()
+        }}>Stop</MenuItem>
+      </Menu>
+    )
+  }
   return (
     <Paper className={clsx(classes.main, className)}>
+      {
+        renderMoreMenu()
+      }
       <div className={classes.header}>
         <Avatar className={classes.avatar}>
           <FileCopy className={classes.icon} />
         </Avatar>
-        <div>
+        <div className={classes.titleWrap}>
           <div className={classes.title}>
             Copy : {getPathBasename(task.output.src)}
           </div>
@@ -83,6 +115,9 @@ const CopyFileTaskCard = ({ className,task }: CopyFileTaskCardPropsType): React.
             {task.status}
           </div>
         </div>
+        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+          <MoreVert />
+        </IconButton>
       </div>
       <div className={classes.content}>
         <div className={classes.info}>

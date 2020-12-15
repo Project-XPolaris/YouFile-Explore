@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       '&::-webkit-scrollbar-thumb': {
         backgroundColor: 'rgba(0,0,0,.6)'
-      }
+      },
     },
     header: {
       width: '100%',
@@ -41,6 +41,21 @@ const useStyles = makeStyles((theme: Theme) =>
     item: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
+    },
+    empty: {
+      width: '100%',
+      height: '80vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    emptyHint: {
+      ...theme.typography.body1,
+      color: '#FFFFFF'
+    },
+    modal:{
+      backgroundColor: 'rgba(0,0,0,.3)',
+      backdropFilter: 'blur(5px)'
     }
   })
 )
