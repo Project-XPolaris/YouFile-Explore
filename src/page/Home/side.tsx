@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { TreeItem, TreeItemContentProps, TreeItemProps, TreeView, useTreeItem } from '@material-ui/lab'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import useHomeModel, { File } from './model'
+import useHomeModel, { File, getFileTree } from './model'
 import FolderIcon from '@material-ui/icons/Folder'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import { Typography } from '@material-ui/core'
@@ -123,7 +123,7 @@ const CustomTreeItem = (props: TreeItemProps & {node : File, onLoadContent:() =>
 const HomeSide = ():React.ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
-  console.log(homeModel.getExpandNode())
+  // console.log(homeModel.getExpandNode())
   const renderFileTreeItem = (fileItem:any) => {
     return (
       <CustomTreeItem
@@ -134,7 +134,7 @@ const HomeSide = ():React.ReactElement => {
         className={classes.item}
         key={fileItem.path}
         node={fileItem}
-        onLoadContent={() => homeModel.loadFile(fileItem)}
+        onLoadContent={() => homeModel.loadFile(fileItem.path)}
         onExpand={() => homeModel.switchExpandNode(fileItem.path)}
       >
         {
@@ -146,17 +146,14 @@ const HomeSide = ():React.ReactElement => {
   }
   return (
     <div className={classes.main}>
-       {
-        homeModel.fileTree &&
-        <TreeView
-          className={classes.tree}
-          defaultExpanded={['/']}
-          selected={homeModel.currentPath}
-          expanded={homeModel.getExpandNode()}
-        >
-          {renderFileTreeItem(homeModel.fileTree)}
-        </TreeView>
-       }
+      <TreeView
+        className={classes.tree}
+        defaultExpanded={['/']}
+        selected={homeModel.currentPath}
+        expanded={homeModel.getExpandNode()}
+      >
+        {renderFileTreeItem(getFileTree().root)}
+      </TreeView>
     </div>
   )
 }

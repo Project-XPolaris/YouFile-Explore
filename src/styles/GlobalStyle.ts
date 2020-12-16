@@ -9,7 +9,5 @@ export const GlobalStyle = createGlobalStyle`
   *, *::after, *::before {
     -webkit-user-select: none;
     -webkit-user-drag: none;
-   
-
   }
 `

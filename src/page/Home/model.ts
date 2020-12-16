@@ -3,6 +3,7 @@ import { FileItem, readDir } from '../../api/dir'
 import { useState } from 'react'
 import { convertSlash } from '../../utils/path'
 import { Node } from 'react-virtualized-tree'
+import { FileTree } from './tree'
 
 export interface File {
   id : string
@@ -11,35 +12,15 @@ export interface File {
   type: string
   children: File[] | undefined
 }
-
+const fTree = new FileTree()
+export const getFileTree = ():FileTree => {
+  return fTree
+}
 const HomeModel = () => {
-  const [fileTree, setFileTree] = useState<File & Node | undefined>(undefined)
-  const [fileList, setFileList] = useState<File[]>([])
   const [currentPath, setCurrentPath] = useState<string>('/')
   const [expanded, setExpanded] = useState<string[]>(['/'])
   const initData = async (dirPath = '/') => {
-    const result = await readDir(dirPath)
-    const root = {
-      id: '/',
-      name: 'root',
-      path: '/',
-      type: 'Directory',
-      children: result.filter(it => it.type === 'Directory').map((it: FileItem) => ({
-        id: it.path,
-        name: it.name,
-        path: convertSlash(it.path),
-        children: undefined,
-        type: it.type
-      }))
-    }
-    setFileTree(root)
-    setFileList(result.map(it => ({
-      id: it.path,
-      name: it.name,
-      path: convertSlash(it.path),
-      children: undefined,
-      type: it.type
-    })))
+    await fTree.loadByPath(dirPath)
   }
   const switchExpandNode = (key:string) => {
     if (expanded.find(it => it === key) !== undefined) {
@@ -48,25 +29,16 @@ const HomeModel = () => {
       setExpanded([...expanded, key])
     }
   }
-  const loadFile = async (node: File) => {
-    if (node && node.type === 'File') {
-      return
-    }
-
-    if (node) {
-      if (node.type === 'Directory' && node.children === undefined) {
-        const result = await readDir(node.path)
-        node.children = result.map(it => ({
-          id: it.path,
-          name: it.name,
-          path: convertSlash(it.path),
-          children: undefined,
-          type: it.type
-        }))
-        setFileTree(Object.assign({}, fileTree))
-      }
-      setFileList(node?.children ?? [])
-      setCurrentPath(node.path)
+  const loadFile = async (path:string) => {
+    setCurrentPath(path)
+  }
+  const onBack = async () => {
+    const parts = currentPath.split('/')
+    parts.pop()
+    if (parts.length === 1) {
+      setCurrentPath('/')
+    } else {
+      setCurrentPath(parts.join('/'))
     }
   }
   const getExpandNode = () => {
@@ -84,14 +56,17 @@ const HomeModel = () => {
     })
     return result
   }
+  const getBreadcrumbs = () => {
+    return currentPath.split('/')
+  }
   return {
     initData,
-    fileTree,
     loadFile,
-    fileList,
     currentPath,
     getExpandNode,
-    switchExpandNode
+    switchExpandNode,
+    getBreadcrumbs,
+    onBack
   }
 }
 const useHomeModel = createModel(HomeModel)

@@ -61,7 +61,8 @@ const useStyles = makeStyles((theme) => ({
   },
   '@global': {
     '*::-webkit-scrollbar': {
-      width: '8px'
+      width: '8px',
+      height: '8px'
     },
     '*::-webkit-scrollbar-track': {
       background: 'rgba(0,0,0,0)'
