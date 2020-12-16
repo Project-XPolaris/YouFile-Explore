@@ -41,6 +41,11 @@ const HomeModel = () => {
       setCurrentPath(parts.join('/'))
     }
   }
+  const onNavChipClick = (index:number) => {
+    const parts = getBreadcrumbs().slice(1,index + 1)
+    console.log('/' + parts.join('/'))
+    setCurrentPath('/' + parts.join('/'))
+  }
   const getExpandNode = () => {
     const parts = currentPath.split('/')
     const result: string[] = []
@@ -57,7 +62,10 @@ const HomeModel = () => {
     return result
   }
   const getBreadcrumbs = () => {
-    return currentPath.split('/')
+    if (currentPath === '/') {
+      return ['root']
+    }
+    return ['root', ...currentPath.split('/').slice(1)]
   }
   return {
     initData,
@@ -66,7 +74,10 @@ const HomeModel = () => {
     getExpandNode,
     switchExpandNode,
     getBreadcrumbs,
-    onBack
+    onBack,
+    onNavChipClick,
+    setExpanded,
+    expanded
   }
 }
 const useHomeModel = createModel(HomeModel)

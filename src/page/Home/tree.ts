@@ -30,6 +30,26 @@ export class FileTree {
     }
   }
 
+  public async reloadContent (path:string) {
+    const node = await this.loadByPath(path)
+    if (node) {
+      const oldChildren = node.children
+      const response = await readDir(path.replace('/', '\\'))
+      const newChildren = response.map(it => (this.generateNode(it, node)))
+      // merge
+      if (oldChildren) {
+        oldChildren.forEach(old => {
+          const target = newChildren.find(it => it.path === old.path)
+          if (target) {
+            target.children = old.children
+          }
+        })
+      }
+      node.children = newChildren
+      return node
+    }
+  }
+
   public async loadByPath (path:string) {
     let cur = this.root
     const parts = path === '/' ? ['/'] : path.split('/')
