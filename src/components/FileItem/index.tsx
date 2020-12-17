@@ -5,6 +5,7 @@ import FolderIcon from '@material-ui/icons/Folder'
 import { File } from '../../page/Home/model'
 import DescriptionIcon from '@material-ui/icons/Description'
 import { FileCopy } from '@material-ui/icons'
+import { ImageFileIcon } from '../FileIcon/ImageFileIcon'
 const useStyles = makeStyles(theme => ({
   root: {
     height: theme.spacing(8),

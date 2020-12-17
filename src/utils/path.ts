@@ -13,9 +13,6 @@ export const convertSlash = (path: string): string => {
   return path.replace(/\\/g, '/').replace('\\', '/')
 }
 
-export const convertPathWitOS = (path:string):string => {
-  if (window.navigator.platform === 'Win32') {
-    return path.replace('/', '\\')
-  }
-  return path.replace('\\', '/')
+export const convertPath = (path:string):string => {
+  return path.replace(/\\/g, '/')
 }

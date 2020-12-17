@@ -1,12 +1,19 @@
 import apiRequest from '../utils/request'
 import { ApplicationConfig } from '../config'
+
 export interface CopyFileOutput {
+  // eslint-disable-next-line camelcase
   total_length: number
+  // eslint-disable-next-line camelcase
   file_count: number
   complete: number
+  // eslint-disable-next-line camelcase
   complete_length: number
-  src: string
-  dest: string
+  list:Array<{
+    src:string,
+    dest:string
+  }>
+  // eslint-disable-next-line camelcase
   current_copy: string
   progress: number
   speed: number

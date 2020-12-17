@@ -32,7 +32,7 @@ const useStyles = makeStyles({
   },
   title: {
     ...theme.typography.subtitle1,
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(2)
   },
   subtitle: {
     ...theme.typography.subtitle2,
@@ -98,6 +98,13 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
       </Menu>
     )
   }
+  const getTaskName = () => {
+    if (task.output.list.length === 1) {
+      return getPathBasename(task.output.list[0].src)
+    } else {
+      return `${getPathBasename(task.output.list[0].src)} and other ${task.output.list.length - 1} tasks`
+    }
+  }
   return (
     <Paper className={clsx(classes.main, className)}>
       {
@@ -109,7 +116,7 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
         </Avatar>
         <div className={classes.titleWrap}>
           <div className={classes.title}>
-            Copy : {getPathBasename(task.output.src)}
+            Copy : {getTaskName()}
           </div>
           <div className={classes.subtitle}>
             {task.status}
