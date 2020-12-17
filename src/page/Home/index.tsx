@@ -12,6 +12,7 @@ import 'react-virtualized/styles.css'
 import { ArrowBack, Refresh } from '@material-ui/icons'
 import { FileNode } from './tree'
 import { useUpdate } from 'ahooks'
+import TextInputDialog from '../../components/TextInputDialog'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -89,11 +90,7 @@ const HomePage = ():React.ReactElement => {
       setDirContent(node?.children ?? [])
     }
   }
-  function rowRenderer ({
-    key, // Unique key within array of rows
-    index, // Index of row within collection
-    style // Style object to be applied to row (to position it)
-  }:{key:string, index:number, style:any}) {
+  const rowRenderer = ({ key, index, style }:{key:string, index:number, style:any}) => {
     const item = dirContent[index]
     return (
       <FileItem
@@ -114,8 +111,14 @@ const HomePage = ():React.ReactElement => {
       />
     )
   }
-
-  // console.log(homeModel.fileList.length)
+  const onSwitchCreateDirectoryDialog = () => {
+    layoutModel.switchDialog('home/createDirectory')
+  }
+  const onCreateDirectory = async (value:string) => {
+    await fileModel.mkdir(value)
+    await onRefresh()
+    onSwitchCreateDirectoryDialog()
+  }
   return (
     <div className={classes.main}>
       <AddSMBDialog
@@ -125,6 +128,13 @@ const HomePage = ():React.ReactElement => {
           layoutModel.switchDialog('global/addSMB')
           fileModel.addSMBFolder(data)
         }}
+      />
+      <TextInputDialog
+        onClose={onSwitchCreateDirectoryDialog}
+        onOk={onCreateDirectory}
+        title="Create directory"
+        label="Directory name"
+        open={layoutModel.dialogs['home/createDirectory']}
       />
       <Paper elevation={2}>
         <div className={classes.side}>

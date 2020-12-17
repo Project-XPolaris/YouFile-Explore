@@ -13,6 +13,14 @@ export const readDir = async (dirPath:string):Promise<FileItem[]> => {
       readPath: dirPath
     }
   })
-  console.log(response)
+  return response.result
+}
+export const createDirectory = async (dirPath:string) => {
+  const response:any = await apiRequest.get(ApplicationConfig.apiPaths.mkdir, {
+    params: {
+      dirPath,
+      perm: 755
+    }
+  })
   return response.result
 }

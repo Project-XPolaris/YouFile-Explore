@@ -2,6 +2,7 @@ export const ApplicationConfig = {
   apiUrl: 'http://localhost:8300',
   apiPaths: {
     readdir: '/path/read',
+    mkdir: '/path/mkdir',
     getAllTasks: '/task/all',
     copyFile: '/task/copy',
     stopTask: '/task/stop'

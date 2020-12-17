@@ -5,7 +5,7 @@ import MinimizeSharpIcon from '@material-ui/icons/MinimizeSharp'
 import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp'
 import ClearSharpIcon from '@material-ui/icons/ClearSharp'
 import { electronApp, electronRemote } from '../../remote'
-import { FileCopy, MoreVert } from '@material-ui/icons'
+import { CreateNewFolder, FileCopy, Launch, MoreVert } from '@material-ui/icons'
 import PopoverImageButton from '../../components/PopoverImageButton'
 import CopyPopover from './parts/CopyPopover'
 import usePopoverController from '../../hooks/PopoverController'
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.dark,
     display: 'flex',
     alignItems: 'center',
-    zIndex:1500
+    zIndex: 1500
   },
   windowTitle: {
     color: theme.palette.primary.contrastText
@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
   },
   actionButton: {
     color: theme.palette.primary.contrastText
+  },
+  menuIcon: {
+    marginRight: theme.spacing(2)
   },
   '@global': {
     '*::-webkit-scrollbar': {
@@ -106,7 +109,6 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
   }
   const moreMenu = (
     <Menu
-      id="demo-positioned-menu"
       anchorEl={anchorEl}
       keepMounted
       open={Boolean(anchorEl)}
@@ -124,7 +126,11 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
       <MenuItem onClick={() => {
         handleClose()
         layoutModel.switchDialog('global/addSMB')
-      }}>Set As SMB Directory</MenuItem>
+      }}><Launch className={classes.menuIcon}/> Set As SMB Directory</MenuItem>
+      <MenuItem onClick={() => {
+        handleClose()
+        layoutModel.switchDialog('home/createDirectory')
+      }}><CreateNewFolder className={classes.menuIcon}/>New directory</MenuItem>
     </Menu>
   )
   return (

@@ -42,8 +42,7 @@ const HomeModel = () => {
     }
   }
   const onNavChipClick = (index:number) => {
-    const parts = getBreadcrumbs().slice(1,index + 1)
-    console.log('/' + parts.join('/'))
+    const parts = getBreadcrumbs().slice(1, index + 1)
     setCurrentPath('/' + parts.join('/'))
   }
   const getExpandNode = () => {
@@ -67,6 +66,7 @@ const HomeModel = () => {
     }
     return ['root', ...currentPath.split('/').slice(1)]
   }
+
   return {
     initData,
     loadFile,

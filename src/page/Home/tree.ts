@@ -1,5 +1,5 @@
 import { FileItem, readDir } from '../../api/dir'
-import { convertSlash } from '../../utils/path'
+import { convertPathWitOS, convertSlash } from '../../utils/path'
 
 export interface FileNode {
   id : string
@@ -34,7 +34,7 @@ export class FileTree {
     const node = await this.loadByPath(path)
     if (node) {
       const oldChildren = node.children
-      const response = await readDir(path.replace('/', '\\'))
+      const response = await readDir(convertPathWitOS(path))
       const newChildren = response.map(it => (this.generateNode(it, node)))
       // merge
       if (oldChildren) {
@@ -56,7 +56,7 @@ export class FileTree {
     for (let index = 0; index < parts.length; index++) {
       if (cur.children === undefined) {
         const fetchPath = parts.slice(0, index + 1).join('\\')
-        const response = await readDir(fetchPath)
+        const response = await readDir(convertPathWitOS(fetchPath))
         cur.children = response.map(it => (this.generateNode(it, cur)))
       }
       // to next
@@ -66,7 +66,7 @@ export class FileTree {
         if (targetNode) {
           cur = targetNode
         } else {
-          return
+          return undefined
         }
       }
     }

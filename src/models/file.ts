@@ -5,6 +5,8 @@ import useHomeModel from '../page/Home/model'
 import { createSMBFolder } from '../api/yousmb'
 import { undefinedOrString } from '../utils/string'
 import { booleanToYesNo } from '../utils/boolean'
+import { createDirectory } from '../api/dir'
+import { convertPathWitOS } from '../utils/path'
 export interface CopyFile {
   name : string
   path:string
@@ -17,7 +19,7 @@ const FileModel = () => {
       copyFileService(copyFile?.path, `${homeModel.currentPath}/${copyFile.name}`)
     }
   }
-  const addSMBFolder = (data:any) => {
+  const addSMBFolder = async (data:any) => {
     if (homeModel.currentPath) {
       createSMBFolder({
         name: data.name,
@@ -36,8 +38,17 @@ const FileModel = () => {
       })
     }
   }
+  const mkdir = async (dirName:string) => {
+    let currentPath = homeModel.currentPath
+    if (currentPath) {
+      if (currentPath.endsWith('\\') || currentPath.endsWith('/')) {
+        currentPath = currentPath.slice(0, currentPath.length - 1)
+      }
+      await createDirectory(convertPathWitOS(`${currentPath}/${dirName}`))
+    }
+  }
   return {
-    copyFile, setCopyFile, pasteFile,addSMBFolder
+    copyFile, setCopyFile, pasteFile, addSMBFolder, mkdir
   }
 }
 
