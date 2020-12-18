@@ -108,6 +108,9 @@ const HomePage = ():React.ReactElement => {
             path: item.path
           })
         }}
+        onDelete={() => {
+          fileModel.deleteFile([item.path])
+        }}
       />
     )
   }

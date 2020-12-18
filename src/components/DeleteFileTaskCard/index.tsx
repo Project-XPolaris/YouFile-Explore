@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, IconButton, LinearProgress, Menu, MenuItem, Paper } from '@material-ui/core'
 import theme from '../../theme'
 import clsx from 'clsx'
-import { FileCopy, MoreVert } from '@material-ui/icons'
-import { CopyFileOutput, Task } from '../../api/task'
+import { Delete, FileCopy, MoreVert } from '@material-ui/icons'
+import { CopyFileOutput, DeleteFileOutput, Task } from '../../api/task'
 import { fileSize } from 'humanize-plus'
 import { getPathBasename } from '../../utils/path'
 const useStyles = makeStyles({
@@ -32,8 +32,7 @@ const useStyles = makeStyles({
   },
   title: {
     ...theme.typography.subtitle1,
-    marginLeft: theme.spacing(2),
-    fontSize:14
+    marginLeft: theme.spacing(2)
   },
   subtitle: {
     ...theme.typography.subtitle2,
@@ -66,13 +65,13 @@ const useStyles = makeStyles({
   }
 })
 
-interface CopyFileTaskCardPropsType {
+interface DeleteFileTaskCardPropsType {
   className?: any
-  task:Task<CopyFileOutput>
   onStop:() => void
+  task:Task<DeleteFileOutput>
 }
 
-const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType): React.ReactElement => {
+const DeleteFileTaskCard = ({ className, task, onStop }: DeleteFileTaskCardPropsType): React.ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -100,10 +99,10 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
     )
   }
   const getTaskName = () => {
-    if (task.output.list.length === 1) {
-      return getPathBasename(task.output.list[0].src)
+    if (task.output.src.length === 1) {
+      return getPathBasename(task.output.src[0])
     } else {
-      return `${getPathBasename(task.output.list[0].src)} and other ${task.output.list.length - 1} tasks`
+      return `${getPathBasename(task.output.src[0])} and other ${task.output.src.length - 1} tasks`
     }
   }
   return (
@@ -113,7 +112,7 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
       }
       <div className={classes.header}>
         <Avatar className={classes.avatar}>
-          <FileCopy className={classes.icon} />
+          <Delete className={classes.icon} />
         </Avatar>
         <div className={classes.titleWrap}>
           <div className={classes.title}>
@@ -137,15 +136,6 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
               {task.output.complete}/{task.output.file_count}
             </div>
           </div>
-
-          <div className={classes.field}>
-            <div className={classes.label}>
-              Size:
-            </div>
-            <div className={classes.text2}>
-              {fileSize(task.output.complete_length)}/{fileSize(task.output.total_length)}
-            </div>
-          </div>
           <div className={classes.field}>
             <div className={classes.label}>
               Speed:
@@ -156,11 +146,11 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
           </div>
         </div>
         <div className={classes.text}>
-          {getPathBasename(task.output.current_copy)}
+          {getPathBasename(task.output.current_delete)}
         </div>
         <LinearProgress variant='determinate' value={task.output.progress * 100} />
       </div>
     </Paper>
   )
 }
-export default CopyFileTaskCard
+export default DeleteFileTaskCard

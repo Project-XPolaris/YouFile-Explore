@@ -18,6 +18,16 @@ export interface CopyFileOutput {
   progress: number
   speed: number
 }
+export interface DeleteFileOutput {
+  // eslint-disable-next-line camelcase
+  file_count: number;
+  complete: number;
+  src: string[];
+  progress: number;
+  speed: number;
+  // eslint-disable-next-line camelcase
+  current_delete: string;
+}
 export interface Task<T> {
   id :string
   type: 'Copy' | 'Delete' | 'Search'

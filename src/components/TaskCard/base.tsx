@@ -1,6 +1,8 @@
 import { Task } from '../../api/task'
 import CopyFileTaskCard from '../CopyFileTaskCard'
 import React from 'react'
+import DeleteFileTaskCard from '../DeleteFileTaskCard'
+
 
 export const TaskCard = ({
   task,
@@ -11,6 +13,10 @@ export const TaskCard = ({
     case 'Copy':
       return (
         <CopyFileTaskCard task={task} className={className} {...cardProps} />
+      )
+    case 'Delete':
+      return (
+        <DeleteFileTaskCard task={task} className={className} {...cardProps}/>
       )
     default:
       return null

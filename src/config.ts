@@ -5,6 +5,7 @@ export const ApplicationConfig = {
     mkdir: '/path/mkdir',
     getAllTasks: '/task/all',
     copyFile: '/task/copy',
+    deleteFile: '/task/delete',
     stopTask: '/task/stop'
   },
   yousmb: {

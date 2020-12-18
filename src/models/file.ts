@@ -1,6 +1,6 @@
 import { createModel } from 'hox'
 import { useState } from 'react'
-import { copyFile as copyFileService } from '../api/file'
+import { copyFile as copyFileService, deleteFile as deleteFileService } from '../api/file'
 import useHomeModel from '../page/Home/model'
 import { createSMBFolder } from '../api/yousmb'
 import { undefinedOrString } from '../utils/string'
@@ -43,6 +43,9 @@ const FileModel = () => {
       })
     }
   }
+  const deleteFile = async (src:string[]) => {
+    await deleteFileService(src)
+  }
   const mkdir = async (dirName:string) => {
     let currentPath = homeModel.currentPath
     if (currentPath) {
@@ -53,7 +56,7 @@ const FileModel = () => {
     }
   }
   return {
-    copyFile, setCopyFile, pasteFile, addSMBFolder, mkdir
+    copyFile, setCopyFile, pasteFile, addSMBFolder, mkdir, deleteFile
   }
 }
 

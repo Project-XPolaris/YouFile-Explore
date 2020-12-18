@@ -4,7 +4,7 @@ import { Avatar, ButtonBase, IconButton } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
 import { File } from '../../page/Home/model'
 import DescriptionIcon from '@material-ui/icons/Description'
-import { FileCopy } from '@material-ui/icons'
+import { Delete, FileCopy } from '@material-ui/icons'
 import { ImageFileIcon } from '../FileIcon/ImageFileIcon'
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,9 +48,10 @@ interface FileItemPropsType {
   onClick:() => void
   onCopy:() => void,
   style?:any
+  onDelete:() => void
 }
 
-const FileItem = ({ file, onClick, onCopy, style }: FileItemPropsType):React.ReactElement => {
+const FileItem = ({ file, onClick, onCopy, style, onDelete }: FileItemPropsType):React.ReactElement => {
   const classes = useStyles()
   const renderIcon = () => {
     if (file.type === 'Directory') {
@@ -74,8 +75,11 @@ const FileItem = ({ file, onClick, onCopy, style }: FileItemPropsType):React.Rea
 
       </ButtonBase>
       <div className={classes.actions}>
-        <IconButton aria-label="copy" onClick={onCopy}>
+        <IconButton onClick={onCopy}>
           <FileCopy />
+        </IconButton>
+        <IconButton onClick={onDelete}>
+          <Delete />
         </IconButton>
       </div>
     </div>
