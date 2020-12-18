@@ -6,6 +6,7 @@ import { File } from '../../page/Home/model'
 import DescriptionIcon from '@material-ui/icons/Description'
 import { Delete, FileCopy } from '@material-ui/icons'
 import { ImageFileIcon } from '../FileIcon/ImageFileIcon'
+import FileIcon from '../FileIcon'
 const useStyles = makeStyles(theme => ({
   root: {
     height: theme.spacing(8),
@@ -58,7 +59,7 @@ const FileItem = ({ file, onClick, onCopy, style, onDelete }: FileItemPropsType)
       return <FolderIcon />
     }
     if (file.type === 'File') {
-      return <DescriptionIcon />
+      return <FileIcon fileName={file.name} />
     }
   }
   return (
