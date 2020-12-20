@@ -21,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2)
   },
-  title: {
-    flexGrow: 1
-  },
   status: {
     width: '100vw',
     height: theme.spacing(4),
@@ -49,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.spacing(2)
   },
   content: {
-    paddingTop: theme.spacing(12),
+    paddingTop: theme.spacing(4),
     height: '100vh',
-    width: '100vw'
+    width: '100vw',
   },
   header: {
     position: 'fixed'
@@ -96,43 +93,7 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
       currentWindow.maximize()
     }
   }
-  const copyPopoverController = usePopoverController()
-  const fileModel = useFileModel()
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const layoutModel = useLayoutModel()
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-  const moreMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      keepMounted
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-      getContentAnchorEl={null}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left'
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left'
-      }}
-    >
-      <MenuItem onClick={() => {
-        handleClose()
-        layoutModel.switchDialog('global/addSMB')
-      }}><Launch className={classes.menuIcon}/> Set As SMB Directory</MenuItem>
-      <MenuItem onClick={() => {
-        handleClose()
-        layoutModel.switchDialog('home/createDirectory')
-      }}><CreateNewFolder className={classes.menuIcon}/>New directory</MenuItem>
-    </Menu>
-  )
   return (
     <div className={classes.main}>
       <TaskDrawer
@@ -152,35 +113,6 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
             <ClearSharpIcon className={classes.actionIcon} />
           </IconButton>
         </div>
-        <AppBar elevation={0} position='static'>
-          <Toolbar>
-            <Typography variant='h6' className={classes.title} component='div'>
-              YouFile
-            </Typography>
-            {
-              fileModel.copyFile &&
-              <PopoverImageButton icon={<FileCopy className={classes.actionButton} /> } controller={copyPopoverController}>
-                <CopyPopover onPaste={() => {
-                  copyPopoverController.setAnchorEl(null)
-                  fileModel.setCopyFile(undefined)
-                }} />
-              </PopoverImageButton>
-            }
-            <IconButton
-              onClick={() => layoutModel.switchDialog('global/taskDrawer')}
-            >
-              <AssignmentIcon className={classes.actionButton}/>
-            </IconButton>
-            <IconButton
-              onClick={handleClick}
-              aria-controls="demo-positioned-menu"
-              aria-haspopup="true"
-            >
-              <MoreVert className={classes.actionButton}/>
-            </IconButton>
-            {moreMenu}
-          </Toolbar>
-        </AppBar>
       </div>
       <div className={classes.content}>
         {children}

@@ -6,7 +6,10 @@ export const ApplicationConfig = {
     getAllTasks: '/task/all',
     copyFile: '/task/copy',
     deleteFile: '/task/delete',
-    stopTask: '/task/stop'
+    stopTask: '/task/stop',
+    fstabMounts: '/fstab/mounts',
+    fstabAddMount: '/fstab/mounts',
+    fsRemoveMount: '/fstab/mounts'
   },
   yousmb: {
     apiUrl: 'http://192.168.31.186:8200',

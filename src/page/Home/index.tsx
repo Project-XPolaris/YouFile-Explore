@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import HomeSide from './side'
 import useHomeModel, { getFileTree } from './model'
-import { Box, Breadcrumbs, Chip, IconButton, Paper } from '@material-ui/core'
+import { Breadcrumbs, Chip, IconButton } from '@material-ui/core'
 import FileItem from '../../components/FileItem'
 import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
@@ -11,8 +10,11 @@ import { AutoSizer, List } from 'react-virtualized'
 import 'react-virtualized/styles.css'
 import { ArrowBack, Refresh } from '@material-ui/icons'
 import { FileNode } from './tree'
-import { useUpdate } from 'ahooks'
 import TextInputDialog from '../../components/TextInputDialog'
+import AppBar from './appbar'
+import AddMountDialog from '../../components/AddMoundDialog'
+import mount from '../../models/mount'
+import useMountModel from '../../models/mount'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -30,9 +32,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#EEEEEE',
     width: '100%',
     overflowX: 'hidden',
-    height: '100%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    marginTop: theme.spacing(8),
+    overflowY: 'auto'
   },
   nav: {
     width: '100%',
@@ -63,7 +66,7 @@ const HomePage = ():React.ReactElement => {
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
-
+  const mountModel = useMountModel()
   useEffect(() => {
     homeModel.initData()
   }, [])
@@ -122,8 +125,22 @@ const HomePage = ():React.ReactElement => {
     await onRefresh()
     onSwitchCreateDirectoryDialog()
   }
+  console.log(homeModel.currentPath)
   return (
     <div className={classes.main}>
+      <AddMountDialog
+        onClose={() => layoutModel.switchDialog('home/addMount')}
+        open={Boolean(layoutModel.dialogs['home/addMount'])}
+        onOk={(data) => {
+          layoutModel.switchDialog('home/addMount')
+          if (homeModel.currentPath) {
+            mountModel.mount({
+              ...data,
+              file: homeModel.currentPath
+            })
+          }
+        }}
+      />
       <AddSMBDialog
         onClose={() => layoutModel.switchDialog('global/addSMB')}
         open={Boolean(layoutModel.dialogs['global/addSMB'])}
@@ -139,12 +156,13 @@ const HomePage = ():React.ReactElement => {
         label="Directory name"
         open={layoutModel.dialogs['home/createDirectory']}
       />
-      <Paper elevation={2}>
-        <div className={classes.side}>
-          <HomeSide />
-        </div>
-      </Paper>
+      {/* <Paper elevation={2}> */}
+      {/*  <div className={classes.side}> */}
+      {/*    <HomeSide /> */}
+      {/*  </div> */}
+      {/* </Paper> */}
       <div className={classes.container}>
+        <AppBar />
         <div className={classes.nav}>
           <IconButton aria-label="delete" size="small" onClick={() => homeModel.onBack()}>
             <ArrowBack fontSize="inherit" />

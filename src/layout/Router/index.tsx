@@ -1,17 +1,16 @@
-import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
-import {
-  HashRouter as Router,
-  Switch,
-  Route,
-} from 'react-router-dom'
-import { Home } from '@material-ui/icons'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import HomePage from '../../page/Home'
+import FstabPage from '../../page/Fstab'
+import AppBar from '../../page/Home/AppBar'
 
 const RouterLayout = () => {
   return (
     <Router>
       <Switch>
+        <Route path="/fstab">
+          <FstabPage />
+        </Route>
         <Route path="/">
           <HomePage />
         </Route>
