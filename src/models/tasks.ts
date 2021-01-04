@@ -6,8 +6,10 @@ import { getTaskList, Task } from '../api/task'
 const TasksModel = () => {
   const [tasks, setTasks] = useState<Task<any>[]>([])
   useInterval(async () => {
-    const response = await getTaskList()
-    setTasks(response.result)
+    if (localStorage.getItem('ServiceUrl') !== null) {
+      const response = await getTaskList()
+      setTasks(response.result)
+    }
   }, 1000)
   return {
     tasks,

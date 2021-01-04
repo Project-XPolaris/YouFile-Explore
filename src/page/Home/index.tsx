@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import useHomeModel, { getFileTree } from './model'
-import { Breadcrumbs, Chip, IconButton } from '@material-ui/core'
+import { Breadcrumbs, Chip, IconButton, Paper } from '@material-ui/core'
 import FileItem from '../../components/FileItem'
 import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
@@ -15,6 +15,8 @@ import AppBar from './appbar'
 import AddMountDialog from '../../components/AddMoundDialog'
 import mount from '../../models/mount'
 import useMountModel from '../../models/mount'
+import HomeSide from './side'
+import SecurityLayout from '../../layout/Security'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -70,22 +72,6 @@ const HomePage = ():React.ReactElement => {
   useEffect(() => {
     homeModel.initData()
   }, [])
-  useEffect(() => {
-    const tree = getFileTree()
-    tree.loadByPath(homeModel.currentPath).then(node => {
-      setDirContent(node?.children ?? [])
-    })
-
-    // update expand node
-    const parts = homeModel.currentPath.split('/')
-    const result: string[] = []
-    while (parts.length !== 2) {
-      parts.pop()
-      result.push(parts.join('/'))
-    }
-    result.push('/')
-    homeModel.setExpanded([...result, ...homeModel.expanded])
-  }, [homeModel.currentPath])
   const onRefresh = async () => {
     if (homeModel.currentPath) {
       const tree = getFileTree()
@@ -94,7 +80,7 @@ const HomePage = ():React.ReactElement => {
     }
   }
   const rowRenderer = ({ key, index, style }:{key:string, index:number, style:any}) => {
-    const item = dirContent[index]
+    const item = homeModel.currentContent[index]
     return (
       <FileItem
         file={item}
@@ -125,7 +111,6 @@ const HomePage = ():React.ReactElement => {
     await onRefresh()
     onSwitchCreateDirectoryDialog()
   }
-  console.log(homeModel.currentPath)
   return (
     <div className={classes.main}>
       <AddMountDialog
@@ -156,11 +141,11 @@ const HomePage = ():React.ReactElement => {
         label="Directory name"
         open={layoutModel.dialogs['home/createDirectory']}
       />
-      {/* <Paper elevation={2}> */}
-      {/*  <div className={classes.side}> */}
-      {/*    <HomeSide /> */}
-      {/*  </div> */}
-      {/* </Paper> */}
+      <Paper elevation={2}>
+        <div className={classes.side}>
+          <HomeSide />
+        </div>
+      </Paper>
       <div className={classes.container}>
         <AppBar />
         <div className={classes.nav}>
@@ -179,7 +164,7 @@ const HomePage = ():React.ReactElement => {
               ))
             }
           </Breadcrumbs>
-          <IconButton aria-label="delete" size="small" onClick={() => onRefresh()} className={classes.reload}>
+          <IconButton aria-label="delete" size="small" onClick={() => homeModel.refresh()} className={classes.reload}>
             <Refresh fontSize="inherit" />
           </IconButton>
         </div>
@@ -192,7 +177,7 @@ const HomePage = ():React.ReactElement => {
               <List
                 width={width}
                 height={height}
-                rowCount={dirContent.length}
+                rowCount={homeModel.currentContent.length}
                 rowHeight={64}
                 rowRenderer={rowRenderer}
               />

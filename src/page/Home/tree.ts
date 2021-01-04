@@ -11,14 +11,17 @@ export interface FileNode {
 }
 export class FileTree {
   root : FileNode = {
-    id: '/',
+    id: 'root:/',
     name: 'root',
     path: '/',
     type: 'Directory',
     parent: undefined,
-    children: undefined
+    children: []
   }
 
+  public addRootNodes (node : FileNode) {
+    this.root.children?.push(node)
+  }
   private generateNode (source:FileItem, parent:FileNode):FileNode {
     return {
       id: source.path,

@@ -1,5 +1,4 @@
 export const ApplicationConfig = {
-  apiUrl: 'http://localhost:8300',
   apiPaths: {
     readdir: '/path/read',
     mkdir: '/path/mkdir',
@@ -12,9 +11,10 @@ export const ApplicationConfig = {
     fsRemoveMount: '/fstab/mounts'
   },
   yousmb: {
-    apiUrl: 'http://192.168.31.186:8200',
+    apiUrl: 'http://192.168.99.101:8200',
     apiPaths: {
-      addFolder: '/folders/add'
+      addFolder: '/folders/add',
+      config: '/config'
     }
   }
 }
