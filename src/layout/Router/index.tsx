@@ -5,6 +5,7 @@ import FstabPage from '../../page/Fstab'
 import AppBar from '../../page/Home/AppBar'
 import SecurityLayout from '../Security'
 import LoginPage from '../../page/Login'
+import StartPage from '../../page/Start'
 
 const RouterLayout = () => {
   return (
@@ -16,8 +17,10 @@ const RouterLayout = () => {
         <Route path="/fstab">
           <FstabPage />
         </Route>
+        <Route path="/start">
+          <StartPage />
+        </Route>
         <Route path="/">
-          <SecurityLayout />
           <HomePage />
         </Route>
       </Switch>

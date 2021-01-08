@@ -88,7 +88,7 @@ const HomePage = ():React.ReactElement => {
         style={style}
         onClick={() => {
           if (item.type === 'Directory') {
-            homeModel.loadFile(item.path)
+            homeModel.setCurrentPath(item.path)
           }
         }}
         onCopy={() => {

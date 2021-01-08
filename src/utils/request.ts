@@ -2,12 +2,12 @@ import { extend } from 'umi-request'
 import { ApplicationConfig } from '../config'
 
 const apiRequest = extend({
-  timeout: 1000,
+  timeout: 10000,
   credentials: 'omit'
 })
 export const yousmbRequest = extend({
   prefix: ApplicationConfig.yousmb.apiUrl,
-  timeout: 1000,
+  timeout: 10000,
   credentials: 'omit'
 })
 
