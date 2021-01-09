@@ -33,7 +33,7 @@ const StartPage = ({}: StartPagePropsType):React.ReactElement => {
     if (currentConfigId) {
       DefaultConfigManager.applyConfig(currentConfigId)
     }
-    history.replace('/')
+    history.replace('/home')
   }
   console.log(DefaultConfigManager.configs)
   return (

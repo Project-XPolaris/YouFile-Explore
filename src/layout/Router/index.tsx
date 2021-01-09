@@ -2,7 +2,6 @@ import React from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import HomePage from '../../page/Home'
 import FstabPage from '../../page/Fstab'
-import AppBar from '../../page/Home/AppBar'
 import SecurityLayout from '../Security'
 import LoginPage from '../../page/Login'
 import StartPage from '../../page/Start'
@@ -17,11 +16,14 @@ const RouterLayout = () => {
         <Route path="/fstab">
           <FstabPage />
         </Route>
-        <Route path="/start">
-          <StartPage />
+        {/*<Route path="/start">*/}
+        {/*  <StartPage />*/}
+        {/*</Route>*/}
+        <Route path="/home">
+          <HomePage />
         </Route>
         <Route path="/">
-          <HomePage />
+          <StartPage />
         </Route>
       </Switch>
     </Router>
