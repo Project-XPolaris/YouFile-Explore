@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import useHomeModel, { getFileTree } from './model'
-import { Breadcrumbs, Chip, IconButton, Paper } from '@material-ui/core'
+import useHomeModel from './model'
+import { Breadcrumbs, Chip, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
 import FileItem from '../../components/FileItem'
 import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
-import { AutoSizer, List } from 'react-virtualized'
 import 'react-virtualized/styles.css'
-import { ArrowBack, Refresh } from '@material-ui/icons'
+import { ArrowBack, Notes, Refresh } from '@material-ui/icons'
 import { FileNode } from './tree'
 import TextInputDialog from '../../components/TextInputDialog'
 import AppBar from './appbar'
 import AddMountDialog from '../../components/AddMoundDialog'
-import mount from '../../models/mount'
 import useMountModel from '../../models/mount'
 import HomeSide from './side'
-import SecurityLayout from '../../layout/Security'
+import FileItemMedium from '../../components/FileItemMedium'
+import { AutoSizer, List } from 'react-virtualized'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -47,7 +46,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1)
+    paddingRight: theme.spacing(1),
+    position: 'sticky',
+    top: 0,
+    zIndex: 1
+  },
+  navDivider: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   reload: {
 
@@ -59,26 +65,32 @@ const useStyles = makeStyles((theme) => ({
   pathBreadcrumbs: {
     marginLeft: theme.spacing(2),
     flex: 1
+  },
+  gridContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: theme.spacing(2)
+  },
+  mediumItem: {
+    width: 120,
+    height: 120,
+    overflow: 'hidden',
+    padding: theme.spacing(2)
   }
 }))
 
 const HomePage = ():React.ReactElement => {
   const [dirContent, setDirContent] = useState<FileNode[]>([])
+  const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
   const mountModel = useMountModel()
+
   useEffect(() => {
     homeModel.initData()
   }, [])
-  const onRefresh = async () => {
-    if (homeModel.currentPath) {
-      const tree = getFileTree()
-      const node = await tree.reloadContent(homeModel.currentPath)
-      setDirContent(node?.children ?? [])
-    }
-  }
   const rowRenderer = ({ key, index, style }:{key:string, index:number, style:any}) => {
     const item = homeModel.currentContent[index]
     return (
@@ -108,11 +120,40 @@ const HomePage = ():React.ReactElement => {
   }
   const onCreateDirectory = async (value:string) => {
     await fileModel.mkdir(value)
-    await onRefresh()
     onSwitchCreateDirectoryDialog()
+  }
+
+  const handleViewTypeMenuClick = (event:any) => {
+    setViewTypeMenuAnchor(event.currentTarget)
+  }
+
+  const handleViewTypeMenuClose = () => {
+    setViewTypeMenuAnchor(null)
+  }
+
+  const viewTypeMenu = () => {
+    return (
+      <Menu
+        id="viewTypeMenu"
+        anchorEl={viewTypeMenuAnchor}
+        keepMounted
+        open={Boolean(viewTypeMenuAnchor)}
+        onClose={handleViewTypeMenuClose}
+      >
+        <MenuItem onClick={() => {
+          homeModel.setViewType('List')
+          handleViewTypeMenuClose()
+        }}>List</MenuItem>
+        <MenuItem onClick={() => {
+          homeModel.setViewType('Medium')
+          handleViewTypeMenuClose()
+        }}>Medium Icon</MenuItem>
+      </Menu>
+    )
   }
   return (
     <div className={classes.main}>
+      {viewTypeMenu()}
       <AddMountDialog
         onClose={() => layoutModel.switchDialog('home/addMount')}
         open={Boolean(layoutModel.dialogs['home/addMount'])}
@@ -167,22 +208,58 @@ const HomePage = ():React.ReactElement => {
           <IconButton aria-label="delete" size="small" onClick={() => homeModel.refresh()} className={classes.reload}>
             <Refresh fontSize="inherit" />
           </IconButton>
+          <Divider orientation={'vertical'} className={classes.navDivider}/>
+          <IconButton aria-label="delete" size="small" onClick={handleViewTypeMenuClick} className={classes.reload}>
+            <Notes fontSize="inherit" />
+          </IconButton>
         </div>
         <div className={classes.fileContent}>
-          <AutoSizer>
-            {({
-              height,
-              width
-            }) => (
-              <List
-                width={width}
-                height={height}
-                rowCount={homeModel.currentContent.length}
-                rowHeight={64}
-                rowRenderer={rowRenderer}
-              />
-            )}
-          </AutoSizer>
+          {
+            homeModel.viewType === 'List' &&
+            <AutoSizer>
+              {({
+                height,
+                width
+              }) => (
+                <List
+                  width={width}
+                  height={height}
+                  rowCount={homeModel.currentContent.length}
+                  rowHeight={64}
+                  rowRenderer={rowRenderer}
+                />
+              )}
+            </AutoSizer>
+          }
+          {
+
+            homeModel.viewType === 'Medium' &&
+            <div className={classes.gridContainer}>
+              {
+                homeModel.currentContent.map(it => (
+                  <FileItemMedium
+                    file={it}
+                    key={it.id}
+                    className={classes.mediumItem}
+                    onCopy={() => {
+                      fileModel.setCopyFile({
+                        name: it.name,
+                        path: it.path
+                      })
+                    }}
+                    onDelete={() => {
+                      fileModel.deleteFile([it.path])
+                    }}
+                    onDoubleClick={() => {
+                      if (it.type === 'Directory') {
+                        homeModel.setCurrentPath(it.path)
+                      }
+                    }}
+                  />
+                ))
+              }
+            </div>
+          }
         </div>
       </div>
     </div>

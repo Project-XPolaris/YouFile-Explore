@@ -19,11 +19,15 @@ const fTree = new FileTree()
 export const getFileTree = (): FileTree => {
   return fTree
 }
+
+export type ViewType = 'List' | 'Medium';
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
 const HomeModel = () => {
   const [currentPath, setCurrentPath] = useState<string>('/')
   const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
   const [currentContent, setCurrentContent] = useState<FileNode[]>([])
+  const [viewType, setViewType] = useState<ViewType>('Medium')
+  // const [currentContentGrid,setCurrentContentGrid]
   const update = useUpdate()
   const initData = async (dirPath = '/') => {
     // await fTree.loadByPath(dirPath)
@@ -36,7 +40,7 @@ const HomeModel = () => {
       path: convertSlash(source.path),
       children: undefined,
       parent: undefined,
-      type: source.type,
+      type: source.type
     }
   }
   const loadContent = async () => {
@@ -77,7 +81,7 @@ const HomeModel = () => {
     console.log(response)
     const dirs: { name: string, path: string }[] = response.sections.filter(it => ignoreSmbSectionNames.find(ignoreName => ignoreName === it.name) === undefined).map(dir => ({
       name: dir.name,
-      path: dir.fields.path,
+      path: dir.fields.path
     }))
     setSmbDirs(dirs)
     update()
@@ -93,7 +97,9 @@ const HomeModel = () => {
     currentContent,
     smbDirs,
     setCurrentPath,
-    refresh
+    refresh,
+    viewType,
+    setViewType
   }
 }
 const useHomeModel = createModel(HomeModel)

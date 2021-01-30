@@ -22,14 +22,15 @@ import { MarkdownFileIcon } from './MarkdownFileIcon'
 import { ArchiveFileIcon } from './ArchiveFileIcon'
 
 const useStyles = makeStyles({
-  main: {},
+  main: {}
 })
 
 interface FileIconPropsType {
   fileName: string
+  className?:any
 }
 
-export default function FileIcon ({ fileName }: FileIconPropsType) {
+export default function FileIcon ({ fileName, className }: FileIconPropsType) {
   const classes = useStyles()
   fileName = convertSlash(fileName)
   if (fileName.endsWith('/')) {
@@ -46,47 +47,47 @@ export default function FileIcon ({ fileName }: FileIconPropsType) {
   switch (ext) {
     case 'js':
     case 'jsx':
-      return <JSFileIcon />
+      return <JSFileIcon className={className} />
     case 'mp3':
     case 'wav':
     case 'flac':
     case 'aac':
     case 'ogg':
     case 'm4a':
-      return <MusicFileIcon />
+      return <MusicFileIcon className={className}/>
     case 'py':
-      return <PythonFileIcon />
+      return <PythonFileIcon className={className}/>
     case 'ts':
     case 'tsx':
-      return <TSFileIcon />
+      return <TSFileIcon className={className}/>
     case 'mp4':
     case 'mkv':
-      return <VideoFileIcon />
+      return <VideoFileIcon className={className}/>
     case 'conf':
-      return <ConfFileIcon />
+      return <ConfFileIcon className={className}/>
     case 'css':
-      return <CSSFileIcon />
+      return <CSSFileIcon className={className}/>
     case 'html':
-      return <HTMLFileIcon />
+      return <HTMLFileIcon className={className}/>
     case 'jpg':
     case 'png':
     case 'gif':
-      return <ImageFileIcon />
+      return <ImageFileIcon className={className}/>
     case 'doc':
     case 'docx':
-      return <WordFileIcon />
+      return <WordFileIcon className={className}/>
     case 'pdf':
-      return <PDFFileIcon />
+      return <PDFFileIcon className={className}/>
     case 'ppt':
     case 'pptx':
-      return <PowerPointFileIcon />
+      return <PowerPointFileIcon className={className}/>
     case 'xls':
     case 'xlsx':
-      return <ExcelFileIcon />
+      return <ExcelFileIcon className={className}/>
     case 'torrent':
-      return <TorrentFileIcon />
+      return <TorrentFileIcon className={className}/>
     case 'exe':
-      return <EXEFileIcon />
+      return <EXEFileIcon className={className}/>
     case '7z':
     case 'rar':
     case 'zip':
@@ -95,16 +96,16 @@ export default function FileIcon ({ fileName }: FileIconPropsType) {
     case 'gz':
     case 'lzma':
     case 'tgz':
-      return <ArchiveFileIcon />
+      return <ArchiveFileIcon className={className}/>
     case 'json':
-      return <JSONFileIcon />
+      return <JSONFileIcon className={className}/>
     case 'md':
-      return <MarkdownFileIcon />
+      return <MarkdownFileIcon className={className}/>
     default:
-      return <DescriptionIcon />
+      return <DescriptionIcon className={className}/>
   }
   return (
-    <div className={classes.main}>
+    <div className={className}>
 
     </div>
   )
