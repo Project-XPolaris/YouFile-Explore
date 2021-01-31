@@ -7,7 +7,7 @@ import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
 import 'react-virtualized/styles.css'
-import { ArrowBack, Notes, Refresh } from '@material-ui/icons'
+import { ArrowBack, Notes, Refresh, Sort } from '@material-ui/icons'
 import { FileNode } from './tree'
 import TextInputDialog from '../../components/TextInputDialog'
 import AppBar from './appbar'
@@ -16,6 +16,7 @@ import useMountModel from '../../models/mount'
 import HomeSide from './side'
 import FileItemMedium from '../../components/FileItemMedium'
 import { AutoSizer, List } from 'react-virtualized'
+import MediumView from './medium'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -66,22 +67,13 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flex: 1
   },
-  gridContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    padding: theme.spacing(2)
-  },
-  mediumItem: {
-    width: 120,
-    height: 120,
-    overflow: 'hidden',
-    padding: theme.spacing(2)
-  }
+
 }))
 
 const HomePage = ():React.ReactElement => {
   const [dirContent, setDirContent] = useState<FileNode[]>([])
   const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
+  const [sortMenuAnchor, setSortMenuAnchor] = React.useState(null)
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
@@ -234,31 +226,7 @@ const HomePage = ():React.ReactElement => {
           {
 
             homeModel.viewType === 'Medium' &&
-            <div className={classes.gridContainer}>
-              {
-                homeModel.currentContent.map(it => (
-                  <FileItemMedium
-                    file={it}
-                    key={it.id}
-                    className={classes.mediumItem}
-                    onCopy={() => {
-                      fileModel.setCopyFile({
-                        name: it.name,
-                        path: it.path
-                      })
-                    }}
-                    onDelete={() => {
-                      fileModel.deleteFile([it.path])
-                    }}
-                    onDoubleClick={() => {
-                      if (it.type === 'Directory') {
-                        homeModel.setCurrentPath(it.path)
-                      }
-                    }}
-                  />
-                ))
-              }
-            </div>
+           <MediumView />
           }
         </div>
       </div>

@@ -42,43 +42,34 @@ const useStyles = makeStyles(theme => ({
     wordBreak: 'break-all',
     textAlign: 'center',
     height: '2rem'
-  },
-  menuIcon: {
-    marginRight: theme.spacing(2)
-  },
-  copyIcon: {
-    color: theme.palette.primary.main
-  },
-  deleteIcon: {
-    color: red['500']
   }
+
 }))
 
 const initialState = {
   mouseX: null,
   mouseY: null
 }
-const FileItemMedium = ({ file, className, onCopy, onDelete, onDoubleClick }:{file:FileNode, className?:any, onCopy?:() => void, onDelete?:() => void, onDoubleClick?:() => void}):React.ReactElement => {
+const FileItemMedium = ({
+  file, className, onDoubleClick, onContextClick
+}:{
+  file:FileNode,
+  className?:any,
+  onDoubleClick?:() => void
+  onContextClick:(x:number, y:number) => void
+}):React.ReactElement => {
   const classes = useStyles()
   const hybridClick = useDoubleClick(
     onDoubleClick, undefined)
 
-  const [state, setState] = React.useState<{
-    mouseX: null | number;
-    mouseY: null | number;
-  }>(initialState)
-
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     console.log(event)
-    setState({
-      mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4
-    })
+    onContextClick(
+      event.clientX - 2,
+      event.clientY - 4
+    )
   }
 
-  const handleClose = () => {
-    setState(initialState)
-  }
   return (
     <div className={clsx(classes.root, className)} onContextMenu={handleClick} onClick={hybridClick}>
       {
@@ -90,27 +81,7 @@ const FileItemMedium = ({ file, className, onCopy, onDelete, onDoubleClick }:{fi
       <div className={classes.name}>
         {file.name}
       </div>
-      <Menu
-        keepMounted
-        open={state.mouseY !== null}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          state.mouseY !== null && state.mouseX !== null
-            ? { top: state.mouseY, left: state.mouseX }
-            : undefined
-        }
-      >
-        <MenuItem >{file.name}</MenuItem>
-        {
-          onCopy && <MenuItem onClick={() => { handleClose(); onCopy() }}><FileCopy className={clsx(classes.menuIcon, classes.copyIcon)} />Copy</MenuItem>
 
-        }
-        {
-          onDelete && <MenuItem onClick={() => { handleClose(); onDelete() }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)}/>Delete</MenuItem>
-
-        }
-      </Menu>
     </div>
   )
 }
