@@ -30,7 +30,6 @@ export class ConfigManager {
     }
     this.configs.push(config)
     this.saveData()
-    console.log(config)
     return config
   }
 
@@ -58,6 +57,11 @@ export class ConfigManager {
     if (config) {
       localStorage.setItem('ServiceUrl', config.apiUrl ?? '')
     }
+  }
+
+  deleteConfig (id:string) : void {
+    this.configs = this.configs.filter(it => it.id !== id)
+    this.saveData()
   }
 }
 export const DefaultConfigManager = new ConfigManager()

@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import useStyles from './style'
-import { AppBar, Fab, List, ListItem, ListItemAvatar, ListItemText, Toolbar, Typography } from '@material-ui/core'
+import {
+  AppBar,
+  Fab, IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+  Toolbar,
+  Typography
+} from '@material-ui/core'
 import { DefaultConfigManager } from '../../store/config'
-import { Add, Link, Settings } from '@material-ui/icons'
+import { Add, Delete, Link, Settings } from '@material-ui/icons'
 import { useUpdate } from 'ahooks'
 import ConfigContent from '../../components/ConfigContent'
 import { useHistory } from 'react-router-dom'
@@ -38,7 +48,10 @@ const StartPage = ({}: StartPagePropsType):React.ReactElement => {
       history.replace('/home')
     }
   }
-  console.log(DefaultConfigManager.configs)
+  const deleteConfig = (id:string) => {
+    DefaultConfigManager.deleteConfig(id)
+    update()
+  }
   return (
     <div className={classes.root}>
       <AppBar position="static" elevation={0}>
@@ -58,6 +71,13 @@ const StartPage = ({}: StartPagePropsType):React.ReactElement => {
                     <Settings />
                   </ListItemAvatar>
                   <ListItemText primary={config.name} secondary={config.apiUrl ?? 'no service'}/>
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      onClick={() => { deleteConfig(config.id) }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
               ))
             }
