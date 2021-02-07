@@ -6,6 +6,7 @@ import { Add, Link, Settings } from '@material-ui/icons'
 import { useUpdate } from 'ahooks'
 import ConfigContent from '../../components/ConfigContent'
 import { useHistory } from 'react-router-dom'
+import useAppModel from '../../models/app'
 
 export interface StartPagePropsType {
 
@@ -16,6 +17,7 @@ const StartPage = ({}: StartPagePropsType):React.ReactElement => {
   const update = useUpdate()
   const [currentConfigId, setCurrentConfigId] = useState<string | undefined>()
   const history = useHistory()
+  const appModel = useAppModel()
   useEffect(() => {
     DefaultConfigManager.loadData()
     if (DefaultConfigManager.configs.length > 0) {
@@ -29,11 +31,12 @@ const StartPage = ({}: StartPagePropsType):React.ReactElement => {
   const switchConfig = (id:string) => {
     setCurrentConfigId(id)
   }
-  const onApply = () => {
+  const onApply = async () => {
     if (currentConfigId) {
       DefaultConfigManager.applyConfig(currentConfigId)
+      await appModel.loadInfo()
+      history.replace('/home')
     }
-    history.replace('/home')
   }
   console.log(DefaultConfigManager.configs)
   return (

@@ -17,6 +17,7 @@ import HomeSide from './side'
 import FileItemMedium from '../../components/FileItemMedium'
 import { AutoSizer, List } from 'react-virtualized'
 import MediumView from './medium'
+import useAppModel from '../../models/app'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -66,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   pathBreadcrumbs: {
     marginLeft: theme.spacing(2),
     flex: 1
-  },
+  }
 
 }))
 
@@ -79,7 +80,7 @@ const HomePage = ():React.ReactElement => {
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
   const mountModel = useMountModel()
-
+  const appModel = useAppModel()
   useEffect(() => {
     homeModel.initData()
   }, [])
@@ -185,7 +186,7 @@ const HomePage = ():React.ReactElement => {
           <IconButton aria-label="delete" size="small" onClick={() => homeModel.onBack()}>
             <ArrowBack fontSize="inherit" />
           </IconButton>
-          <Breadcrumbs className={classes.pathBreadcrumbs}>
+          <Breadcrumbs className={classes.pathBreadcrumbs} separator={appModel.info?.sep}>
             {
               homeModel.getBreadcrumbs().map((it, index) => (
                 <Chip

@@ -6,6 +6,7 @@ import { Node } from 'react-virtualized-tree'
 import { FileNode, FileTree } from './tree'
 import { fetchSmbConfig } from '../../api/yousmb'
 import { useUpdate } from 'ahooks'
+import useAppModel from '../../models/app'
 
 export interface File {
   id: string
@@ -23,28 +24,36 @@ export const getFileTree = (): FileTree => {
 export type ViewType = 'List' | 'Medium';
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
 const HomeModel = () => {
-  const [currentPath, setCurrentPath] = useState<string>('/')
+  const appModel = useAppModel()
+  const [currentPath, setCurrentPath] = useState<string | undefined>()
   const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
   const [currentContent, setCurrentContent] = useState<FileNode[]>([])
   const [viewType, setViewType] = useState<ViewType>('Medium')
-  // const [currentContentGrid,setCurrentContentGrid]
   const update = useUpdate()
-  const initData = async (dirPath = '/') => {
+  const initData = async () => {
     // await fTree.loadByPath(dirPath)
+    await appModel.loadInfo()
     await loadSmbDirs()
   }
   const generateNode = (source: FileItem): FileNode => {
     return {
       id: source.path,
       name: source.name,
-      path: convertSlash(source.path),
+      path: source.path,
       children: undefined,
       parent: undefined,
       type: source.type
     }
   }
   const loadContent = async () => {
-    const response = await readDir(currentPath)
+    let fetchPath = currentPath
+    if (fetchPath === undefined) {
+      fetchPath = appModel.info?.root_paths[0].path
+    }
+    if (fetchPath === undefined) {
+      return
+    }
+    const response = await readDir(fetchPath)
     setCurrentContent(response.map(it => generateNode(it)))
   }
   useEffect(() => {
@@ -57,23 +66,44 @@ const HomeModel = () => {
     setCurrentPath(path)
   }
   const onBack = async () => {
-    const parts = currentPath.split('/')
-    parts.pop()
-    if (parts.length === 1) {
-      setCurrentPath('/')
-    } else {
-      setCurrentPath(parts.join('/'))
+    if (appModel.info?.sep === undefined || currentPath === undefined) {
+      return
     }
+    const parts = getBreadcrumbs()
+    if (parts.length === 1) {
+      // root path
+      return
+    }
+    parts.pop()
+    let targetPath = parts.join(appModel.info.sep)
+    if (!targetPath.endsWith(appModel.info.sep)) {
+      targetPath += appModel.info.sep
+    }
+    setCurrentPath(targetPath)
   }
   const onNavChipClick = (index: number) => {
-    const parts = getBreadcrumbs().slice(1, index + 1)
-    setCurrentPath('/' + parts.join('/'))
+    if (appModel.info?.sep === undefined) {
+      return
+    }
+    const parts = getBreadcrumbs().slice(0,index + 1)
+    let targetPath = parts.join(appModel.info.sep)
+    if (!targetPath.endsWith(appModel.info.sep)) {
+      targetPath += appModel.info.sep
+    }
+    setCurrentPath(targetPath)
   }
   const getBreadcrumbs = () => {
-    if (currentPath === '/') {
-      return ['root']
+    if (appModel.info === undefined) {
+      return []
     }
-    return ['root', ...currentPath.split('/').slice(1)]
+    if (currentPath) {
+      const parts = currentPath.split(appModel.info.sep)
+      if (parts[parts.length - 1] === '') {
+        parts.pop()
+      }
+      return parts
+    }
+    return []
   }
 
   const loadSmbDirs = async () => {

@@ -4,6 +4,7 @@ import useHomeModel, { getFileTree } from './model'
 import { Expandable } from 'react-virtualized-tree'
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core'
 import { Folder } from '@material-ui/icons'
+import useAppModel from '../../models/app'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -16,24 +17,27 @@ const useStyles = makeStyles(theme => ({
 const HomeSide = (): React.ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
-  // console.log(homeModel.getExpandNode())
-  console.log(getFileTree().root)
+  const appModel = useAppModel()
   return (
     <div className={classes.main}>
       <List subheader={<ListSubheader>System</ListSubheader>}>
         {
-          <ListItem id={'root'} button onClick={() => homeModel.setCurrentPath('/')}>
-            <ListItemIcon>
-              <Folder />
-            </ListItemIcon>
-            <ListItemText primary={'Root'} />
-          </ListItem>
+          appModel.info?.root_paths?.map(it => {
+            return (
+              <ListItem id={it.path} button onClick={() => homeModel.setCurrentPath(it.path)}>
+                <ListItemIcon>
+                  <Folder />
+                </ListItemIcon>
+                <ListItemText primary={it.name} />
+              </ListItem>
+            )
+          })
         }
       </List>
       <List subheader={<ListSubheader>Share Folder</ListSubheader>}>
         {
           homeModel.smbDirs.map(smbDir => (
-            <ListItem id={smbDir.name} button onClick={() => homeModel.setCurrentPath(smbDir.path)}>
+            <ListItem id={smbDir.name} button onClick={() => homeModel.setCurrentPath(smbDir.path)} key={smbDir.name}>
               <ListItemIcon>
                 <Folder />
               </ListItemIcon>
