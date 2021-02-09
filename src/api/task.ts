@@ -66,7 +66,7 @@ export const newSearchFileTask = async (rootPath : string, searchKey:string) :Pr
   })
 }
 
-export const fetchTaskById = async (id:string) :Promise<Task<SearchFileOutput>> => {
+export const fetchTaskById = async (id:string) :Promise<Task<any>> => {
   return apiRequest.post(ApplicationConfig.apiPaths.getTask, {
     params: {
       taskId: id

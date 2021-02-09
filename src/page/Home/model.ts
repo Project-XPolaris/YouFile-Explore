@@ -5,7 +5,14 @@ import { FileNode, FileTree } from './tree'
 import { fetchSmbConfig } from '../../api/yousmb'
 import { useUpdate } from 'ahooks'
 import useAppModel from '../../models/app'
-import { fetchTaskById, newSearchFileTask, SearchFileOutput, SearchFileResult, Task } from '../../api/task'
+import {
+  CopyFileOutput, DeleteFileOutput,
+  fetchTaskById,
+  newSearchFileTask,
+  SearchFileOutput,
+  SearchFileResult,
+  Task,
+} from '../../api/task'
 import { DefaultApiWebsocket } from '../../api/websocket/client'
 import { NotificationEvent, NotificationMessage } from '../../api/websocket/event'
 
@@ -45,6 +52,40 @@ const HomeModel = () => {
     console.log(task)
     setSearchResult(task.output.result)
   }
+  const onCopyFileCompleteHandler = async (event:NotificationMessage) => {
+    const id = event.id
+    console.log(event.id)
+    if (!id) {
+      return
+    }
+    const task :Task<CopyFileOutput> = await fetchTaskById(id)
+    if (!currentPath) {
+      return
+    }
+    task.output.list.forEach(item => {
+      if (item.dest.indexOf(currentPath) !== -1) {
+        console.log('refresh content')
+        loadContent()
+      }
+    })
+  }
+  const onDeleteFileDoneHandler = async (event:NotificationMessage) => {
+    const id = event.id
+    console.log(event.id)
+    if (!id) {
+      return
+    }
+    const task :Task<DeleteFileOutput> = await fetchTaskById(id)
+    if (!currentPath) {
+      return
+    }
+    task.output.src.forEach(item => {
+      if (item.indexOf(currentPath) !== -1) {
+        console.log('refresh content')
+        loadContent()
+      }
+    })
+  }
   DefaultApiWebsocket.connect()
   DefaultApiWebsocket.addListener('homeModel', {
     onMessage (data: string) {
@@ -52,6 +93,12 @@ const HomeModel = () => {
       console.log(event)
       if (event.event === 'SearchTaskComplete') {
         onSearchCompleteHandler(event)
+      }
+      if (event.event === 'CopyTaskComplete') {
+        onCopyFileCompleteHandler(event)
+      }
+      if (event.event === 'DeleteTaskDone') {
+        onDeleteFileDoneHandler(event)
       }
     }
   })

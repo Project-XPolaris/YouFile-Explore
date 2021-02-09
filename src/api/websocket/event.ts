@@ -1,4 +1,4 @@
-export type NotificationEvent = 'SearchTaskComplete'
+export type NotificationEvent = 'SearchTaskComplete' | 'CopyTaskComplete' | 'DeleteTaskDone'
 export interface NotificationMessage {
   event:NotificationEvent,
   id?:string
