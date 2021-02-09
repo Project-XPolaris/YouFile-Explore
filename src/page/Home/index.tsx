@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import useHomeModel from './model'
-import { Breadcrumbs, Chip, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
+import { Breadcrumbs, Chip, Divider, IconButton, InputBase, Menu, MenuItem, Paper } from '@material-ui/core'
 import FileItem from '../../components/FileItem'
 import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
 import 'react-virtualized/styles.css'
-import { ArrowBack, Notes, Refresh, Sort } from '@material-ui/icons'
+import { ArrowBack, Notes, Refresh, Search, Sort } from '@material-ui/icons'
 import { FileNode } from './tree'
 import TextInputDialog from '../../components/TextInputDialog'
 import AppBar from './appbar'
@@ -18,6 +18,8 @@ import FileItemMedium from '../../components/FileItemMedium'
 import { AutoSizer, List } from 'react-virtualized'
 import MediumView from './medium'
 import useAppModel from '../../models/app'
+import SearchView from './views/search/search'
+import model from './model'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -66,7 +68,18 @@ const useStyles = makeStyles((theme) => ({
   },
   pathBreadcrumbs: {
     marginLeft: theme.spacing(2),
-    flex: 1
+    flex: 1,
+    overflowX: 'auto'
+  },
+  searchFile: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  searchIcon: {
+    marginLeft: theme.spacing(1)
+  },
+  searchInput: {
+    width: theme.spacing(20)
   }
 
 }))
@@ -75,6 +88,7 @@ const HomePage = ():React.ReactElement => {
   const [dirContent, setDirContent] = useState<FileNode[]>([])
   const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
   const [sortMenuAnchor, setSortMenuAnchor] = React.useState(null)
+  const [searchText, setSearchText] = useState<string | undefined>()
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
@@ -144,6 +158,42 @@ const HomePage = ():React.ReactElement => {
       </Menu>
     )
   }
+
+  const renderDisplayMode = () => {
+    return (
+      <>
+        {
+          homeModel.viewType === 'List' &&
+          <AutoSizer>
+            {({
+              height,
+              width
+            }) => (
+              <List
+                width={width}
+                height={height}
+                rowCount={homeModel.currentContent.length}
+                rowHeight={64}
+                rowRenderer={rowRenderer}
+              />
+            )}
+          </AutoSizer>
+        }
+        {
+          homeModel.viewType === 'Medium' &&
+          <MediumView />
+        }
+      </>
+    )
+  }
+
+  const searchContent = () => {
+    if (!searchText) {
+      return
+    }
+    homeModel.setMode('search')
+    homeModel.searchFile(searchText)
+  }
   return (
     <div className={classes.main}>
       {viewTypeMenu()}
@@ -183,17 +233,30 @@ const HomePage = ():React.ReactElement => {
       <div className={classes.container}>
         <AppBar />
         <div className={classes.nav}>
-          <IconButton aria-label="delete" size="small" onClick={() => homeModel.onBack()}>
+          <IconButton aria-label="delete" size="small" onClick={() => {
+            if (homeModel.mode === 'display') {
+              homeModel.onBack()
+              return
+            }
+            homeModel.setMode('display')
+          }}>
             <ArrowBack fontSize="inherit" />
           </IconButton>
-          <Breadcrumbs className={classes.pathBreadcrumbs} separator={appModel.info?.sep}>
+          {
+            homeModel.mode === 'search' && <span>Result in </span>
+          }
+          <Breadcrumbs className={classes.pathBreadcrumbs} separator={appModel.info?.sep} >
             {
               homeModel.getBreadcrumbs().map((it, index) => (
                 <Chip
                   size="small"
                   label={it}
                   key={it}
-                  onClick={() => homeModel.onNavChipClick(index)}
+                  onClick={() => {
+                    if (homeModel.mode === 'display') {
+                      homeModel.onNavChipClick(index)
+                    }
+                  }}
                 />
               ))
             }
@@ -205,30 +268,17 @@ const HomePage = ():React.ReactElement => {
           <IconButton aria-label="delete" size="small" onClick={handleViewTypeMenuClick} className={classes.reload}>
             <Notes fontSize="inherit" />
           </IconButton>
+          <Divider orientation={'vertical'} className={classes.navDivider}/>
+          <div className={classes.searchFile}>
+            <InputBase className={classes.searchInput} onChange={(e) => setSearchText(e.target.value)}/>
+            <IconButton aria-label="delete" size="small" onClick={() => { searchContent() }} className={classes.searchIcon}>
+              <Search fontSize="inherit" />
+            </IconButton>
+          </div>
         </div>
         <div className={classes.fileContent}>
-          {
-            homeModel.viewType === 'List' &&
-            <AutoSizer>
-              {({
-                height,
-                width
-              }) => (
-                <List
-                  width={width}
-                  height={height}
-                  rowCount={homeModel.currentContent.length}
-                  rowHeight={64}
-                  rowRenderer={rowRenderer}
-                />
-              )}
-            </AutoSizer>
-          }
-          {
-
-            homeModel.viewType === 'Medium' &&
-           <MediumView />
-          }
+          {homeModel.mode === 'display' && renderDisplayMode()}
+          {homeModel.mode === 'search' && <SearchView />}
         </div>
       </div>
     </div>

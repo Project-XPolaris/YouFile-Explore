@@ -37,6 +37,7 @@
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
     "@types/styled-components": "^5.1.0",
+    "@types/urijs": "^1.19.14",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^3.4.0",
@@ -98,6 +99,7 @@
     "react-virtualized-tree": "^3.4.1",
     "styled-components": "^5.1.1",
     "umi-request": "^1.3.5",
+    "urijs": "^1.19.5",
     "uuid": "^8.3.2"
   },
   "build": {

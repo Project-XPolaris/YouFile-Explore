@@ -9,6 +9,8 @@ export const ApplicationConfig = {
     fstabMounts: '/fstab/mounts',
     fstabAddMount: '/fstab/mounts',
     fsRemoveMount: '/fstab/mounts',
+    newSearchTask: '/task/search',
+    getTask: '/task/get',
     info: '/info'
   },
   yousmb: {

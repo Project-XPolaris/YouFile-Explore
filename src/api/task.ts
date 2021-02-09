@@ -28,6 +28,16 @@ export interface DeleteFileOutput {
   // eslint-disable-next-line camelcase
   current_delete: string;
 }
+
+export interface SearchFileResult {
+  name:string
+  path:string
+  type:string
+  size:number
+}
+export interface SearchFileOutput {
+  result:SearchFileResult[]
+}
 export interface Task<T> {
   id :string
   type: 'Copy' | 'Delete' | 'Search'
@@ -40,6 +50,24 @@ export const getTaskList = ():Promise<{result:Task<any>[]}> => {
 
 export const stopTask = async (id:string):Promise<any> => {
   return apiRequest.post(ApplicationConfig.apiPaths.stopTask, {
+    params: {
+      taskId: id
+    }
+  })
+}
+
+export const newSearchFileTask = async (rootPath : string, searchKey:string) :Promise<Task<SearchFileOutput>> => {
+  return apiRequest.post(ApplicationConfig.apiPaths.newSearchTask, {
+    params: {
+      searchPath: rootPath,
+      searchKey,
+      limit: 0
+    }
+  })
+}
+
+export const fetchTaskById = async (id:string) :Promise<Task<SearchFileOutput>> => {
+  return apiRequest.post(ApplicationConfig.apiPaths.getTask, {
     params: {
       taskId: id
     }

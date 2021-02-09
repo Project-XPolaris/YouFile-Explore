@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import useHomeModel from '../../model'
+import { FlexGrid } from '../../../../components/FlexGrid'
+import FileItemMedium from '../../../../components/FileItemMedium'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { AutoSizer, Grid } from 'react-virtualized'
-import useHomeModel from './model'
-import FileItemMedium from '../../components/FileItemMedium'
-import { useResizeDetector } from 'react-resize-detector'
-import useFileModel from '../../models/file'
-import { useDebounceEffect, useUpdate } from 'ahooks'
-import { chunk } from 'lodash'
-import { FileNode } from './tree'
 import { Menu, MenuItem } from '@material-ui/core'
 import { Delete, FileCopy } from '@material-ui/icons'
-import { red } from '@material-ui/core/colors'
 import clsx from 'clsx'
-import { FlexGrid } from '../../components/FlexGrid';
+import { FileNode } from '../../tree'
+import useFileModel from '../../../../models/file'
+import { red } from '@material-ui/core/colors'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -24,9 +20,6 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     padding: theme.spacing(2)
   },
-  row: {
-    display: 'flex'
-  },
   menuIcon: {
     marginRight: theme.spacing(2)
   },
@@ -37,19 +30,15 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-
-interface MediumViewPropsType {
-
-}
 type ContextMenuState = {
   x : number
   y : number
   file:FileNode
 }
-export default function MediumView ({ }: MediumViewPropsType) {
-  const classes = useStyles()
+export const SearchFileMediumView = () => {
+  const homeMode = useHomeModel()
   const fileModel = useFileModel()
-  const homeModel = useHomeModel()
+  const classes = useStyles()
   const [contextMenuState, setContextMenuState] = useState<ContextMenuState | undefined>(undefined)
   const handleContextClose = () => {
     setContextMenuState(undefined)
@@ -83,23 +72,24 @@ export default function MediumView ({ }: MediumViewPropsType) {
         }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)}/>Delete</MenuItem>
 
       </Menu>
-      <FlexGrid dataSource={homeModel.currentContent} rowWidth={120} columnHeight={120} itemRender={(it) => {
-        return (
-          <FileItemMedium
-            file={it}
-            key={it.id}
-            className={classes.mediumItem}
-            onDoubleClick={() => {
-              if (it.type === 'Directory') {
-                homeModel.setCurrentPath(it.path)
-              }
-            }}
-            onContextClick={(x, y) => {
-              setContextMenuState({ x, y, file: it })
-            }}
-          />
-        )
-      }} />
+      {
+        homeMode.searchResult &&
+         <FlexGrid dataSource={homeMode.searchResult} rowWidth={120} columnHeight={120} itemRender={(it) => {
+           return (
+             <FileItemMedium
+               file={it}
+               key={it.id}
+               className={classes.mediumItem}
+               onDoubleClick={() => {
+
+               }}
+               onContextClick={(x, y) => {
+                 setContextMenuState({ x, y, file: it })
+               }}
+             />
+           )
+         }}/>
+      }
     </div>
   )
 }

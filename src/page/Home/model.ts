@@ -1,12 +1,13 @@
 import { createModel } from 'hox'
 import { FileItem, readDir } from '../../api/dir'
 import { useEffect, useState } from 'react'
-import { convertSlash } from '../../utils/path'
-import { Node } from 'react-virtualized-tree'
 import { FileNode, FileTree } from './tree'
 import { fetchSmbConfig } from '../../api/yousmb'
 import { useUpdate } from 'ahooks'
 import useAppModel from '../../models/app'
+import { fetchTaskById, newSearchFileTask, SearchFileOutput, SearchFileResult, Task } from '../../api/task'
+import { DefaultApiWebsocket } from '../../api/websocket/client'
+import { NotificationEvent, NotificationMessage } from '../../api/websocket/event'
 
 export interface File {
   id: string
@@ -22,6 +23,7 @@ export const getFileTree = (): FileTree => {
 }
 
 export type ViewType = 'List' | 'Medium';
+export type Mode = 'display' | 'search'
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
 const HomeModel = () => {
   const appModel = useAppModel()
@@ -29,7 +31,30 @@ const HomeModel = () => {
   const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
   const [currentContent, setCurrentContent] = useState<FileNode[]>([])
   const [viewType, setViewType] = useState<ViewType>('Medium')
+  const [mode, setMode] = useState<Mode>('display')
+  const [searchFileTaskId, setSearchFileTaskId] = useState<string | undefined>()
+  const [searchResult, setSearchResult] = useState<SearchFileResult[] | undefined>(undefined)
   const update = useUpdate()
+  const onSearchCompleteHandler = async (event:NotificationMessage) => {
+    const id = event.id
+    console.log(event.id)
+    if (!id) {
+      return
+    }
+    const task :Task<SearchFileOutput> = await fetchTaskById(id)
+    console.log(task)
+    setSearchResult(task.output.result)
+  }
+  DefaultApiWebsocket.connect()
+  DefaultApiWebsocket.addListener('homeModel', {
+    onMessage (data: string) {
+      const event : NotificationMessage = JSON.parse(data)
+      console.log(event)
+      if (event.event === 'SearchTaskComplete') {
+        onSearchCompleteHandler(event)
+      }
+    }
+  })
   const initData = async () => {
     // await fTree.loadByPath(dirPath)
     await appModel.loadInfo()
@@ -85,7 +110,7 @@ const HomeModel = () => {
     if (appModel.info?.sep === undefined) {
       return
     }
-    const parts = getBreadcrumbs().slice(0,index + 1)
+    const parts = getBreadcrumbs().slice(0, index + 1)
     let targetPath = parts.join(appModel.info.sep)
     if (!targetPath.endsWith(appModel.info.sep)) {
       targetPath += appModel.info.sep
@@ -105,7 +130,6 @@ const HomeModel = () => {
     }
     return []
   }
-
   const loadSmbDirs = async () => {
     const response = await fetchSmbConfig()
     console.log(response)
@@ -115,6 +139,13 @@ const HomeModel = () => {
     }))
     setSmbDirs(dirs)
     update()
+  }
+  const searchFile = async (searchKey : string) => {
+    if (!currentPath) {
+      return
+    }
+    const response = await newSearchFileTask(currentPath, searchKey)
+    setSearchFileTaskId(response.id)
   }
   return {
     initData,
@@ -129,7 +160,11 @@ const HomeModel = () => {
     setCurrentPath,
     refresh,
     viewType,
-    setViewType
+    setViewType,
+    mode,
+    setMode,
+    searchResult,
+    searchFile
   }
 }
 const useHomeModel = createModel(HomeModel)

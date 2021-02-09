@@ -17,6 +17,7 @@ import { useUpdate } from 'ahooks'
 import ConfigContent from '../../components/ConfigContent'
 import { useHistory } from 'react-router-dom'
 import useAppModel from '../../models/app'
+import { DefaultApiWebsocket } from '../../api/websocket/client'
 
 export interface StartPagePropsType {
 
@@ -45,6 +46,7 @@ const StartPage = ({}: StartPagePropsType):React.ReactElement => {
     if (currentConfigId) {
       DefaultConfigManager.applyConfig(currentConfigId)
       await appModel.loadInfo()
+      DefaultApiWebsocket.connect()
       history.replace('/home')
     }
   }
