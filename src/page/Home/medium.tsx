@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { AutoSizer, Grid } from 'react-virtualized'
 import useHomeModel from './model'
 import FileItemMedium from '../../components/FileItemMedium'
-import { useResizeDetector } from 'react-resize-detector'
 import useFileModel from '../../models/file'
-import { useDebounceEffect, useUpdate } from 'ahooks'
-import { chunk } from 'lodash'
 import { FileNode } from './tree'
 import { Menu, MenuItem } from '@material-ui/core'
-import { Delete, FileCopy } from '@material-ui/icons'
+import { Delete, Edit, FileCopy } from '@material-ui/icons'
 import { red } from '@material-ui/core/colors'
 import clsx from 'clsx'
-import { FlexGrid } from '../../components/FlexGrid';
+import { FlexGrid } from '../../components/FlexGrid'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -39,14 +35,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface MediumViewPropsType {
-
+  onRename:(file:FileNode) => void
 }
 type ContextMenuState = {
   x : number
   y : number
   file:FileNode
 }
-export default function MediumView ({ }: MediumViewPropsType) {
+export default function MediumView ({ onRename }: MediumViewPropsType):ReactElement {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
@@ -67,10 +63,12 @@ export default function MediumView ({ }: MediumViewPropsType) {
             : undefined
         }
       >
-        <MenuItem >{contextMenuState?.file.name ?? ' '}</MenuItem>
         <MenuItem
           onClick={() => {
             handleContextClose()
+            if (!contextMenuState) {
+              return
+            }
             fileModel.setCopyFile({
               name: contextMenuState?.file.name,
               path: contextMenuState?.file.path
@@ -79,8 +77,18 @@ export default function MediumView ({ }: MediumViewPropsType) {
 
         <MenuItem onClick={() => {
           handleContextClose()
+          if (!contextMenuState?.file.path) {
+            return
+          }
           fileModel.deleteFile([contextMenuState?.file.path])
         }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)}/>Delete</MenuItem>
+        <MenuItem onClick={() => {
+          handleContextClose()
+          if (!contextMenuState?.file) {
+            return
+          }
+          onRename(contextMenuState?.file)
+        }}><Edit className={clsx(classes.menuIcon, classes.copyIcon)}/>Rename</MenuItem>
 
       </Menu>
       <FlexGrid dataSource={homeModel.currentContent} rowWidth={120} columnHeight={120} itemRender={(it) => {
@@ -97,6 +105,7 @@ export default function MediumView ({ }: MediumViewPropsType) {
             onContextClick={(x, y) => {
               setContextMenuState({ x, y, file: it })
             }}
+            contextSelected={contextMenuState?.file.path === it.path}
           />
         )
       }} />

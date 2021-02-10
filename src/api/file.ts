@@ -15,3 +15,11 @@ export const deleteFile = async (list:Array<string>):Promise<any> => {
     }
   })
 }
+
+export const renameFile = async (old : string, newName : string):Promise<void> => {
+  return apiRequest.post(ApplicationConfig.apiPaths.rename, {
+    params: {
+      old, new: newName
+    }
+  })
+}

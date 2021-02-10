@@ -1,13 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles'
 import FileIcon from '../FileIcon'
-import { FileItem } from '../../api/dir'
 import React from 'react'
 import clsx from 'clsx'
-import { Menu, MenuItem } from '@material-ui/core'
 import { FileNode } from '../../page/Home/tree'
 import FolderIcon from '@material-ui/icons/Folder'
-import { red, yellow } from '@material-ui/core/colors'
-import { Delete, FileCopy } from '@material-ui/icons'
+import { yellow } from '@material-ui/core/colors'
 import { useDoubleClick } from '../../hooks/DoubleClick'
 
 const useStyles = makeStyles(theme => ({
@@ -21,6 +18,9 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: 'rgba(0,0,0,0.05)'
     },
     borderRadius: theme.spacing(2)
+  },
+  contextSelected: {
+    backgroundColor: 'rgba(0,0,0,0.05)'
   },
   avatar: {
     backgroundColor: theme.palette.primary.dark
@@ -51,12 +51,13 @@ const initialState = {
   mouseY: null
 }
 const FileItemMedium = ({
-  file, className, onDoubleClick, onContextClick
+  file, className, onDoubleClick, onContextClick, contextSelected = false
 }:{
   file:FileNode,
   className?:any,
   onDoubleClick?:() => void
   onContextClick:(x:number, y:number) => void
+  contextSelected?:boolean
 }):React.ReactElement => {
   const classes = useStyles()
   const hybridClick = useDoubleClick(
@@ -71,7 +72,7 @@ const FileItemMedium = ({
   }
 
   return (
-    <div className={clsx(classes.root, className)} onContextMenu={handleClick} onClick={hybridClick}>
+    <div className={clsx(classes.root, className, contextSelected ? classes.contextSelected : undefined)} onContextMenu={handleClick} onClick={hybridClick}>
       {
         file.type === 'File' && <FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)}/>
       }

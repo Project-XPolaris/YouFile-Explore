@@ -7,19 +7,18 @@ import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
 import 'react-virtualized/styles.css'
-import { ArrowBack, Notes, Refresh, Search, Sort } from '@material-ui/icons'
+import { ArrowBack, Notes, Refresh, Search } from '@material-ui/icons'
 import { FileNode } from './tree'
 import TextInputDialog from '../../components/TextInputDialog'
 import AppBar from './appbar'
 import AddMountDialog from '../../components/AddMoundDialog'
 import useMountModel from '../../models/mount'
 import HomeSide from './side'
-import FileItemMedium from '../../components/FileItemMedium'
 import { AutoSizer, List } from 'react-virtualized'
 import MediumView from './medium'
 import useAppModel from '../../models/app'
 import SearchView from './views/search/search'
-import model from './model'
+import RenameFileDialog from '../../components/RenameFileDialog'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -89,15 +88,28 @@ const HomePage = ():React.ReactElement => {
   const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
   const [sortMenuAnchor, setSortMenuAnchor] = React.useState(null)
   const [searchText, setSearchText] = useState<string | undefined>()
+  const [contextFile, setContextFile] = useState<FileNode | undefined>()
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
   const mountModel = useMountModel()
   const appModel = useAppModel()
+  const [renameDialogOpen, switchRenameDialog] = layoutModel.useDialogController('home/rename')
   useEffect(() => {
     homeModel.initData()
   }, [])
+  const onRename = (file:FileNode) => {
+    setContextFile(file)
+    switchRenameDialog()
+  }
+  const onRenameOk = (name:string) => {
+    if (!contextFile) {
+      return
+    }
+    switchRenameDialog()
+    homeModel.rename(contextFile, name)
+  }
   const rowRenderer = ({ key, index, style }:{key:string, index:number, style:any}) => {
     const item = homeModel.currentContent[index]
     return (
@@ -119,6 +131,7 @@ const HomePage = ():React.ReactElement => {
         onDelete={() => {
           fileModel.deleteFile([item.path])
         }}
+        onRename={() => onRename(item)}
       />
     )
   }
@@ -181,7 +194,7 @@ const HomePage = ():React.ReactElement => {
         }
         {
           homeModel.viewType === 'Medium' &&
-          <MediumView />
+          <MediumView onRename={onRename} />
         }
       </>
     )
@@ -196,6 +209,7 @@ const HomePage = ():React.ReactElement => {
   }
   return (
     <div className={classes.main}>
+      <RenameFileDialog onClose={switchRenameDialog} onOk={onRenameOk} open={renameDialogOpen} file={contextFile} />
       {viewTypeMenu()}
       <AddMountDialog
         onClose={() => layoutModel.switchDialog('home/addMount')}

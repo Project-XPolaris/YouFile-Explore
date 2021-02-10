@@ -2,6 +2,7 @@ export const ApplicationConfig = {
   apiPaths: {
     readdir: '/path/read',
     mkdir: '/path/mkdir',
+    rename: '/path/rename',
     getAllTasks: '/task/all',
     copyFile: '/task/copy',
     deleteFile: '/task/delete',

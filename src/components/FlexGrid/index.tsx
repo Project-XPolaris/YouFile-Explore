@@ -1,10 +1,10 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { red } from '@material-ui/core/colors';
-import { useResizeDetector } from 'react-resize-detector';
-import React, { ReactElement, useEffect, useState } from 'react';
-import { chunk } from 'lodash';
-import { useDebounceEffect } from 'ahooks';
-import { AutoSizer, Grid } from 'react-virtualized';
+import { makeStyles } from '@material-ui/core/styles'
+import { red } from '@material-ui/core/colors'
+import { useResizeDetector } from 'react-resize-detector'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { chunk } from 'lodash'
+import { useDebounceEffect } from 'ahooks'
+import { AutoSizer, Grid } from 'react-virtualized'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -27,6 +27,9 @@ const useStyles = makeStyles(theme => ({
   },
   deleteIcon: {
     color: red['500']
+  },
+  grid: {
+    outline: 'none'
   }
 }))
 export interface FlexGridProp {
@@ -94,6 +97,7 @@ export const FlexGrid = ({ dataSource, rowWidth, itemRender, columnHeight }:Flex
             rowCount={gridData?.length ?? 0}
             rowHeight={columnHeight}
             width={width}
+            className={classes.grid}
           />
         )}
       </AutoSizer>

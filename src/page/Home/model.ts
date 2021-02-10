@@ -6,15 +6,17 @@ import { fetchSmbConfig } from '../../api/yousmb'
 import { useUpdate } from 'ahooks'
 import useAppModel from '../../models/app'
 import {
-  CopyFileOutput, DeleteFileOutput,
+  CopyFileOutput,
+  DeleteFileOutput,
   fetchTaskById,
   newSearchFileTask,
   SearchFileOutput,
   SearchFileResult,
-  Task,
+  Task
 } from '../../api/task'
 import { DefaultApiWebsocket } from '../../api/websocket/client'
-import { NotificationEvent, NotificationMessage } from '../../api/websocket/event'
+import { NotificationMessage } from '../../api/websocket/event'
+import { renameFile } from '../../api/file'
 
 export interface File {
   id: string
@@ -194,6 +196,11 @@ const HomeModel = () => {
     const response = await newSearchFileTask(currentPath, searchKey)
     setSearchFileTaskId(response.id)
   }
+  const rename = async (file:FileNode, name:string) => {
+    const renamePath = [currentPath, name].join(appModel.info?.sep)
+    await renameFile(file.path, renamePath)
+    await loadContent()
+  }
   return {
     initData,
     loadFile,
@@ -211,7 +218,8 @@ const HomeModel = () => {
     mode,
     setMode,
     searchResult,
-    searchFile
+    searchFile,
+    rename
   }
 }
 const useHomeModel = createModel(HomeModel)
