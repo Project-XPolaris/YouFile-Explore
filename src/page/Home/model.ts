@@ -204,6 +204,7 @@ const HomeModel = () => {
   return {
     initData,
     loadFile,
+    loadContent,
     currentPath,
     getBreadcrumbs,
     onBack,

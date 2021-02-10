@@ -1,19 +1,22 @@
 import { createModel } from 'hox'
 import { useState } from 'react'
-import { copyFile as copyFileService, deleteFile as deleteFileService } from '../api/file'
+import { copyFile as copyFileService, deleteFile as deleteFileService, renameFile } from '../api/file'
 import useHomeModel from '../page/Home/model'
 import { createSMBFolder } from '../api/yousmb'
 import { undefinedOrString } from '../utils/string'
 import { booleanToYesNo } from '../utils/boolean'
 import { createDirectory } from '../api/dir'
 import { convertPath } from '../utils/path'
+import useAppModel from './app'
 export interface CopyFile {
   name : string
   path:string
 }
 const FileModel = () => {
   const [copyFile, setCopyFile] = useState<CopyFile | undefined>()
+  const [moveFile, setMoveFile] = useState<CopyFile | undefined>()
   const homeModel = useHomeModel()
+  const appModel = useAppModel()
   const pasteFile = () => {
     if (copyFile && homeModel.currentPath) {
       copyFileService([
@@ -22,6 +25,13 @@ const FileModel = () => {
           dest: `${homeModel.currentPath}/${copyFile.name}`
         }
       ])
+    }
+  }
+  const move = async () => {
+    if (moveFile && homeModel.currentPath && appModel.info) {
+      const movePath = [homeModel.currentPath, moveFile.name].join(appModel.info.sep)
+      await renameFile(moveFile.path, movePath)
+      await homeModel.loadContent()
     }
   }
   const addSMBFolder = async (data:any) => {
@@ -56,7 +66,7 @@ const FileModel = () => {
     }
   }
   return {
-    copyFile, setCopyFile, pasteFile, addSMBFolder, mkdir, deleteFile
+    copyFile, setCopyFile, pasteFile, addSMBFolder, mkdir, deleteFile, moveFile, setMoveFile, move
   }
 }
 

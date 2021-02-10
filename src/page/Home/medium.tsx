@@ -5,7 +5,7 @@ import FileItemMedium from '../../components/FileItemMedium'
 import useFileModel from '../../models/file'
 import { FileNode } from './tree'
 import { Menu, MenuItem } from '@material-ui/core'
-import { Delete, Edit, FileCopy } from '@material-ui/icons'
+import { Delete, Edit, ExitToApp, FileCopy } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors'
 import clsx from 'clsx'
 import { FlexGrid } from '../../components/FlexGrid'
@@ -89,6 +89,16 @@ export default function MediumView ({ onRename }: MediumViewPropsType):ReactElem
           }
           onRename(contextMenuState?.file)
         }}><Edit className={clsx(classes.menuIcon, classes.copyIcon)}/>Rename</MenuItem>
+        <MenuItem onClick={() => {
+          handleContextClose()
+          if (!contextMenuState?.file) {
+            return
+          }
+          fileModel.setMoveFile({
+            name: contextMenuState?.file.name,
+            path: contextMenuState?.file.path
+          })
+        }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)}/>Move</MenuItem>
 
       </Menu>
       <FlexGrid dataSource={homeModel.currentContent} rowWidth={120} columnHeight={120} itemRender={(it) => {
