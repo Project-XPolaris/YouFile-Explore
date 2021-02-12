@@ -5,7 +5,7 @@ import FileItemMedium from '../../../../components/FileItemMedium'
 import React from 'react'
 import FileItem from '../../../../components/FileItem'
 import { AutoSizer, List } from 'react-virtualized'
-import useFileModel from '../../../../models/file';
+import useFileModel from '../../../../models/file'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -23,10 +23,7 @@ export const SearchFileListView = () => {
   const fileModel = useFileModel()
   const classes = useStyles()
   const rowRenderer = ({ key, index, style }:{key:string, index:number, style:any}) => {
-    if (!homeModel.searchResult){
-      return
-    }
-    const item : any = homeModel.searchResult[index]
+    const item : any = homeModel.getSearchResult()[index]
     return (
       <FileItem
         file={item}
@@ -47,26 +44,23 @@ export const SearchFileListView = () => {
       />
     )
   }
-
   return (
     <div className={classes.main}>
-      {
-        homeModel.searchResult &&
-        <AutoSizer>
-          {({
-            height,
-            width
-          }) => (
-            <List
-              width={width}
-              height={height}
-              rowCount={homeModel.searchResult?.length ?? 0}
-              rowHeight={64}
-              rowRenderer={rowRenderer}
-            />
-          )}
-        </AutoSizer>
-      }
+
+      <AutoSizer>
+        {({
+          height,
+          width
+        }) => (
+          <List
+            width={width}
+            height={height}
+            rowCount={homeModel.getSearchResult()?.length ?? 0}
+            rowHeight={64}
+            rowRenderer={rowRenderer}
+          />
+        )}
+      </AutoSizer>
     </div>
   )
 }

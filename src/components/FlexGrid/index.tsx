@@ -60,7 +60,7 @@ export const FlexGrid = ({ dataSource, rowWidth, itemRender, columnHeight }:Flex
     },
     [width],
     {
-      wait: 1000
+      wait: 200
     }
   )
 

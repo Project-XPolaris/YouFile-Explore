@@ -12,7 +12,8 @@ import { red } from '@material-ui/core/colors'
 
 const useStyles = makeStyles(theme => ({
   main: {
-    width: '100%', height: '100%'
+    width: '100%', height: '100%',
+    backgroundColor: '#EEEEEE'
   },
   mediumItem: {
     width: 120,
@@ -43,6 +44,7 @@ export const SearchFileMediumView = () => {
   const handleContextClose = () => {
     setContextMenuState(undefined)
   }
+  console.log(homeMode.getSearchResult())
   return (
     <div className={classes.main}>
       <Menu
@@ -56,7 +58,6 @@ export const SearchFileMediumView = () => {
             : undefined
         }
       >
-        <MenuItem >{contextMenuState?.file.name ?? ' '}</MenuItem>
         <MenuItem
           onClick={() => {
             handleContextClose()
@@ -72,24 +73,23 @@ export const SearchFileMediumView = () => {
         }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)}/>Delete</MenuItem>
 
       </Menu>
-      {
-        homeMode.searchResult &&
-         <FlexGrid dataSource={homeMode.searchResult} rowWidth={120} columnHeight={120} itemRender={(it) => {
-           return (
-             <FileItemMedium
-               file={it}
-               key={it.id}
-               className={classes.mediumItem}
-               onDoubleClick={() => {
+      <FlexGrid dataSource={homeMode.getSearchResult()} rowWidth={120} columnHeight={120} itemRender={(it) => {
+        return (
+          <FileItemMedium
+            file={it}
+            key={it.id}
+            className={classes.mediumItem}
+            onDoubleClick={() => {
 
-               }}
-               onContextClick={(x, y) => {
-                 setContextMenuState({ x, y, file: it })
-               }}
-             />
-           )
-         }}/>
-      }
+            }}
+            onContextClick={(x, y) => {
+              setContextMenuState({ x, y, file: it })
+            }}
+            contextSelected={contextMenuState?.file.path === it.path}
+          />
+        )
+      }}/>
+
     </div>
   )
 }

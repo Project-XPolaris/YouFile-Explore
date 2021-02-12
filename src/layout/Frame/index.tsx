@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.spacing(2)
   },
   content: {
-    paddingTop: theme.spacing(4),
     height: '100vh',
     width: '100vw',
   },
@@ -100,20 +99,20 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
         onClose={() => layoutModel.switchDialog('global/taskDrawer')}
         open={layoutModel.dialogs['global/taskDrawer']}
       />
-      <div className={classes.header}>
-        <div className={classes.status}>
-          <div className={classes.dragZone} />
-          <IconButton size='small' className={classes.windowAction} onClick={onMin}>
-            <MinimizeSharpIcon className={classes.actionIcon} />
-          </IconButton>
-          <IconButton size='small' className={classes.windowAction} onClick={onMax}>
-            <CheckBoxOutlineBlankSharpIcon className={classes.actionIcon} />
-          </IconButton>
-          <IconButton size='small' className={classes.windowAction} onClick={onClose}>
-            <ClearSharpIcon className={classes.actionIcon} />
-          </IconButton>
-        </div>
-      </div>
+      {/*<div className={classes.header}>*/}
+      {/*  <div className={classes.status}>*/}
+      {/*    <div className={classes.dragZone} />*/}
+      {/*    <IconButton size='small' className={classes.windowAction} onClick={onMin}>*/}
+      {/*      <MinimizeSharpIcon className={classes.actionIcon} />*/}
+      {/*    </IconButton>*/}
+      {/*    <IconButton size='small' className={classes.windowAction} onClick={onMax}>*/}
+      {/*      <CheckBoxOutlineBlankSharpIcon className={classes.actionIcon} />*/}
+      {/*    </IconButton>*/}
+      {/*    <IconButton size='small' className={classes.windowAction} onClick={onClose}>*/}
+      {/*      <ClearSharpIcon className={classes.actionIcon} />*/}
+      {/*    </IconButton>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
       <div className={classes.content}>
         {children}
       </div>

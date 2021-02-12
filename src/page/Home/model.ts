@@ -3,7 +3,7 @@ import { FileItem, readDir } from '../../api/dir'
 import { useEffect, useState } from 'react'
 import { FileNode, FileTree } from './tree'
 import { fetchSmbConfig } from '../../api/yousmb'
-import { useUpdate } from 'ahooks'
+import { useDynamicList, useUpdate } from 'ahooks'
 import useAppModel from '../../models/app'
 import {
   CopyFileOutput,
@@ -17,6 +17,7 @@ import {
 import { DefaultApiWebsocket } from '../../api/websocket/client'
 import { NotificationMessage } from '../../api/websocket/event'
 import { renameFile } from '../../api/file'
+import { useTabsController } from './hooks/tab'
 
 export interface File {
   id: string
@@ -30,7 +31,10 @@ const fTree = new FileTree()
 export const getFileTree = (): FileTree => {
   return fTree
 }
-
+export interface SearchResult {
+  id:string
+  result:SearchFileResult[]
+}
 export type ViewType = 'List' | 'Medium';
 export type Mode = 'display' | 'search'
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
@@ -41,8 +45,22 @@ const HomeModel = () => {
   const [currentContent, setCurrentContent] = useState<FileNode[]>([])
   const [viewType, setViewType] = useState<ViewType>('Medium')
   const [mode, setMode] = useState<Mode>('display')
-  const [searchFileTaskId, setSearchFileTaskId] = useState<string | undefined>()
-  const [searchResult, setSearchResult] = useState<SearchFileResult[] | undefined>(undefined)
+  const [searchResult, setSearchResult] = useState<SearchResult[]>([])
+  const [searchId, setSearchId] = useState<string | undefined>()
+  const tabController = useTabsController({
+    onTabChange: (tab) => {
+      console.log(tab)
+      switch (tab.type) {
+        case 'Explore':
+          setMode('display')
+          setCurrentPath(tab.path)
+          break
+        case 'Search':
+          setMode('search')
+          setSearchId(tab.id)
+      }
+    }
+  })
   const update = useUpdate()
   const onSearchCompleteHandler = async (event:NotificationMessage) => {
     const id = event.id
@@ -52,7 +70,15 @@ const HomeModel = () => {
     }
     const task :Task<SearchFileOutput> = await fetchTaskById(id)
     console.log(task)
-    setSearchResult(task.output.result)
+    setSearchResult(searchResult.map(it => {
+      if (it.id === task.id) {
+        return {
+          ...it,
+          result: task.output.result
+        }
+      }
+      return it
+    }))
   }
   const onCopyFileCompleteHandler = async (event:NotificationMessage) => {
     const id = event.id
@@ -120,18 +146,22 @@ const HomeModel = () => {
     }
   }
   const loadContent = async () => {
-    let fetchPath = currentPath
-    if (fetchPath === undefined) {
-      fetchPath = appModel.info?.root_paths[0].path
-    }
-    if (fetchPath === undefined) {
+    if (currentPath === undefined) {
+      setCurrentContent([])
       return
     }
-    const response = await readDir(fetchPath)
+    const response = await readDir(currentPath)
     setCurrentContent(response.map(it => generateNode(it)))
   }
   useEffect(() => {
     loadContent()
+    const root = appModel?.info?.root_paths.find(it => it.path === currentPath)
+    if (root) {
+      tabController.setCurrentTabFolder(root.name, currentPath)
+    } else {
+      const parts = getBreadcrumbs()
+      tabController.setCurrentTabFolder(parts.pop() ?? 'new tab', currentPath)
+    }
   }, [currentPath])
   const refresh = () => {
     loadContent()
@@ -181,7 +211,6 @@ const HomeModel = () => {
   }
   const loadSmbDirs = async () => {
     const response = await fetchSmbConfig()
-    console.log(response)
     const dirs: { name: string, path: string }[] = response.sections.filter(it => ignoreSmbSectionNames.find(ignoreName => ignoreName === it.name) === undefined).map(dir => ({
       name: dir.name,
       path: dir.fields.path
@@ -194,13 +223,35 @@ const HomeModel = () => {
       return
     }
     const response = await newSearchFileTask(currentPath, searchKey)
-    setSearchFileTaskId(response.id)
+    console.log(response)
+    searchResult.push({
+      id: response.id,
+      result: []
+    })
+    setSearchResult([...searchResult])
+    tabController.newSearchTab(getBreadcrumbs().pop() ?? '', response.id)
   }
   const rename = async (file:FileNode, name:string) => {
     const renamePath = [currentPath, name].join(appModel.info?.sep)
     await renameFile(file.path, renamePath)
     await loadContent()
   }
+  const getSearchResult = ():SearchFileResult[] => {
+    console.log(searchId)
+    if (!searchId) {
+      return []
+    }
+    const result = searchResult.find(it => it.id === searchId)
+    console.log(result)
+    console.log(searchResult)
+    if (result) {
+      return result.result
+    }
+    return []
+  }
+  useEffect(() => {
+    console.log(searchResult)
+  },[searchResult])
   return {
     initData,
     loadFile,
@@ -220,7 +271,10 @@ const HomeModel = () => {
     setMode,
     searchResult,
     searchFile,
-    rename
+    rename,
+    tabController,
+    searchId,
+    getSearchResult
   }
 }
 const useHomeModel = createModel(HomeModel)

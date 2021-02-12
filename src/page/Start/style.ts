@@ -12,9 +12,10 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.primary.contrastText
     },
     content: {
-      height: 'calc(100vh - 32px - 64px)',
+      height: '100vh',
       width: '100vw',
-      display: 'flex'
+      display: 'flex',
+      paddingTop: theme.spacing(4)
     },
     side: {
       width: theme.spacing(35),

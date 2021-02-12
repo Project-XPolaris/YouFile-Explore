@@ -1,14 +1,14 @@
 import React, { ReactElement, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import useHomeModel from './model'
-import FileItemMedium from '../../components/FileItemMedium'
-import useFileModel from '../../models/file'
-import { FileNode } from './tree'
+import useHomeModel from '../../model'
+import FileItemMedium from '../../../../components/FileItemMedium'
+import useFileModel from '../../../../models/file'
+import { FileNode } from '../../tree'
 import { Menu, MenuItem } from '@material-ui/core'
-import { Delete, Edit, ExitToApp, FileCopy } from '@material-ui/icons';
+import { Delete, Edit, ExitToApp, FileCopy } from '@material-ui/icons'
 import { red } from '@material-ui/core/colors'
 import clsx from 'clsx'
-import { FlexGrid } from '../../components/FlexGrid'
+import { FlexGrid } from '../../../../components/FlexGrid'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -109,6 +109,7 @@ export default function MediumView ({ onRename }: MediumViewPropsType):ReactElem
             className={classes.mediumItem}
             onDoubleClick={() => {
               if (it.type === 'Directory') {
+                homeModel.tabController.setCurrentTabFolder(it.name, it.path)
                 homeModel.setCurrentPath(it.path)
               }
             }}

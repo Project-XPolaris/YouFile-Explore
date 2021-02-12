@@ -15,32 +15,20 @@ import AddMountDialog from '../../components/AddMoundDialog'
 import useMountModel from '../../models/mount'
 import HomeSide from './side'
 import { AutoSizer, List } from 'react-virtualized'
-import MediumView from './medium'
+import MediumView from './views/explore/medium'
 import useAppModel from '../../models/app'
 import SearchView from './views/search/search'
 import RenameFileDialog from '../../components/RenameFileDialog'
+import HomeTitleBar from './titlebar'
+import HomeToolbar from './views/explore/toolbar'
+import ExploreView from './views/explore'
+import SearchToolbar from './views/search/toolbar'
 
 const useStyles = makeStyles((theme) => ({
   main: {
-    display: 'flex',
-    flexDirection: 'row',
-    height: '100%'
+
   },
-  side: {
-    backgroundColor: 'white',
-    height: '100%',
-    width: 240,
-    overflowY: 'auto'
-  },
-  container: {
-    backgroundColor: '#EEEEEE',
-    width: '100%',
-    overflowX: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: theme.spacing(8),
-    overflowY: 'auto'
-  },
+
   nav: {
     width: '100%',
     height: theme.spacing(4),
@@ -61,10 +49,7 @@ const useStyles = makeStyles((theme) => ({
   reload: {
 
   },
-  fileContent: {
-    width: '100%',
-    flex: '1 1'
-  },
+
   pathBreadcrumbs: {
     marginLeft: theme.spacing(2),
     flex: 1,
@@ -79,14 +64,17 @@ const useStyles = makeStyles((theme) => ({
   },
   searchInput: {
     width: theme.spacing(20)
+  },
+  contentContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: '100vh',
+    paddingTop: theme.spacing(13)
   }
 
 }))
 
 const HomePage = ():React.ReactElement => {
-  const [dirContent, setDirContent] = useState<FileNode[]>([])
-  const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
-  const [sortMenuAnchor, setSortMenuAnchor] = React.useState(null)
   const [searchText, setSearchText] = useState<string | undefined>()
   const [contextFile, setContextFile] = useState<FileNode | undefined>()
   const classes = useStyles()
@@ -110,31 +98,7 @@ const HomePage = ():React.ReactElement => {
     switchRenameDialog()
     homeModel.rename(contextFile, name)
   }
-  const rowRenderer = ({ key, index, style }:{key:string, index:number, style:any}) => {
-    const item = homeModel.currentContent[index]
-    return (
-      <FileItem
-        file={item}
-        key={key}
-        style={style}
-        onClick={() => {
-          if (item.type === 'Directory') {
-            homeModel.setCurrentPath(item.path)
-          }
-        }}
-        onCopy={() => {
-          fileModel.setCopyFile({
-            name: item.name,
-            path: item.path
-          })
-        }}
-        onDelete={() => {
-          fileModel.deleteFile([item.path])
-        }}
-        onRename={() => onRename(item)}
-      />
-    )
-  }
+
   const onSwitchCreateDirectoryDialog = () => {
     layoutModel.switchDialog('home/createDirectory')
   }
@@ -143,74 +107,12 @@ const HomePage = ():React.ReactElement => {
     onSwitchCreateDirectoryDialog()
   }
 
-  const handleViewTypeMenuClick = (event:any) => {
-    setViewTypeMenuAnchor(event.currentTarget)
-  }
-
-  const handleViewTypeMenuClose = () => {
-    setViewTypeMenuAnchor(null)
-  }
-
-  const viewTypeMenu = () => {
-    return (
-      <Menu
-        id="viewTypeMenu"
-        anchorEl={viewTypeMenuAnchor}
-        keepMounted
-        open={Boolean(viewTypeMenuAnchor)}
-        onClose={handleViewTypeMenuClose}
-      >
-        <MenuItem onClick={() => {
-          homeModel.setViewType('List')
-          handleViewTypeMenuClose()
-        }}>List</MenuItem>
-        <MenuItem onClick={() => {
-          homeModel.setViewType('Medium')
-          handleViewTypeMenuClose()
-        }}>Medium Icon</MenuItem>
-      </Menu>
-    )
-  }
-
-  const renderDisplayMode = () => {
-    return (
-      <>
-        {
-          homeModel.viewType === 'List' &&
-          <AutoSizer>
-            {({
-              height,
-              width
-            }) => (
-              <List
-                width={width}
-                height={height}
-                rowCount={homeModel.currentContent.length}
-                rowHeight={64}
-                rowRenderer={rowRenderer}
-              />
-            )}
-          </AutoSizer>
-        }
-        {
-          homeModel.viewType === 'Medium' &&
-          <MediumView onRename={onRename} />
-        }
-      </>
-    )
-  }
-
-  const searchContent = () => {
-    if (!searchText) {
-      return
-    }
-    homeModel.setMode('search')
-    homeModel.searchFile(searchText)
-  }
   return (
     <div className={classes.main}>
+      <HomeTitleBar />
+      {homeModel.mode === 'display' && <HomeToolbar />}
+      {homeModel.mode === 'search' && <SearchToolbar />}
       <RenameFileDialog onClose={switchRenameDialog} onOk={onRenameOk} open={renameDialogOpen} file={contextFile} />
-      {viewTypeMenu()}
       <AddMountDialog
         onClose={() => layoutModel.switchDialog('home/addMount')}
         open={Boolean(layoutModel.dialogs['home/addMount'])}
@@ -239,62 +141,16 @@ const HomePage = ():React.ReactElement => {
         label="Directory name"
         open={layoutModel.dialogs['home/createDirectory']}
       />
-      <Paper elevation={2}>
-        <div className={classes.side}>
-          <HomeSide />
-        </div>
-      </Paper>
-      <div className={classes.container}>
-        <AppBar />
-        <div className={classes.nav}>
-          <IconButton aria-label="delete" size="small" onClick={() => {
-            if (homeModel.mode === 'display') {
-              homeModel.onBack()
-              return
-            }
-            homeModel.setMode('display')
-          }}>
-            <ArrowBack fontSize="inherit" />
-          </IconButton>
-          {
-            homeModel.mode === 'search' && <span>Result in </span>
-          }
-          <Breadcrumbs className={classes.pathBreadcrumbs} separator={appModel.info?.sep} >
-            {
-              homeModel.getBreadcrumbs().map((it, index) => (
-                <Chip
-                  size="small"
-                  label={it}
-                  key={it}
-                  onClick={() => {
-                    if (homeModel.mode === 'display') {
-                      homeModel.onNavChipClick(index)
-                    }
-                  }}
-                />
-              ))
-            }
-          </Breadcrumbs>
-          <IconButton aria-label="delete" size="small" onClick={() => homeModel.refresh()} className={classes.reload}>
-            <Refresh fontSize="inherit" />
-          </IconButton>
-          <Divider orientation={'vertical'} className={classes.navDivider}/>
-          <IconButton aria-label="delete" size="small" onClick={handleViewTypeMenuClick} className={classes.reload}>
-            <Notes fontSize="inherit" />
-          </IconButton>
-          <Divider orientation={'vertical'} className={classes.navDivider}/>
-          <div className={classes.searchFile}>
-            <InputBase className={classes.searchInput} onChange={(e) => setSearchText(e.target.value)}/>
-            <IconButton aria-label="delete" size="small" onClick={() => { searchContent() }} className={classes.searchIcon}>
-              <Search fontSize="inherit" />
-            </IconButton>
-          </div>
-        </div>
-        <div className={classes.fileContent}>
-          {homeModel.mode === 'display' && renderDisplayMode()}
-          {homeModel.mode === 'search' && <SearchView />}
-        </div>
+
+      <div className={classes.contentContainer}>
+        {
+          homeModel.mode === 'display' && <ExploreView onRename={onRename} />
+        }
+        {
+          homeModel.mode === 'search' && <SearchView />
+        }
       </div>
+
     </div>
   )
 }

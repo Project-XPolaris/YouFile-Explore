@@ -3,10 +3,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-
+      backgroundColor: 'transparent',
     },
     paper: {
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent !important',
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       '&::-webkit-scrollbar': {

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import useStyles from './style'
 import {
-  AppBar,
-  Fab, IconButton,
+  Fab,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-  Toolbar,
-  Typography
 } from '@material-ui/core'
 import { DefaultConfigManager } from '../../store/config'
 import { Add, Delete, Link, Settings } from '@material-ui/icons'
@@ -18,6 +16,7 @@ import ConfigContent from '../../components/ConfigContent'
 import { useHistory } from 'react-router-dom'
 import useAppModel from '../../models/app'
 import { DefaultApiWebsocket } from '../../api/websocket/client'
+import StartTitleBar from './titlebar'
 
 export interface StartPagePropsType {
 
@@ -56,13 +55,7 @@ const StartPage = ({}: StartPagePropsType):React.ReactElement => {
   }
   return (
     <div className={classes.root}>
-      <AppBar position="static" elevation={0}>
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Start
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <StartTitleBar />
       <div className={classes.content}>
         <div className={classes.side}>
           <List>

@@ -9,8 +9,7 @@ import useAppModel from '../../models/app'
 const useStyles = makeStyles(theme => ({
   main: {
     width: '100%',
-    height: 'calc(100% - 64px)',
-    marginTop: 64
+    height: 'calc(100% - 64px)'
   }
 }))
 
@@ -24,7 +23,10 @@ const HomeSide = (): React.ReactElement => {
         {
           appModel.info?.root_paths?.map(it => {
             return (
-              <ListItem id={it.path} button onClick={() => homeModel.setCurrentPath(it.path)}>
+              <ListItem id={it.path} button onClick={() => {
+                homeModel.setCurrentPath(it.path)
+                homeModel.tabController.setCurrentTabFolder(it.name, it.path)
+              }}>
                 <ListItemIcon>
                   <Folder />
                 </ListItemIcon>

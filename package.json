@@ -103,9 +103,16 @@
     "uuid": "^8.3.2"
   },
   "build": {
-    "appId": "your.id",
+    "appId": "projectxpolaris.youfile",
     "mac": {
-      "category": "public.app-category.video"
+      "category": "public.app-category.video",
+      "icon": "build/mac/icon.icns"
+    },
+    "win": {
+      "icon": "build/win/icon.ico"
+    },
+    "linux": {
+      "icon": "build/icon.png"
     },
     "directories": {
       "output": "packages"
