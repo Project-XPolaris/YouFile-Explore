@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: theme.spacing(2),
       right: theme.spacing(2)
     },
-    fabIcon:{
+    fabIcon: {
       marginRight: theme.spacing(2)
     }
   })

@@ -28,8 +28,8 @@ class ApiWebsocket {
     console.log(connectUri)
     this.socket = new WebSocket(connectUri)
     this.socket.addEventListener('message', function (event) {
-      console.log('Message from server ', event.data);
-    });
+      console.log('Message from server ', event.data)
+    })
     this.socket.onmessage = (ev) => {
       console.log(ev)
       this.notifyAll(ev.data)

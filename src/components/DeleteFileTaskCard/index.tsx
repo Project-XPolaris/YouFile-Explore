@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, IconButton, LinearProgress, Menu, MenuItem, Paper } from '@material-ui/core'
 import theme from '../../theme'
 import clsx from 'clsx'
-import { Delete, FileCopy, MoreVert } from '@material-ui/icons'
-import { CopyFileOutput, DeleteFileOutput, Task } from '../../api/task'
+import { Delete, MoreVert } from '@material-ui/icons'
+import { DeleteFileOutput, Task } from '../../api/task'
 import { fileSize } from 'humanize-plus'
 import { getPathBasename } from '../../utils/path'
+
 const useStyles = makeStyles({
   main: {
     width: '100%',

@@ -1,12 +1,7 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar as MAppBar, IconButton, Menu, Toolbar, Typography } from '@material-ui/core'
-import PopoverImageButton from '../PopoverImageButton'
-import { ArrowBack, FileCopy, ListAlt, MoreVert } from '@material-ui/icons'
-import CopyPopover from '../../layout/Frame/parts/CopyPopover'
-import useFileModel from '../../models/file'
-import useLayoutModel from '../../models/layout'
-import { useHistory } from 'react-router-dom'
+import { AppBar as MAppBar, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { ArrowBack, MoreVert } from '@material-ui/icons'
 import { ApplicationBarController } from './hook'
 
 const useStyles = makeStyles((theme) => ({
@@ -26,9 +21,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface ApplicationBarPropsType {
-  title?:any
-  actions?:any
-  moreMenu?:any
+  title?:string
+  actions?:ReactElement
+  moreMenu?:ReactElement
   controller:ApplicationBarController
   onBack?:() => void,
   className?:any

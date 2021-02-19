@@ -1,7 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import useHomeModel, { getFileTree } from './model'
-import { Expandable } from 'react-virtualized-tree'
+import useHomeModel from './model'
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core'
 import { Folder } from '@material-ui/icons'
 import useAppModel from '../../models/app'
@@ -23,7 +22,7 @@ const HomeSide = (): React.ReactElement => {
         {
           appModel.info?.root_paths?.map(it => {
             return (
-              <ListItem id={it.path} button onClick={() => {
+              <ListItem id={it.path} key={it.path} button onClick={() => {
                 homeModel.setCurrentPath(it.path)
                 homeModel.tabController.setCurrentTabFolder(it.name, it.path)
               }}>

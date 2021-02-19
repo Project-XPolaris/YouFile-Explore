@@ -1,10 +1,8 @@
-import React, { ReactElement, ReactNode } from 'react'
+import React, { ReactElement } from 'react'
 import FileItem from '../../../../components/FileItem'
 import useHomeModel from '../../model'
-import useFileModel from '../../../../models/file'
 import { AutoSizer, List } from 'react-virtualized'
 import { FileNode } from '../../tree'
-import { Menu } from '@material-ui/core'
 import useFileContextMenu from '../../hooks/fileContentMenu'
 import FileContextMenu from './menu'
 
@@ -14,7 +12,6 @@ export interface ExploreListViewPropsType {
 
 const ExploreListView = ({ onRename }: ExploreListViewPropsType) : ReactElement => {
   const homeModel = useHomeModel()
-  const fileModel = useFileModel()
   const fileContextMenuController = useFileContextMenu()
 
   const rowRenderer = ({

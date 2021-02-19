@@ -1,5 +1,6 @@
 import { useDynamicList } from 'ahooks'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+
 export type TabType = 'Explore' | 'Search'
 export interface TabItem {
   path : string | undefined
@@ -61,7 +62,7 @@ export const useTabsController = ({ onTabChange }:{onTabChange:(tab:TabItem) => 
     })
     tabsListController.resetList(newList)
   }
-  const openNewExploreByPath = (name:string,path:string) => {
+  const openNewExploreByPath = (name:string, path:string) => {
     const newList = tabsListController.list.map(it => {
       return {
         ...it,

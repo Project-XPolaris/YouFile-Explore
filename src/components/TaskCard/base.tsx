@@ -3,12 +3,11 @@ import CopyFileTaskCard from '../CopyFileTaskCard'
 import React from 'react'
 import DeleteFileTaskCard from '../DeleteFileTaskCard'
 
-
 export const TaskCard = ({
   task,
   className,
   cardProps
-}: { task: Task<any>, className?: any,cardProps:any }) => {
+}: { task: Task<any>, className?: any, cardProps:any }) => {
   switch (task.type) {
     case 'Copy':
       return (

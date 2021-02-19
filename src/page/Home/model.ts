@@ -1,9 +1,9 @@
 import { createModel } from 'hox'
 import { FileItem, readDir } from '../../api/dir'
 import { useEffect, useState } from 'react'
-import { FileNode, FileTree } from './tree'
+import { FileNode } from './tree'
 import { fetchSmbConfig } from '../../api/yousmb'
-import { useDynamicList, useUpdate } from 'ahooks'
+import { useUpdate } from 'ahooks'
 import useAppModel from '../../models/app'
 import {
   CopyFileOutput,
@@ -19,17 +19,6 @@ import { NotificationMessage } from '../../api/websocket/event'
 import { renameFile } from '../../api/file'
 import { useTabsController } from './hooks/tab'
 
-export interface File {
-  name: string
-  path: string
-  type: string
-  children: File[] | undefined
-}
-
-const fTree = new FileTree()
-export const getFileTree = (): FileTree => {
-  return fTree
-}
 export interface SearchResult {
   id:string
   result:SearchFileResult[]
@@ -235,13 +224,10 @@ const HomeModel = () => {
     await loadContent()
   }
   const getSearchResult = ():SearchFileResult[] => {
-    console.log(searchId)
     if (!searchId) {
       return []
     }
     const result = searchResult.find(it => it.id === searchId)
-    console.log(result)
-    console.log(searchResult)
     if (result) {
       return result.result
     }

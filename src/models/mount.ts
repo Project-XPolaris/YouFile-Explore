@@ -39,7 +39,7 @@ const MountModel = () => {
     setMountList(mounts)
   }
   return {
-    mount, loadMounts, mountList,removeMount
+    mount, loadMounts, mountList, removeMount
   }
 }
 

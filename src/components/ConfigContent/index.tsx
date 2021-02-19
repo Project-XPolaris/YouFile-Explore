@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, ListItem, Paper, Typography } from '@material-ui/core'
+import { List, Paper, Typography } from '@material-ui/core'
 import TextInputOption from './conponents/TextInputOption'
 import { ConnectionConfig } from '../../store/config'
 import { Language, Settings } from '@material-ui/icons'

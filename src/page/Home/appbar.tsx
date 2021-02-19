@@ -1,17 +1,16 @@
 import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { IconButton, Menu, MenuItem, Toolbar, Typography, AppBar as MAppBar, Divider } from '@material-ui/core'
+import { Divider, IconButton, Menu, MenuItem } from '@material-ui/core'
 import PopoverImageButton from '../../components/PopoverImageButton'
-import { CreateNewFolder, ExitToApp, FileCopy, FlashOn, Launch, ListAlt, MoreVert, Storage } from '@material-ui/icons';
+import { CreateNewFolder, ExitToApp, FileCopy, FlashOn, Launch, ListAlt, Storage } from '@material-ui/icons'
 import CopyPopover from '../../layout/Frame/parts/CopyPopover'
-import AssignmentIcon from '@material-ui/icons/Assignment'
 import useFileModel from '../../models/file'
 import useLayoutModel from '../../models/layout'
 import usePopoverController from '../../hooks/PopoverController'
 import { useHistory } from 'react-router-dom'
 import ApplicationBar from '../../components/ApplicationBar'
 import useApplicationBarController from '../../components/ApplicationBar/hook'
-import CutPopover from '../../layout/Frame/parts/CutPopover';
+import CutPopover from '../../layout/Frame/parts/CutPopover'
 
 const useStyles = makeStyles((theme) => ({
   main: {},

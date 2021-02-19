@@ -2,7 +2,6 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, ButtonBase } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
-import { File } from '../../page/Home/model'
 import FileIcon from '../FileIcon'
 
 const useStyles = makeStyles(theme => ({
@@ -44,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 interface FileItemPropsType {
   file:File
-  onClick:() => void
+  onClick?:() => void
   style?:any
   onContextClick:(x:number, y:number) => void
 }
@@ -76,7 +75,6 @@ const FileItem = ({ file, onClick, style, onContextClick }: FileItemPropsType):R
             {file.name}
           </div>
         </div>
-
       </ButtonBase>
       <div className={classes.actions}>
 

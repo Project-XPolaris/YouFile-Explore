@@ -1,11 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles'
 import useHomeModel from '../../model'
-import { FlexGrid } from '../../../../components/FlexGrid'
-import FileItemMedium from '../../../../components/FileItemMedium'
 import React from 'react'
 import FileItem from '../../../../components/FileItem'
 import { AutoSizer, List } from 'react-virtualized'
-import useFileModel from '../../../../models/file'
+import useFileContextMenu from '../../hooks/fileContentMenu'
+import SearchContextMenu from './menu'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -20,8 +19,8 @@ const useStyles = makeStyles(theme => ({
 }))
 export const SearchFileListView = () => {
   const homeModel = useHomeModel()
-  const fileModel = useFileModel()
   const classes = useStyles()
+  const fileContextMenuController = useFileContextMenu()
   const rowRenderer = ({ key, index, style }:{key:string, index:number, style:any}) => {
     const item : any = homeModel.getSearchResult()[index]
     return (
@@ -29,24 +28,17 @@ export const SearchFileListView = () => {
         file={item}
         key={key}
         style={style}
-        onClick={() => {
-
-        }}
-        onCopy={() => {
-          fileModel.setCopyFile({
-            name: item.name,
-            path: item.path
+        onContextClick={(x, y) => {
+          fileContextMenuController.openMenu({
+            left: x, top: y, name: item.name, type: item.type, path: item.path
           })
-        }}
-        onDelete={() => {
-          fileModel.deleteFile([item.path])
         }}
       />
     )
   }
   return (
     <div className={classes.main}>
-
+      <SearchContextMenu controller={fileContextMenuController} />
       <AutoSizer>
         {({
           height,

@@ -1,25 +1,10 @@
 import React, { useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import useStyles from './style'
 import ApplicationBar from '../../components/ApplicationBar'
 import useApplicationBarController from '../../components/ApplicationBar/hook'
 import { useHistory } from 'react-router-dom'
-import {
-  Box,
-  Collapse,
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow, Typography
-} from '@material-ui/core'
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import useMountModel from '../../models/mount'
-import { formatFstabOption } from '../../utils/string'
-import { ArrowDownward, ArrowUpward, KeyboardArrowDown, KeyboardArrowUp, ListAlt } from '@material-ui/icons'
-import { Mount } from '../../api/mount'
 import MountRow from './row'
 
 interface FstabPagePropsType {

@@ -104,9 +104,4 @@ export default function FileIcon ({ fileName, className }: FileIconPropsType) {
     default:
       return <DescriptionIcon className={className}/>
   }
-  return (
-    <div className={className}>
-
-    </div>
-  )
 }

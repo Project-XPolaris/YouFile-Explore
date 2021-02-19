@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { electronApp, electronRemote } from '../../remote'
 import { IconButton } from '@material-ui/core'
@@ -67,7 +67,7 @@ interface HomeTitleBarPropsType {
 
 }
 
-export default function HomeTitleBar ({}: HomeTitleBarPropsType) {
+const HomeTitleBar = ({}: HomeTitleBarPropsType) : ReactElement => {
   const classes = useStyles()
   const onClose = () => {
     electronApp.exit()
@@ -107,3 +107,4 @@ export default function HomeTitleBar ({}: HomeTitleBarPropsType) {
     </div>
   )
 }
+export default HomeTitleBar

@@ -1,14 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Button, Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle, FormControlLabel,
-  TextField
-} from '@material-ui/core'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 
 const useStyles = makeStyles(theme => ({
@@ -25,7 +17,7 @@ interface AddMountDialogPropsType {
   onOk:(data:any) => void
 }
 
-const AddMountDialog = ({ open = false, onClose,onOk }: AddMountDialogPropsType):React.ReactElement => {
+const AddMountDialog = ({ open = false, onClose, onOk }: AddMountDialogPropsType):React.ReactElement => {
   const classes = useStyles()
   const { register, handleSubmit, setValue } = useForm()
   const onSubmit = (data:any) => {

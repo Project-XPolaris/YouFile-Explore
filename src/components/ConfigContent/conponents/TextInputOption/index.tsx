@@ -1,15 +1,15 @@
 import React, { ReactElement, useState } from 'react'
 import {
   Button,
-  Dialog, DialogActions,
+  Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  TextField
+  TextField,
 } from '@material-ui/core'
-import { Title } from '@material-ui/icons'
 
 export interface TextInputOptionPropsType {
   label: string

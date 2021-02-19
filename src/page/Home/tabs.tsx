@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import theme from '../../theme'
 import { IconButton, Paper } from '@material-ui/core'
-import { blue } from '@material-ui/core/colors'
 import { Add, Close } from '@material-ui/icons'
 import useHomeModel from './model'
 
@@ -55,15 +54,15 @@ const useStyles = makeStyles({
   dragZone: {
     '-webkit-app-region': 'drag',
     height: '100%',
-    flexGrow:1
-  },
+    flexGrow: 1
+  }
 })
 
 interface HomeTabsPropsType {
   className?: any
 }
 
-export default function HomeTabs ({ className }: HomeTabsPropsType) {
+export default function HomeTabs ({ className }: HomeTabsPropsType) : ReactElement {
   const classes = useStyles()
   const homeModel = useHomeModel()
   return (

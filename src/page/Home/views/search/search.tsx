@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement } from 'react'
 import useHomeModel from '../../model'
 import { SearchFileMediumView } from './medium'
 import { makeStyles } from '@material-ui/core/styles'

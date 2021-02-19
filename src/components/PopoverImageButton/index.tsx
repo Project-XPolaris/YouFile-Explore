@@ -8,7 +8,7 @@ export interface PopoverImageButtonPropsType {
   controller:any
 }
 
-const PopoverImageButton = ({ children, icon,controller }: PopoverImageButtonPropsType) => {
+const PopoverImageButton = ({ children, icon, controller }: PopoverImageButtonPropsType) => {
   const classes = useStyles()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

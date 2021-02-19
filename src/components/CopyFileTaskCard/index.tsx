@@ -33,7 +33,7 @@ const useStyles = makeStyles({
   title: {
     ...theme.typography.subtitle1,
     marginLeft: theme.spacing(2),
-    fontSize:14
+    fontSize: 14
   },
   subtitle: {
     ...theme.typography.subtitle2,

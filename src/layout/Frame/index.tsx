@@ -1,18 +1,9 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Button, Card, CardContent, IconButton, Toolbar, Typography, Menu, MenuItem } from '@material-ui/core'
-import MinimizeSharpIcon from '@material-ui/icons/MinimizeSharp'
-import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp'
-import ClearSharpIcon from '@material-ui/icons/ClearSharp'
 import { electronApp, electronRemote } from '../../remote'
-import { CreateNewFolder, FileCopy, Launch, MoreVert } from '@material-ui/icons'
-import PopoverImageButton from '../../components/PopoverImageButton'
-import CopyPopover from './parts/CopyPopover'
-import usePopoverController from '../../hooks/PopoverController'
-import useFileModel from '../../models/file'
 import useLayoutModel from '../../models/layout'
 import TaskDrawer from './parts/TaskDrawer'
-import AssignmentIcon from '@material-ui/icons/Assignment'
+
 const useStyles = makeStyles((theme) => ({
   main: {},
   root: {
@@ -47,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     height: '100vh',
-    width: '100vw',
+    width: '100vw'
   },
   header: {
     position: 'fixed'
@@ -99,20 +90,6 @@ const FrameLayout = ({ children }: FrameLayoutPropsType) => {
         onClose={() => layoutModel.switchDialog('global/taskDrawer')}
         open={layoutModel.dialogs['global/taskDrawer']}
       />
-      {/*<div className={classes.header}>*/}
-      {/*  <div className={classes.status}>*/}
-      {/*    <div className={classes.dragZone} />*/}
-      {/*    <IconButton size='small' className={classes.windowAction} onClick={onMin}>*/}
-      {/*      <MinimizeSharpIcon className={classes.actionIcon} />*/}
-      {/*    </IconButton>*/}
-      {/*    <IconButton size='small' className={classes.windowAction} onClick={onMax}>*/}
-      {/*      <CheckBoxOutlineBlankSharpIcon className={classes.actionIcon} />*/}
-      {/*    </IconButton>*/}
-      {/*    <IconButton size='small' className={classes.windowAction} onClick={onClose}>*/}
-      {/*      <ClearSharpIcon className={classes.actionIcon} />*/}
-      {/*    </IconButton>*/}
-      {/*  </div>*/}
-      {/*</div>*/}
       <div className={classes.content}>
         {children}
       </div>

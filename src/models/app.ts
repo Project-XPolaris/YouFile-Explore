@@ -8,7 +8,7 @@ const AppModel = () => {
     setInfo(await fetchInfo())
   }
   return {
-    info,loadInfo
+    info, loadInfo
   }
 }
 const useAppModel = createModel(AppModel)

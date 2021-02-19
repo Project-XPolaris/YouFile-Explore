@@ -1,13 +1,14 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Button, Checkbox,
+  Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle, FormControlLabel,
-  TextField
+  DialogTitle,
+  FormControlLabel,
+  TextField,
 } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 
@@ -25,7 +26,7 @@ interface AddSMBDialogPropsType {
   onOk:(data:any) => void
 }
 
-const AddSMBDialog = ({ open = false, onClose,onOk }: AddSMBDialogPropsType):React.ReactElement => {
+const AddSMBDialog = ({ open = false, onClose, onOk }: AddSMBDialogPropsType):React.ReactElement => {
   const classes = useStyles()
   const { register, handleSubmit, setValue } = useForm()
   const onSubmit = (data:any) => {

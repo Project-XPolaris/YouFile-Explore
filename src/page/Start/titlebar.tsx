@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   header: {
     position: 'fixed',
     backgroundColor: theme.palette.primary.dark,
-    width: "100vh",
+    width: '100vh',
     zIndex: 1200
   },
   actionButton: {

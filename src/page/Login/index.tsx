@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import theme from '../../theme'
 import { Button, Paper, TextField, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 

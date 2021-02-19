@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent'
     },
     paper: {
       backgroundColor: 'transparent !important',
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       '&::-webkit-scrollbar-thumb': {
         backgroundColor: 'rgba(0,0,0,.6)'
-      },
+      }
     },
     header: {
       width: '100%',
@@ -47,13 +47,13 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '80vh',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     emptyHint: {
       ...theme.typography.body1,
       color: '#FFFFFF'
     },
-    modal:{
+    modal: {
       backgroundColor: 'rgba(0,0,0,.3)',
       backdropFilter: 'blur(5px)'
     }

@@ -1,26 +1,15 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
-import { Breadcrumbs, IconButton, Menu, MenuItem, Paper, Typography } from '@material-ui/core'
-import {
-  ArrowBack,
-  ArrowForward,
-  ArrowForwardIos,
-  ArrowRight,
-  ExitToApp,
-  FileCopy,
-  ListAlt,
-  Notes, Refresh, Search
-} from '@material-ui/icons'
+import { IconButton, Menu, MenuItem, Paper, Typography } from '@material-ui/core'
+import { ExitToApp, FileCopy, ListAlt, Notes } from '@material-ui/icons'
 import useHomeModel from '../../model'
-import useAppModel from '../../../../models/app'
 import PopoverImageButton from '../../../../components/PopoverImageButton'
 import CopyPopover from '../../../../layout/Frame/parts/CopyPopover'
 import useFileModel from '../../../../models/file'
 import usePopoverController from '../../../../hooks/PopoverController'
 import CutPopover from '../../../../layout/Frame/parts/CutPopover'
 import useLayoutModel from '../../../../models/layout'
-import SearchPopover from '../../../../layout/Frame/parts/SearchPopover'
 
 const useStyles = makeStyles({
   main: {

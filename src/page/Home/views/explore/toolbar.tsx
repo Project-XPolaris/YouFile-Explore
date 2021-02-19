@@ -1,19 +1,9 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
 import { Breadcrumbs, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
-import {
-  ArrowBack,
-  ArrowForward,
-  ArrowForwardIos,
-  ArrowRight,
-  ExitToApp,
-  FileCopy,
-  ListAlt,
-  Notes, Refresh, Search,
-} from '@material-ui/icons'
+import { ArrowBack, ArrowForwardIos, ExitToApp, FileCopy, ListAlt, Notes, Refresh, Search } from '@material-ui/icons'
 import useHomeModel from '../../model'
-import useAppModel from '../../../../models/app'
 import PopoverImageButton from '../../../../components/PopoverImageButton'
 import CopyPopover from '../../../../layout/Frame/parts/CopyPopover'
 import useFileModel from '../../../../models/file'
@@ -76,8 +66,8 @@ const useStyles = makeStyles({
   sep: {
     fontSize: 10
   },
-  actionIcon:{
-    color:theme.palette.primary.contrastText
+  actionIcon: {
+    color: theme.palette.primary.contrastText
   }
 
 })
@@ -86,10 +76,9 @@ interface HomeToolbarPropsType {
 
 }
 
-export default function HomeToolbar ({}: HomeToolbarPropsType) {
+const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
-  const appModel = useAppModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
   const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
@@ -192,3 +181,4 @@ export default function HomeToolbar ({}: HomeToolbarPropsType) {
     </Paper>
   )
 }
+export default HomeToolbar
