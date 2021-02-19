@@ -46,10 +46,6 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-const initialState = {
-  mouseX: null,
-  mouseY: null
-}
 const FileItemMedium = ({
   file, className, onDoubleClick, onContextClick, contextSelected = false
 }:{
@@ -64,7 +60,6 @@ const FileItemMedium = ({
     onDoubleClick, undefined)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log(event)
     onContextClick(
       event.clientX - 2,
       event.clientY - 4

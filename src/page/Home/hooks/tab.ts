@@ -61,6 +61,21 @@ export const useTabsController = ({ onTabChange }:{onTabChange:(tab:TabItem) => 
     })
     tabsListController.resetList(newList)
   }
+  const openNewExploreByPath = (name:string,path:string) => {
+    const newList = tabsListController.list.map(it => {
+      return {
+        ...it,
+        active: false
+      }
+    })
+    newList.push({
+      name: name,
+      path: path,
+      active: true,
+      type: 'Explore'
+    })
+    tabsListController.resetList(newList)
+  }
 
   const setCurrentTabFolder = (name:string, path?:string) => {
     tabsListController.resetList(tabsListController.list.map(it => {
@@ -102,6 +117,6 @@ export const useTabsController = ({ onTabChange }:{onTabChange:(tab:TabItem) => 
     }
   }, [tabsListController.list])
   return {
-    addTab, closeTab, list: tabsListController.list, setActiveWithIndex, newTab, setCurrentTabFolder, newSearchTab
+    addTab, closeTab, list: tabsListController.list, setActiveWithIndex, newTab, setCurrentTabFolder, newSearchTab, openNewExploreByPath
   }
 }

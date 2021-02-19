@@ -1,14 +1,16 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import useHomeModel from '../../model'
 import FileItemMedium from '../../../../components/FileItemMedium'
 import useFileModel from '../../../../models/file'
 import { FileNode } from '../../tree'
 import { Menu, MenuItem } from '@material-ui/core'
-import { Delete, Edit, ExitToApp, FileCopy } from '@material-ui/icons'
+import { Delete, Edit, ExitToApp, FileCopy, Tab } from '@material-ui/icons'
 import { red } from '@material-ui/core/colors'
 import clsx from 'clsx'
 import { FlexGrid } from '../../../../components/FlexGrid'
+import useFileContextMenu from '../../hooks/fileContentMenu'
+import FileContextMenu from './menu'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -37,70 +39,13 @@ const useStyles = makeStyles(theme => ({
 interface MediumViewPropsType {
   onRename:(file:FileNode) => void
 }
-type ContextMenuState = {
-  x : number
-  y : number
-  file:FileNode
-}
 export default function MediumView ({ onRename }: MediumViewPropsType):ReactElement {
   const classes = useStyles()
-  const fileModel = useFileModel()
   const homeModel = useHomeModel()
-  const [contextMenuState, setContextMenuState] = useState<ContextMenuState | undefined>(undefined)
-  const handleContextClose = () => {
-    setContextMenuState(undefined)
-  }
+  const fileContextMenuController = useFileContextMenu()
   return (
     <div className={classes.main}>
-      <Menu
-        keepMounted
-        open={Boolean(contextMenuState)}
-        onClose={handleContextClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenuState?.y !== null && contextMenuState?.x !== null
-            ? { top: contextMenuState?.y, left: contextMenuState?.x }
-            : undefined
-        }
-      >
-        <MenuItem
-          onClick={() => {
-            handleContextClose()
-            if (!contextMenuState) {
-              return
-            }
-            fileModel.setCopyFile({
-              name: contextMenuState?.file.name,
-              path: contextMenuState?.file.path
-            })
-          }}><FileCopy className={clsx(classes.menuIcon, classes.copyIcon)} />Copy</MenuItem>
-
-        <MenuItem onClick={() => {
-          handleContextClose()
-          if (!contextMenuState?.file.path) {
-            return
-          }
-          fileModel.deleteFile([contextMenuState?.file.path])
-        }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)}/>Delete</MenuItem>
-        <MenuItem onClick={() => {
-          handleContextClose()
-          if (!contextMenuState?.file) {
-            return
-          }
-          onRename(contextMenuState?.file)
-        }}><Edit className={clsx(classes.menuIcon, classes.copyIcon)}/>Rename</MenuItem>
-        <MenuItem onClick={() => {
-          handleContextClose()
-          if (!contextMenuState?.file) {
-            return
-          }
-          fileModel.setMoveFile({
-            name: contextMenuState?.file.name,
-            path: contextMenuState?.file.path
-          })
-        }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)}/>Move</MenuItem>
-
-      </Menu>
+      <FileContextMenu controller={fileContextMenuController} onRename={onRename} />
       <FlexGrid dataSource={homeModel.currentContent} rowWidth={120} columnHeight={120} itemRender={(it) => {
         return (
           <FileItemMedium
@@ -114,9 +59,11 @@ export default function MediumView ({ onRename }: MediumViewPropsType):ReactElem
               }
             }}
             onContextClick={(x, y) => {
-              setContextMenuState({ x, y, file: it })
+              fileContextMenuController.openMenu({
+                left: x, top: y, name: it.name, type: it.type, path: it.path
+              })
             }}
-            contextSelected={contextMenuState?.file.path === it.path}
+            contextSelected={fileContextMenuController.file?.path === it.path && fileContextMenuController.open }
           />
         )
       }} />

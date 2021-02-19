@@ -2,7 +2,6 @@ import { FileItem, readDir } from '../../api/dir'
 import { convertPath, convertSlash } from '../../utils/path'
 
 export interface FileNode {
-  id : string
   name: string
   path: string
   type: string
@@ -11,7 +10,6 @@ export interface FileNode {
 }
 export class FileTree {
   root : FileNode = {
-    id: 'root:/',
     name: 'root',
     path: '/',
     type: 'Directory',
@@ -19,12 +17,12 @@ export class FileTree {
     children: []
   }
 
-  public addRootNodes (node : FileNode) {
-    this.root.children?.push(node)
-  }
+  // public addRootNodes (node : FileNode) {
+  //   this.root.children?.push(node)
+  // }
+  //
   private generateNode (source:FileItem, parent:FileNode):FileNode {
     return {
-      id: source.path,
       name: source.name,
       path: convertSlash(source.path),
       children: undefined,

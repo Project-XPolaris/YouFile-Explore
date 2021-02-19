@@ -20,7 +20,6 @@ import { renameFile } from '../../api/file'
 import { useTabsController } from './hooks/tab'
 
 export interface File {
-  id: string
   name: string
   path: string
   type: string
@@ -137,7 +136,6 @@ const HomeModel = () => {
   }
   const generateNode = (source: FileItem): FileNode => {
     return {
-      id: source.path,
       name: source.name,
       path: source.path,
       children: undefined,
@@ -251,7 +249,7 @@ const HomeModel = () => {
   }
   useEffect(() => {
     console.log(searchResult)
-  },[searchResult])
+  }, [searchResult])
   return {
     initData,
     loadFile,

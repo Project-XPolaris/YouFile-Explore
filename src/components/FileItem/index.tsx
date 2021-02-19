@@ -1,12 +1,10 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Avatar, ButtonBase, IconButton } from '@material-ui/core'
+import { Avatar, ButtonBase } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
 import { File } from '../../page/Home/model'
-import DescriptionIcon from '@material-ui/icons/Description'
-import { Delete, Edit, FileCopy } from '@material-ui/icons';
-import { ImageFileIcon } from '../FileIcon/ImageFileIcon'
 import FileIcon from '../FileIcon'
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: theme.spacing(8),
@@ -47,13 +45,11 @@ const useStyles = makeStyles(theme => ({
 interface FileItemPropsType {
   file:File
   onClick:() => void
-  onCopy:() => void,
-  onRename:() => void
   style?:any
-  onDelete:() => void
+  onContextClick:(x:number, y:number) => void
 }
 
-const FileItem = ({ file, onClick, onCopy, style, onDelete,onRename }: FileItemPropsType):React.ReactElement => {
+const FileItem = ({ file, onClick, style, onContextClick }: FileItemPropsType):React.ReactElement => {
   const classes = useStyles()
   const renderIcon = () => {
     if (file.type === 'Directory') {
@@ -63,8 +59,14 @@ const FileItem = ({ file, onClick, onCopy, style, onDelete,onRename }: FileItemP
       return <FileIcon fileName={file.name} />
     }
   }
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    onContextClick(
+      event.clientX - 2,
+      event.clientY - 4
+    )
+  }
   return (
-    <div className={classes.root} style={style}>
+    <div className={classes.root} style={style} onContextMenu={handleClick}>
       <ButtonBase className={classes.main} onClick={onClick}>
         <Avatar className={classes.avatar}>
           {renderIcon()}
@@ -77,15 +79,7 @@ const FileItem = ({ file, onClick, onCopy, style, onDelete,onRename }: FileItemP
 
       </ButtonBase>
       <div className={classes.actions}>
-        <IconButton onClick={onCopy}>
-          <FileCopy />
-        </IconButton>
-        <IconButton onClick={onDelete}>
-          <Delete />
-        </IconButton>
-        <IconButton onClick={onRename}>
-          <Edit />
-        </IconButton>
+
       </div>
     </div>
 
