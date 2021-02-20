@@ -12,12 +12,13 @@ import {
   newSearchFileTask,
   SearchFileOutput,
   SearchFileResult,
-  Task,
+  Task
 } from '../../api/task'
 import { DefaultApiWebsocket } from '../../api/websocket/client'
 import { NotificationMessage } from '../../api/websocket/event'
 import { renameFile } from '../../api/file'
 import { useTabsController } from './hooks/tab'
+import { FavouriteItem, FavouriteManager } from '../../favourite'
 
 export interface SearchResult {
   id:string
@@ -35,6 +36,7 @@ const HomeModel = () => {
   const [mode, setMode] = useState<Mode>('blank')
   const [searchResult, setSearchResult] = useState<SearchResult[]>([])
   const [searchId, setSearchId] = useState<string | undefined>()
+  const [favorite, setFavourite] = useState<FavouriteItem[]>()
   const tabController = useTabsController({
     onTabChange: (tab) => {
       console.log(tab)
@@ -240,6 +242,15 @@ const HomeModel = () => {
   useEffect(() => {
     console.log(searchResult)
   }, [searchResult])
+
+  const addFavourite = (item :FavouriteItem) => {
+    FavouriteManager.getInstance().addFavourite(item)
+    setFavourite([...FavouriteManager.getInstance().items])
+  }
+  const removeFavourite = (path:string) => {
+    FavouriteManager.getInstance().removeFavourite(path)
+    setFavourite([...FavouriteManager.getInstance().items])
+  }
   return {
     initData,
     loadFile,
@@ -262,7 +273,9 @@ const HomeModel = () => {
     rename,
     tabController,
     searchId,
-    getSearchResult
+    getSearchResult,
+    addFavourite,
+    removeFavourite
   }
 }
 const useHomeModel = createModel(HomeModel)

@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import useAppModel from '../../../../models/app'
 import FileItemMedium from '../../../../components/FileItemMedium'
 import useHomeModel from '../../model'
+import { FavouriteManager } from '../../../../favourite'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,7 +14,8 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
-      overflowX: 'hidden'
+      overflowX: 'hidden',
+      width: '100%'
     },
     itemContainer: {
       display: 'flex',
@@ -24,14 +26,15 @@ const useStyles = makeStyles((theme: Theme) =>
       height: theme.spacing(15),
       justifyContent: 'center'
     },
-    label:{
+    label: {
       ...theme.typography.h6,
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(2),
-      fontWeight:300
+      fontWeight: 300
     }
   })
 )
+
 export interface StartViewPropsType {
 
 }
@@ -42,6 +45,36 @@ const StartView = ({}: StartViewPropsType) => {
   const homeModel = useHomeModel()
   return (
     <div className={classes.root}>
+      {
+        FavouriteManager.getInstance().items.length > 0 &&
+        <>
+          <div className={classes.label}>
+            Favourite
+          </div>
+          <div className={classes.itemContainer}>
+            {
+              FavouriteManager.getInstance().items.map(item => {
+                return (
+                  <FileItemMedium
+                    file={{
+                      name: item.name,
+                      path: item.path,
+                      type: item.type,
+                      parent: undefined,
+                      children: undefined
+                    }}
+                    key={item.path}
+                    className={classes.item}
+                    onDoubleClick={() => {
+                      homeModel.tabController.startPageToExplore(item.path)
+                    }}
+                  />
+                )
+              })
+            }
+          </div>
+        </>
+      }
       <div className={classes.label}>
         Disks
       </div>

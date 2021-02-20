@@ -1,11 +1,20 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import useHomeModel from '../../model'
-import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core'
-import { Folder } from '@material-ui/icons'
+import {
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+  ListSubheader
+} from '@material-ui/core'
+import { Delete, Folder } from '@material-ui/icons'
 import useAppModel from '../../../../models/app'
 import { DiskFileIcon } from '../../../../components/FileIcon/DiskFileIcon'
 import FolderIcon from '@material-ui/icons/Folder'
+import { FavouriteManager } from '../../../../favourite'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -20,14 +29,43 @@ const HomeSide = (): React.ReactElement => {
   const appModel = useAppModel()
   return (
     <div className={classes.main}>
-      <List subheader={<ListSubheader>System</ListSubheader>}>
+      {
+        FavouriteManager.getInstance().items.length > 0 &&
+        <List subheader={<ListSubheader>Favourite</ListSubheader>} dense>
+          {
+            FavouriteManager.getInstance().items.map(item => (
+              <ListItem button onClick={() => homeModel.setCurrentPath(item.path)} key={item.path}>
+                <ListItemIcon>
+                  <Folder />
+                </ListItemIcon>
+                <ListItemText primary={item.name} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    size={'small'}
+                    onClick={() => {
+                      homeModel.removeFavourite(item.path)
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))
+          }
+        </List>
+      }
+      <List subheader={<ListSubheader>System</ListSubheader>} dense>
         {
           appModel.info?.root_paths?.map(it => {
             return (
-              <ListItem id={it.path} key={it.path} button onClick={() => {
-                homeModel.setCurrentPath(it.path)
-                homeModel.tabController.setCurrentTabFolder(it.name, it.path)
-              }}>
+              <ListItem
+                id={it.path}
+                key={it.path}
+                button onClick={() => {
+                  homeModel.setCurrentPath(it.path)
+                  homeModel.tabController.setCurrentTabFolder(it.name, it.path)
+                }}
+              >
                 <ListItemIcon>
                   {
                     it.type === 'Parted' && <DiskFileIcon />
@@ -42,18 +80,21 @@ const HomeSide = (): React.ReactElement => {
           })
         }
       </List>
-      <List subheader={<ListSubheader>Share Folder</ListSubheader>}>
-        {
-          homeModel.smbDirs.map(smbDir => (
-            <ListItem id={smbDir.name} button onClick={() => homeModel.setCurrentPath(smbDir.path)} key={smbDir.name}>
-              <ListItemIcon>
-                <Folder />
-              </ListItemIcon>
-              <ListItemText primary={smbDir.name} />
-            </ListItem>
-          ))
-        }
-      </List>
+      {
+        homeModel.smbDirs.length > 0 &&
+        <List subheader={<ListSubheader>Share Folder</ListSubheader>} dense>
+          {
+            homeModel.smbDirs.map(smbDir => (
+              <ListItem id={smbDir.name} button onClick={() => homeModel.setCurrentPath(smbDir.path)} key={smbDir.name}>
+                <ListItemIcon>
+                  <Folder />
+                </ListItemIcon>
+                <ListItemText primary={smbDir.name} />
+              </ListItem>
+            ))
+          }
+        </List>
+      }
     </div>
   )
 }

@@ -2,7 +2,17 @@ import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
 import { Breadcrumbs, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
-import { ArrowBack, ArrowForwardIos, ExitToApp, FileCopy, ListAlt, Notes, Refresh, Search } from '@material-ui/icons'
+import {
+  ArrowBack,
+  ArrowForwardIos,
+  ExitToApp,
+  Favorite,
+  FileCopy,
+  ListAlt,
+  Notes,
+  Refresh,
+  Search
+} from '@material-ui/icons'
 import useHomeModel from '../../model'
 import PopoverImageButton from '../../../../components/PopoverImageButton'
 import CopyPopover from '../../../../layout/Frame/parts/CopyPopover'
@@ -11,6 +21,9 @@ import usePopoverController from '../../../../hooks/PopoverController'
 import CutPopover from '../../../../layout/Frame/parts/CutPopover'
 import useLayoutModel from '../../../../models/layout'
 import SearchPopover from '../../../../layout/Frame/parts/SearchPopover'
+import useAppModel from '../../../../models/app'
+import { FavouriteManager } from '../../../../favourite'
+import { useUpdate } from 'ahooks'
 
 const useStyles = makeStyles({
   main: {
@@ -81,6 +94,7 @@ const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
+  const appModel = useAppModel()
   const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
   const copyPopoverController = usePopoverController()
   const movePopoverController = usePopoverController()
@@ -91,6 +105,20 @@ const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
 
   const handleViewTypeMenuClose = () => {
     setViewTypeMenuAnchor(null)
+  }
+  const handlerAddToFavourite = () => {
+    if (!homeModel.currentPath || !appModel.info) {
+      return
+    }
+    const name = homeModel.currentPath.split(appModel.info.sep).pop()
+    if (!name) {
+      return
+    }
+    homeModel.addFavourite({
+      name,
+      path: homeModel.currentPath,
+      type: 'Directory'
+    })
   }
   const viewTypeMenu = () => {
     return (
@@ -145,6 +173,9 @@ const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
             }
           </Breadcrumbs>
         </Paper>
+        <IconButton onClick={handlerAddToFavourite} >
+          <Favorite fontSize='inherit' className={classes.actionIcon}/>
+        </IconButton>
         {
           fileModel.copyFile &&
           <PopoverImageButton icon={<FileCopy className={classes.actionIcon} />} controller={copyPopoverController}>
@@ -174,8 +205,8 @@ const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
         >
           <ListAlt className={classes.actionIcon} />
         </IconButton>
-        <IconButton aria-label='delete' size='small' onClick={handleViewTypeMenuClick} className={classes.actionIcon}>
-          <Notes fontSize='inherit' />
+        <IconButton aria-label='delete' onClick={handleViewTypeMenuClick} >
+          <Notes fontSize='inherit' className={classes.actionIcon} />
         </IconButton>
       </div>
     </Paper>
