@@ -16,6 +16,8 @@ import HomeTitleBar from './titlebar'
 import HomeToolbar from './views/explore/toolbar'
 import ExploreView from './views/explore'
 import SearchToolbar from './views/search/toolbar'
+import StartView from './views/start'
+import StartToolbar from './views/start/toolbar'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -105,6 +107,7 @@ const HomePage = ():React.ReactElement => {
       <HomeTitleBar />
       {homeModel.mode === 'display' && <HomeToolbar />}
       {homeModel.mode === 'search' && <SearchToolbar />}
+      {homeModel.mode === 'blank' && <StartToolbar />}
       <RenameFileDialog onClose={switchRenameDialog} onOk={onRenameOk} open={renameDialogOpen} file={contextFile} />
       <AddMountDialog
         onClose={() => layoutModel.switchDialog('home/addMount')}
@@ -141,6 +144,9 @@ const HomePage = ():React.ReactElement => {
         }
         {
           homeModel.mode === 'search' && <SearchView />
+        }
+        {
+          homeModel.mode === 'blank' && <StartView />
         }
       </div>
 

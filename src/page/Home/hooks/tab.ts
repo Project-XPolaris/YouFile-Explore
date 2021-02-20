@@ -1,7 +1,7 @@
 import { useDynamicList } from 'ahooks'
 import { useEffect } from 'react'
 
-export type TabType = 'Explore' | 'Search'
+export type TabType = 'Explore' | 'Search' | 'Start'
 export interface TabItem {
   path : string | undefined
   name : string
@@ -9,12 +9,24 @@ export interface TabItem {
   type : TabType,
   id?: string
 }
-export const useTabsController = ({ onTabChange }:{onTabChange:(tab:TabItem) => void}) => {
+export const useTabsController = ({
+  onTabChange,
+  onEmptyTab
+}:{
+  onTabChange:(tab:TabItem) => void
+  onEmptyTab?:() => void
+}) => {
+  const init : Array<TabItem> = [{
+    name: 'new tab',
+    path: undefined,
+    active: true,
+    type: 'Start'
+  }]
   const tabsListController = useDynamicList<TabItem>([{
     name: 'new tab',
     path: undefined,
     active: true,
-    type: 'Explore'
+    type: 'Start'
   }])
   const addTab = (item : TabItem) => {
     tabsListController.push(item)
@@ -28,7 +40,13 @@ export const useTabsController = ({ onTabChange }:{onTabChange:(tab:TabItem) => 
         active: true
       })
     }
-    console.log(index)
+    if (tab.active && index === 0 && tabsListController.list.length > 1) {
+      const nextTab = tabsListController.list[index + 1]
+      tabsListController.replace(index + 1, {
+        ...nextTab,
+        active: true
+      })
+    }
     tabsListController.remove(index)
   }
   const setActiveWithIndex = (index:number) => {
@@ -94,7 +112,6 @@ export const useTabsController = ({ onTabChange }:{onTabChange:(tab:TabItem) => 
   }
 
   const newSearchTab = (name:string, id:string) => {
-    console.log(id)
     const newList = tabsListController.list.map(it => {
       return {
         ...it,
@@ -110,14 +127,43 @@ export const useTabsController = ({ onTabChange }:{onTabChange:(tab:TabItem) => 
     })
     tabsListController.resetList(newList)
   }
+  const startPageToExplore = (path:string) => {
+    const newList : Array<TabItem> = tabsListController.list.map((it) => {
+      if (it.active) {
+        return {
+          ...it,
+          type: 'Explore',
+          path: path,
+          active: true
+        }
+      } else {
+        return {
+          ...it,
+          active: false
+        }
+      }
+    })
+    tabsListController.resetList(newList)
+  }
   useEffect(() => {
-    console.log(tabsListController.list)
+    if (tabsListController.list.length === 0) {
+      tabsListController.resetList(init)
+      return
+    }
     const tab = tabsListController.list.find(it => it.active)
     if (onTabChange && tab) {
       onTabChange(tab)
     }
   }, [tabsListController.list])
   return {
-    addTab, closeTab, list: tabsListController.list, setActiveWithIndex, newTab, setCurrentTabFolder, newSearchTab, openNewExploreByPath
+    list: tabsListController.list,
+    addTab,
+    closeTab,
+    setActiveWithIndex,
+    newTab,
+    setCurrentTabFolder,
+    newSearchTab,
+    openNewExploreByPath,
+    startPageToExplore
   }
 }

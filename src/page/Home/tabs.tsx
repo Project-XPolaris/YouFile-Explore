@@ -32,7 +32,11 @@ const useStyles = makeStyles({
     backgroundColor: theme.palette.primary.main
   },
   inactive: {
-    backgroundColor: theme.palette.primary.dark
+    backgroundColor: '#1769aa',
+    cubicBezier: '(.17,.67,.83,.67)',
+    '&:hover': {
+      backgroundColor: '#1a74bd'
+    }
   },
   title: {
     ...theme.typography.body1,
@@ -93,7 +97,7 @@ export default function HomeTabs ({ className }: HomeTabsPropsType) : ReactEleme
         <IconButton
           size={'small'}
           onClick={() => {
-            homeModel.tabController.newTab({ type: 'Explore' })
+            homeModel.tabController.newTab({ type: 'Start' })
           }}
         >
           <Add className={classes.addIcon}/>

@@ -12,7 +12,7 @@ import {
   newSearchFileTask,
   SearchFileOutput,
   SearchFileResult,
-  Task
+  Task,
 } from '../../api/task'
 import { DefaultApiWebsocket } from '../../api/websocket/client'
 import { NotificationMessage } from '../../api/websocket/event'
@@ -24,7 +24,7 @@ export interface SearchResult {
   result:SearchFileResult[]
 }
 export type ViewType = 'List' | 'Medium';
-export type Mode = 'display' | 'search'
+export type Mode = 'display' | 'search' | 'blank'
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
 const HomeModel = () => {
   const appModel = useAppModel()
@@ -32,7 +32,7 @@ const HomeModel = () => {
   const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
   const [currentContent, setCurrentContent] = useState<FileNode[]>([])
   const [viewType, setViewType] = useState<ViewType>('Medium')
-  const [mode, setMode] = useState<Mode>('display')
+  const [mode, setMode] = useState<Mode>('blank')
   const [searchResult, setSearchResult] = useState<SearchResult[]>([])
   const [searchId, setSearchId] = useState<string | undefined>()
   const tabController = useTabsController({
@@ -46,18 +46,22 @@ const HomeModel = () => {
         case 'Search':
           setMode('search')
           setSearchId(tab.id)
+          break
+        case 'Start':
+          setMode('blank')
       }
+    },
+    onEmptyTab: () => {
+      setMode('blank')
     }
   })
   const update = useUpdate()
   const onSearchCompleteHandler = async (event:NotificationMessage) => {
     const id = event.id
-    console.log(event.id)
     if (!id) {
       return
     }
     const task :Task<SearchFileOutput> = await fetchTaskById(id)
-    console.log(task)
     setSearchResult(searchResult.map(it => {
       if (it.id === task.id) {
         return {
@@ -105,7 +109,7 @@ const HomeModel = () => {
   DefaultApiWebsocket.connect()
   DefaultApiWebsocket.addListener('homeModel', {
     onMessage (data: string) {
-      const event : NotificationMessage = JSON.parse(data)
+      const event : NotificationMessage & any = JSON.parse(data)
       console.log(event)
       if (event.event === 'SearchTaskComplete') {
         onSearchCompleteHandler(event)

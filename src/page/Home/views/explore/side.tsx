@@ -1,9 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import useHomeModel from './model'
+import useHomeModel from '../../model'
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core'
 import { Folder } from '@material-ui/icons'
-import useAppModel from '../../models/app'
+import useAppModel from '../../../../models/app'
+import { DiskFileIcon } from '../../../../components/FileIcon/DiskFileIcon'
+import FolderIcon from '@material-ui/icons/Folder'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -27,7 +29,12 @@ const HomeSide = (): React.ReactElement => {
                 homeModel.tabController.setCurrentTabFolder(it.name, it.path)
               }}>
                 <ListItemIcon>
-                  <Folder />
+                  {
+                    it.type === 'Parted' && <DiskFileIcon />
+                  }
+                  {
+                    it.type === 'Directory' && <FolderIcon />
+                  }
                 </ListItemIcon>
                 <ListItemText primary={it.name} />
               </ListItem>

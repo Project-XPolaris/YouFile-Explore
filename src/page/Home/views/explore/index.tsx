@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core'
-import HomeSide from '../../side'
+import HomeSide from './side'
 import useHomeModel from '../../model'
 import MediumView from './medium'
 import { FileNode } from '../../tree'

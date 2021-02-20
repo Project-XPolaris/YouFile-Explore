@@ -6,6 +6,7 @@ import { FileNode } from '../../page/Home/tree'
 import FolderIcon from '@material-ui/icons/Folder'
 import { yellow } from '@material-ui/core/colors'
 import { useDoubleClick } from '../../hooks/DoubleClick'
+import { DiskFileIcon } from '../FileIcon/DiskFileIcon'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,7 +53,7 @@ const FileItemMedium = ({
   file:FileNode,
   className?:any,
   onDoubleClick?:() => void
-  onContextClick:(x:number, y:number) => void
+  onContextClick?:(x:number, y:number) => void
   contextSelected?:boolean
 }):React.ReactElement => {
   const classes = useStyles()
@@ -60,10 +61,12 @@ const FileItemMedium = ({
     onDoubleClick, undefined)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    onContextClick(
-      event.clientX - 2,
-      event.clientY - 4
-    )
+    if (onContextClick) {
+      onContextClick(
+        event.clientX - 2,
+        event.clientY - 4
+      )
+    }
   }
 
   return (
@@ -73,6 +76,9 @@ const FileItemMedium = ({
       }
       {
         file.type === 'Directory' && <FolderIcon className={clsx(classes.icon, classes.folder)}/>
+      }
+      {
+        file.type === 'Parted' && <DiskFileIcon className={clsx(classes.icon)} />
       }
       <div className={classes.name}>
         {file.name}

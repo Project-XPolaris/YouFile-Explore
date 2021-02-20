@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, ButtonBase } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
 import FileIcon from '../FileIcon'
+import { FileNode } from '../../page/Home/tree'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,10 +43,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface FileItemPropsType {
-  file:File
+  file:FileNode
   onClick?:() => void
   style?:any
-  onContextClick:(x:number, y:number) => void
+  onContextClick?:(x:number, y:number) => void
 }
 
 const FileItem = ({ file, onClick, style, onContextClick }: FileItemPropsType):React.ReactElement => {
@@ -59,10 +60,12 @@ const FileItem = ({ file, onClick, style, onContextClick }: FileItemPropsType):R
     }
   }
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    onContextClick(
-      event.clientX - 2,
-      event.clientY - 4
-    )
+    if (onContextClick) {
+      onContextClick(
+        event.clientX - 2,
+        event.clientY - 4
+      )
+    }
   }
   return (
     <div className={classes.root} style={style} onContextMenu={handleClick}>

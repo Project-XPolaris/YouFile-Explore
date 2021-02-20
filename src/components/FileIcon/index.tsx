@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 
 interface FileIconPropsType {
   fileName: string
-  className?:any
+  className?:any,
 }
 
 export default function FileIcon ({ fileName, className }: FileIconPropsType) {
