@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core'
 import HomeSide from './side'
@@ -6,6 +6,8 @@ import useHomeModel from '../../model'
 import MediumView from './medium'
 import { FileNode } from '../../tree'
 import ExploreListView from './list'
+import { useEventListener } from 'ahooks'
+import useFileSelect from '../../hooks/select'
 
 const useStyles = makeStyles({
   main: {
@@ -34,22 +36,72 @@ const useStyles = makeStyles({
 })
 
 interface ExploreViewPropsType {
-  onRename:(file:FileNode) => void
+  onRename: (file: FileNode) => void
 }
 
-const ExploreView = ({ onRename }: ExploreViewPropsType):React.ReactElement => {
+const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
+  const [selectMode, setSelectMode] = useState<boolean>(false)
+  const itemSelectController = useFileSelect({ initValue: [] })
+  useEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Control') {
+      if (!selectMode) {
+      }
+      setSelectMode(true)
+    }
+  })
+  useEventListener('keyup', (e: KeyboardEvent) => {
+    if (e.key === 'Control') {
+      if (selectMode) {
+        setSelectMode(false)
+      }
+    }
+  })
+  const handleItemClick = (file: FileNode) => {
+    if (selectMode) {
+      itemSelectController.switchSelect(file.path)
+    } else {
+      itemSelectController.setSelect([file.path])
+    }
+  }
+  const handleListClick = (file: FileNode) => {
+    if (selectMode) {
+      itemSelectController.switchSelect(file.path)
+    } else {
+      if (file.type === 'Directory') {
+        homeModel.setCurrentPath(file.path)
+      }
+    }
+  }
   const renderDisplayMode = () => {
     return (
       <>
         {
           homeModel.viewType === 'List' &&
-          <ExploreListView onRename={onRename} />
+          <ExploreListView
+            onRename={onRename}
+            onItemClick={handleListClick}
+            selectPaths={itemSelectController.selectPaths}
+            onItemClickAway={() => {
+              if (!selectMode && itemSelectController.selectPaths.length !== 0) {
+                itemSelectController.setSelect([])
+              }
+            }}
+          />
         }
         {
           homeModel.viewType === 'Medium' &&
-          <MediumView onRename={onRename} />
+          <MediumView
+            onRename={onRename}
+            onItemClick={handleItemClick}
+            selectPaths={itemSelectController.selectPaths}
+            onItemClickAway={() => {
+              if (!selectMode && itemSelectController.selectPaths.length !== 0) {
+                itemSelectController.setSelect([])
+              }
+            }}
+          />
         }
       </>
     )

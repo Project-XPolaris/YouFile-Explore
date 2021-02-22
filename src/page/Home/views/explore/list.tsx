@@ -5,12 +5,16 @@ import { AutoSizer, List } from 'react-virtualized'
 import { FileNode } from '../../tree'
 import useFileContextMenu from '../../hooks/fileContentMenu'
 import FileContextMenu from './menu'
+import FileItemMedium from '../../../../components/FileItemMedium'
 
 export interface ExploreListViewPropsType {
   onRename:(file:FileNode) => void
+  onItemClick:(file:FileNode) => void
+  onItemClickAway:(file:FileNode) => void
+  selectPaths:string[]
 }
 
-const ExploreListView = ({ onRename }: ExploreListViewPropsType) : ReactElement => {
+const ExploreListView = ({ onRename, onItemClickAway, onItemClick,selectPaths }: ExploreListViewPropsType) : ReactElement => {
   const homeModel = useHomeModel()
   const fileContextMenuController = useFileContextMenu()
 
@@ -25,16 +29,17 @@ const ExploreListView = ({ onRename }: ExploreListViewPropsType) : ReactElement 
         file={item}
         key={key}
         style={style}
-        onClick={() => {
-          if (item.type === 'Directory') {
-            homeModel.setCurrentPath(item.path)
-          }
-        }}
         onContextClick={(x, y) => {
           fileContextMenuController.openMenu({
             left: x, top: y, name: item.name, type: item.type, path: item.path
           })
         }}
+        contextSelected={
+          (fileContextMenuController.file?.path === item.path && fileContextMenuController.open ) ||
+          selectPaths.find(selected => selected === item.path) !== undefined
+        }
+        onClickAway={() => onItemClickAway(item)}
+        onClick={() => onItemClick(item)}
       />
     )
   }

@@ -1,12 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles'
 import FileIcon from '../FileIcon'
-import React from 'react'
+import React, { useRef } from 'react'
 import clsx from 'clsx'
 import { FileNode } from '../../page/Home/tree'
 import FolderIcon from '@material-ui/icons/Folder'
 import { yellow } from '@material-ui/core/colors'
 import { useDoubleClick } from '../../hooks/DoubleClick'
 import { DiskFileIcon } from '../FileIcon/DiskFileIcon'
+import { useClickAway } from 'ahooks'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,18 +49,31 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const FileItemMedium = ({
-  file, className, onDoubleClick, onContextClick, contextSelected = false
-}:{
-  file:FileNode,
-  className?:any,
-  onDoubleClick?:() => void
-  onContextClick?:(x:number, y:number) => void
-  contextSelected?:boolean
-}):React.ReactElement => {
+  file,
+  className,
+  onDoubleClick,
+  onContextClick,
+  onClick,
+  onClickAway,
+  contextSelected = false
+}: {
+  file: FileNode,
+  className?: any,
+  onDoubleClick?: () => void
+  onContextClick?: (x: number, y: number) => void
+  contextSelected?: boolean
+  onClick?: () => void
+  onClickAway?: () => void
+}): React.ReactElement => {
   const classes = useStyles()
   const hybridClick = useDoubleClick(
-    onDoubleClick, undefined)
-
+    onDoubleClick, onClick)
+  const ref = useRef<any>()
+  useClickAway(() => {
+    if (onClickAway) {
+      onClickAway()
+    }
+  }, ref)
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (onContextClick) {
       onContextClick(
@@ -70,12 +84,16 @@ const FileItemMedium = ({
   }
 
   return (
-    <div className={clsx(classes.root, className, contextSelected ? classes.contextSelected : undefined)} onContextMenu={handleClick} onClick={hybridClick}>
+    <div
+      className={clsx(classes.root, className, contextSelected ? classes.contextSelected : undefined)}
+      onContextMenu={handleClick}
+      onClick={hybridClick} ref={ref}
+    >
       {
-        file.type === 'File' && <FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)}/>
+        file.type === 'File' && <FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)} />
       }
       {
-        file.type === 'Directory' && <FolderIcon className={clsx(classes.icon, classes.folder)}/>
+        file.type === 'Directory' && <FolderIcon className={clsx(classes.icon, classes.folder)} />
       }
       {
         file.type === 'Parted' && <DiskFileIcon className={clsx(classes.icon)} />

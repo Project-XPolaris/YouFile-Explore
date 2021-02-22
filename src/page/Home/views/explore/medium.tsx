@@ -34,8 +34,11 @@ const useStyles = makeStyles(theme => ({
 
 interface MediumViewPropsType {
   onRename:(file:FileNode) => void
+  onItemClick:(file:FileNode) => void
+  onItemClickAway:(file:FileNode) => void
+  selectPaths:string[]
 }
-export default function MediumView ({ onRename }: MediumViewPropsType):ReactElement {
+export default function MediumView ({ onRename, onItemClick,onItemClickAway,selectPaths }: MediumViewPropsType):ReactElement {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileContextMenuController = useFileContextMenu()
@@ -59,7 +62,12 @@ export default function MediumView ({ onRename }: MediumViewPropsType):ReactElem
                 left: x, top: y, name: it.name, type: it.type, path: it.path
               })
             }}
-            contextSelected={fileContextMenuController.file?.path === it.path && fileContextMenuController.open }
+            onClick={() => onItemClick(it)}
+            contextSelected={
+              (fileContextMenuController.file?.path === it.path && fileContextMenuController.open ) ||
+                selectPaths.find(selected => selected === it.path) !== undefined
+            }
+            onClickAway={() => onItemClickAway(it)}
           />
         )
       }} />

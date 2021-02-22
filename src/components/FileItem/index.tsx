@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Avatar, ButtonBase } from '@material-ui/core'
+import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
 import FileIcon from '../FileIcon'
 import { FileNode } from '../../page/Home/tree'
+import clsx from 'clsx'
+import { useClickAway } from 'ahooks'
 
 const useStyles = makeStyles(theme => ({
   root: {
     height: theme.spacing(8),
     width: '100%',
-    position: 'relative'
+    position: 'relative'.split,
+    '&:hover': {
+      backgroundColor: 'rgba(0,0,0,0.05)'
+    }
   },
   main: {
     width: '100%',
@@ -18,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     paddingLeft: theme.spacing(2),
     justifyContent: 'left'
+  },
+  contextSelected: {
+    backgroundColor: 'rgba(0,0,0,0.05)'
   },
   avatar: {
     color: theme.palette.primary.contrastText,
@@ -46,10 +54,12 @@ interface FileItemPropsType {
   file:FileNode
   onClick?:() => void
   style?:any
+  contextSelected?: boolean
   onContextClick?:(x:number, y:number) => void
+  onClickAway?: () => void
 }
 
-const FileItem = ({ file, onClick, style, onContextClick }: FileItemPropsType):React.ReactElement => {
+const FileItem = ({ file, onClick, style, onContextClick, contextSelected, onClickAway }: FileItemPropsType):React.ReactElement => {
   const classes = useStyles()
   const renderIcon = () => {
     if (file.type === 'Directory') {
@@ -59,6 +69,12 @@ const FileItem = ({ file, onClick, style, onContextClick }: FileItemPropsType):R
       return <FileIcon fileName={file.name} />
     }
   }
+  const ref = useRef<any>()
+  useClickAway(() => {
+    if (onClickAway) {
+      onClickAway()
+    }
+  }, ref)
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (onContextClick) {
       onContextClick(
@@ -68,21 +84,20 @@ const FileItem = ({ file, onClick, style, onContextClick }: FileItemPropsType):R
     }
   }
   return (
-    <div className={classes.root} style={style} onContextMenu={handleClick}>
-      <ButtonBase className={classes.main} onClick={onClick}>
+    <ListItem
+      className={clsx(classes.root, contextSelected ? classes.contextSelected : undefined)}
+      style={style}
+      onContextMenu={handleClick}
+      ref={ref}
+      onClick={onClick}
+    >
+      <ListItemAvatar>
         <Avatar className={classes.avatar}>
           {renderIcon()}
         </Avatar>
-        <div className={classes.info}>
-          <div className={classes.filename}>
-            {file.name}
-          </div>
-        </div>
-      </ButtonBase>
-      <div className={classes.actions}>
-
-      </div>
-    </div>
+      </ListItemAvatar>
+      <ListItemText primary={file.name}/>
+    </ListItem>
 
   )
 }
