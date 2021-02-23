@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogProps,
+  DialogTitle,
+  TextField
+} from '@material-ui/core'
 
 export interface TextInputDialogPropsType {
   open?:boolean
@@ -8,9 +17,10 @@ export interface TextInputDialogPropsType {
   onOk:(value:string) => void
   label?:string
   title:string
+  contentClassName?:any
 }
 
-const TextInputDialog = ({ open = false, onClose, description, onOk, label = '', title }: TextInputDialogPropsType):React.ReactElement => {
+const TextInputDialog = ({ open = false, onClose, description, onOk, contentClassName, title, label = '', ...other }: TextInputDialogPropsType & DialogProps):React.ReactElement => {
   const [text, setText] = useState<string | undefined>()
   const onDialogOk = () => {
     if (text) {
@@ -18,9 +28,9 @@ const TextInputDialog = ({ open = false, onClose, description, onOk, label = '',
     }
   }
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} {...other}>
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
+      <DialogContent className={contentClassName}>
         {
           description &&
           <DialogContentText>

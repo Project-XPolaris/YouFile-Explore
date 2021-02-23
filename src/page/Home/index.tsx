@@ -6,7 +6,6 @@ import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
 import 'react-virtualized/styles.css'
 import { FileNode } from './tree'
-import TextInputDialog from '../../components/TextInputDialog'
 import AddMountDialog from '../../components/AddMoundDialog'
 import useMountModel from '../../models/mount'
 import useAppModel from '../../models/app'
@@ -128,13 +127,7 @@ const HomePage = ():React.ReactElement => {
           fileModel.addSMBFolder(data)
         }}
       />
-      <TextInputDialog
-        onClose={onSwitchCreateDirectoryDialog}
-        onOk={onCreateDirectory}
-        title="Create directory"
-        label="Directory name"
-        open={layoutModel.dialogs['home/createDirectory']}
-      />
+
 
       <div className={classes.contentContainer}>
         {

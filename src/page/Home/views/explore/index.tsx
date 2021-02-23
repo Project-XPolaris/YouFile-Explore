@@ -12,6 +12,9 @@ import useFileContextMenu from '../../hooks/fileContentMenu'
 import useFileModel, { CopyFile } from '../../../../models/file'
 import FileContextMenu from './menu'
 import HomeToolbar from './toolbar'
+import TextInputDialog from '../../../../components/TextInputDialog'
+import useLayoutModel from '../../../../models/layout'
+import theme from '../../../../theme'
 
 const useStyles = makeStyles({
   main: {
@@ -36,6 +39,9 @@ const useStyles = makeStyles({
     height: '100%',
     width: 240,
     overflowY: 'auto'
+  },
+  createDirectory:{
+    width: theme.spacing(40)
   }
 })
 
@@ -49,6 +55,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
   const [selectMode, setSelectMode] = useState<boolean>(false)
   const itemSelectController = useFileSelect({ initValue: [] })
   const fileModel = useFileModel()
+  const layoutModel = useLayoutModel()
   const fileContextMenuController = useFileContextMenu()
   useEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Control') {
@@ -210,9 +217,30 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
       </>
     )
   }
+  const onSwitchCreateDirectoryDialog = () => {
+    layoutModel.switchDialog('home/createDirectory')
+  }
+  const onCreateDirectory = async (value:string) => {
+    await fileModel.mkdir(value)
+    homeModel.loadContent()
+    onSwitchCreateDirectoryDialog()
+  }
   return (
     <div className={classes.main}>
-      <HomeToolbar onSelectAll={handleSelectAll} onReverseSelect={handleReverseSelect} />
+      <TextInputDialog
+        onClose={onSwitchCreateDirectoryDialog}
+        onOk={onCreateDirectory}
+        title="Create directory"
+        label="Directory name"
+        open={layoutModel.dialogs['home/createDirectory']}
+        contentClassName={classes.createDirectory}
+        maxWidth={'xl'}
+      />
+      <HomeToolbar
+        onSelectAll={handleSelectAll}
+        onReverseSelect={handleReverseSelect}
+        onCreateNewDirectory={onSwitchCreateDirectoryDialog}
+      />
       <Paper elevation={2}>
         <div className={classes.side}>
           <HomeSide />

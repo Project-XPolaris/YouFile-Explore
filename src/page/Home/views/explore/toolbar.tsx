@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
-import { Breadcrumbs, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
+import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
 import {
   ArrowBack,
   ArrowForwardIos,
@@ -12,7 +12,7 @@ import {
   MoreVert,
   Notes,
   Refresh,
-  Search,
+  Search
 } from '@material-ui/icons'
 import useHomeModel from '../../model'
 import PopoverImageButton from '../../../../components/PopoverImageButton'
@@ -87,9 +87,10 @@ const useStyles = makeStyles({
 interface HomeToolbarPropsType {
   onSelectAll:() => void
   onReverseSelect:() => void
+  onCreateNewDirectory:() => void
 }
 
-const HomeToolbar = ({ onSelectAll, onReverseSelect }: HomeToolbarPropsType):ReactElement => {
+const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: HomeToolbarPropsType):ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
@@ -151,12 +152,18 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect }: HomeToolbarPropsType):Rea
   const renderMoreMenu = () => {
     return (
       <Menu
-        id="simple-menu"
         anchorEl={moreMenuAnchor}
         keepMounted
         open={Boolean(moreMenuAnchor)}
         onClose={handleMoreMenuClose}
       >
+        <MenuItem
+          onClick={() => {
+            handleMoreMenuClose()
+            onCreateNewDirectory()
+          }}
+        >New directory</MenuItem>
+        <Divider />
         <MenuItem
           onClick={() => {
             handleMoreMenuClose()
