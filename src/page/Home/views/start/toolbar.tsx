@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
-    flexDirection: 'row-reverse',
+    flexDirection: 'row-reverse'
   },
   actionIcon: {
     color: theme.palette.primary.contrastText

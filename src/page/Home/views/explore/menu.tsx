@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import { Menu, MenuItem } from '@material-ui/core'
-import { Delete, Edit, ExitToApp, FileCopy, Tab } from '@material-ui/icons'
+import { Divider, Menu, MenuItem } from '@material-ui/core'
+import { Delete, Edit, ExitToApp, FileCopy, Refresh, SelectAll, Tab } from '@material-ui/icons'
 import clsx from 'clsx'
 import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,6 +13,8 @@ export interface FileContextMenuPropsType {
     controller:FileContextMenuController,
     onRename:(file:FileNode) => void,
     onCopy:(file:FileContext) => void
+    onSelectAll:() => void
+    onReverseSelect:() => void
 }
 const useStyles = makeStyles(theme => ({
   menuIcon: {
@@ -25,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-const FileContextMenu = ({ controller, onRename,onCopy }: FileContextMenuPropsType):ReactElement => {
+const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onReverseSelect }: FileContextMenuPropsType):ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
@@ -87,6 +89,15 @@ const FileContextMenu = ({ controller, onRename,onCopy }: FileContextMenuPropsTy
               homeModel.tabController.openNewExploreByPath(controller.file.name, controller.file.path)
             }}><Tab className={clsx(classes.menuIcon, classes.copyIcon)}/>Open in new tab</MenuItem>
       }
+      <Divider/>
+      <MenuItem onClick={() => {
+        onSelectAll()
+        handleContextClose()
+      }}><SelectAll className={clsx(classes.menuIcon, classes.copyIcon)} />Select all</MenuItem>
+      <MenuItem onClick={() => {
+        onReverseSelect()
+        handleContextClose()
+      }}><Refresh className={clsx(classes.menuIcon, classes.copyIcon)} />Reverse select</MenuItem>
     </Menu>
   )
 }

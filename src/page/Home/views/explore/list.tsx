@@ -3,21 +3,28 @@ import FileItem from '../../../../components/FileItem'
 import useHomeModel from '../../model'
 import { AutoSizer, List } from 'react-virtualized'
 import { FileNode } from '../../tree'
-import useFileContextMenu, { FileContext } from '../../hooks/fileContentMenu'
-import FileContextMenu from './menu'
+import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
+import { makeStyles } from '@material-ui/core/styles'
 
+const useStyles = makeStyles(theme => ({
+  main: {
+    width: '100%',
+    height: '100%',
+  },
+}))
 export interface ExploreListViewPropsType {
   onRename:(file:FileNode) => void
   onItemClick:(file:FileNode) => void
-  onItemClickAway:(file:FileNode) => void
+  onItemClickAway:() => void
   selectPaths:string[]
   onCopy:(file:FileContext) => void
+  onContextClick:(x:number, y:number, file:FileNode) => void
+  fileContextMenuController: FileContextMenuController
 }
 
-const ExploreListView = ({ onRename, onItemClickAway, onItemClick, onCopy, selectPaths }: ExploreListViewPropsType) : ReactElement => {
+const ExploreListView = ({ onItemClickAway, onItemClick, selectPaths, onContextClick, fileContextMenuController }: ExploreListViewPropsType) : ReactElement => {
   const homeModel = useHomeModel()
-  const fileContextMenuController = useFileContextMenu()
-
+  const classes = useStyles()
   const rowRenderer = ({
     key,
     index,
@@ -30,27 +37,19 @@ const ExploreListView = ({ onRename, onItemClickAway, onItemClick, onCopy, selec
         key={key}
         style={style}
         onContextClick={(x, y) => {
-          fileContextMenuController.openMenu({
-            left: x, top: y, name: item.name, type: item.type, path: item.path
-          })
+          onContextClick(x, y, item)
         }}
         contextSelected={
           (fileContextMenuController.file?.path === item.path && fileContextMenuController.open) ||
           selectPaths.find(selected => selected === item.path) !== undefined
         }
-        onClickAway={() => onItemClickAway(item)}
         onClick={() => onItemClick(item)}
       />
     )
   }
 
   return (
-    <>
-      <FileContextMenu
-        controller={fileContextMenuController}
-        onRename={onRename}
-        onCopy={onCopy}
-      />
+    <div className={classes.main} onClick={onItemClickAway}>
       <AutoSizer>
         {({
           height,
@@ -65,7 +64,7 @@ const ExploreListView = ({ onRename, onItemClickAway, onItemClick, onCopy, selec
           />
         )}
       </AutoSizer>
-    </>
+    </div>
   )
 }
 

@@ -13,7 +13,6 @@ import useAppModel from '../../models/app'
 import SearchView from './views/search/search'
 import RenameFileDialog from '../../components/RenameFileDialog'
 import HomeTitleBar from './titlebar'
-import HomeToolbar from './views/explore/toolbar'
 import ExploreView from './views/explore'
 import SearchToolbar from './views/search/toolbar'
 import StartView from './views/start'
@@ -105,7 +104,6 @@ const HomePage = ():React.ReactElement => {
   return (
     <div className={classes.main}>
       <HomeTitleBar />
-      {homeModel.mode === 'display' && <HomeToolbar />}
       {homeModel.mode === 'search' && <SearchToolbar />}
       {homeModel.mode === 'blank' && <StartToolbar />}
       <RenameFileDialog onClose={switchRenameDialog} onOk={onRenameOk} open={renameDialogOpen} file={contextFile} />

@@ -1,6 +1,6 @@
 import React from 'react'
 import useStyles from './style'
-import { Drawer, List } from '@material-ui/core'
+import { Drawer } from '@material-ui/core'
 import useTasksModel from '../../../../models/tasks'
 import { TaskCard } from '../../../../components/TaskCard/base'
 import { stopTask } from '../../../../api/task'

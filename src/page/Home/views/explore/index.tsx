@@ -6,10 +6,12 @@ import useHomeModel from '../../model'
 import MediumView from './medium'
 import { FileNode } from '../../tree'
 import ExploreListView from './list'
-import { useEventListener } from 'ahooks'
+import { useEventListener, useKeyPress } from 'ahooks'
 import useFileSelect from '../../hooks/select'
-import { FileContext } from '../../hooks/fileContentMenu'
+import useFileContextMenu from '../../hooks/fileContentMenu'
 import useFileModel, { CopyFile } from '../../../../models/file'
+import FileContextMenu from './menu'
+import HomeToolbar from './toolbar'
 
 const useStyles = makeStyles({
   main: {
@@ -47,6 +49,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
   const [selectMode, setSelectMode] = useState<boolean>(false)
   const itemSelectController = useFileSelect({ initValue: [] })
   const fileModel = useFileModel()
+  const fileContextMenuController = useFileContextMenu()
   useEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Control') {
       if (!selectMode) {
@@ -60,6 +63,13 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
         setSelectMode(false)
       }
     }
+  })
+  useKeyPress('ctrl.a', () => {
+    if (itemSelectController.selectPaths.length !== homeModel.currentContent.length) {
+      handleSelectAll()
+    }
+  }, {
+    events: ['keydown']
   })
   const handleItemClick = (file: FileNode) => {
     if (selectMode) {
@@ -77,7 +87,11 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
       }
     }
   }
-  const handlerCopy = (file: FileContext) => {
+  const handlerCopy = () => {
+    const file = fileContextMenuController.file
+    if (!file) {
+      return
+    }
     if (itemSelectController.selectPaths.length > 0) {
       const copyFile: CopyFile[] = []
       itemSelectController.selectPaths.forEach(selected => {
@@ -101,9 +115,29 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
       }
     ])
   }
+  const handleSelectAll = () => {
+    itemSelectController.setSelect(homeModel.currentContent.map(it => it.path))
+  }
+  const handleReverseSelect = () => {
+    const reverseSelectList : string[] = []
+    homeModel.currentContent.forEach(it => {
+      const isExist = itemSelectController.selectPaths.find(selected => selected === it.path) !== undefined
+      if (!isExist) {
+        reverseSelectList.push(it.path)
+      }
+    })
+    itemSelectController.setSelect(reverseSelectList)
+  }
   const renderDisplayMode = () => {
     return (
       <>
+        <FileContextMenu
+          controller={fileContextMenuController}
+          onRename={onRename}
+          onCopy={handlerCopy}
+          onSelectAll={handleSelectAll}
+          onReverseSelect={handleReverseSelect}
+        />
         {
           homeModel.viewType === 'List' &&
           <ExploreListView
@@ -115,6 +149,12 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
                 itemSelectController.setSelect([])
               }
             }}
+            onContextClick={(x, y, file) => {
+              fileContextMenuController.openMenu({
+                left: x, top: y, name: file.name, type: file.type, path: file.path
+              })
+            }}
+            fileContextMenuController={fileContextMenuController}
             onCopy={handlerCopy}
           />
         }
@@ -129,7 +169,13 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
                 itemSelectController.setSelect([])
               }
             }}
+            onContextClick={(x, y, file) => {
+              fileContextMenuController.openMenu({
+                left: x, top: y, name: file.name, type: file.type, path: file.path
+              })
+            }}
             onCopy={handlerCopy}
+            fileContextMenuController={fileContextMenuController}
           />
         }
       </>
@@ -137,6 +183,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
   }
   return (
     <div className={classes.main}>
+      <HomeToolbar onSelectAll={handleSelectAll} onReverseSelect={handleReverseSelect} />
       <Paper elevation={2}>
         <div className={classes.side}>
           <HomeSide />

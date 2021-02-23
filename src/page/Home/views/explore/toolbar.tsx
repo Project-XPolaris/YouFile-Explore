@@ -9,9 +9,10 @@ import {
   Favorite,
   FileCopy,
   ListAlt,
+  MoreVert,
   Notes,
   Refresh,
-  Search
+  Search,
 } from '@material-ui/icons'
 import useHomeModel from '../../model'
 import PopoverImageButton from '../../../../components/PopoverImageButton'
@@ -22,8 +23,6 @@ import CutPopover from '../../../../layout/Frame/parts/CutPopover'
 import useLayoutModel from '../../../../models/layout'
 import SearchPopover from '../../../../layout/Frame/parts/SearchPopover'
 import useAppModel from '../../../../models/app'
-import { FavouriteManager } from '../../../../favourite'
-import { useUpdate } from 'ahooks'
 
 const useStyles = makeStyles({
   main: {
@@ -86,16 +85,18 @@ const useStyles = makeStyles({
 })
 
 interface HomeToolbarPropsType {
-
+  onSelectAll:() => void
+  onReverseSelect:() => void
 }
 
-const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
+const HomeToolbar = ({ onSelectAll, onReverseSelect }: HomeToolbarPropsType):ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
   const appModel = useAppModel()
   const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
+  const [moreMenuAnchor, setMoreMenuAnchor] = React.useState(null)
   const copyPopoverController = usePopoverController()
   const movePopoverController = usePopoverController()
   const searchPopoverController = usePopoverController()
@@ -105,6 +106,13 @@ const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
 
   const handleViewTypeMenuClose = () => {
     setViewTypeMenuAnchor(null)
+  }
+  const handleMoreMenuClick = (event:any) => {
+    setMoreMenuAnchor(event.currentTarget)
+  }
+
+  const handleMoreMenuClose = () => {
+    setMoreMenuAnchor(null)
   }
   const handlerAddToFavourite = () => {
     if (!homeModel.currentPath || !appModel.info) {
@@ -140,9 +148,34 @@ const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
       </Menu>
     )
   }
+  const renderMoreMenu = () => {
+    return (
+      <Menu
+        id="simple-menu"
+        anchorEl={moreMenuAnchor}
+        keepMounted
+        open={Boolean(moreMenuAnchor)}
+        onClose={handleMoreMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            handleMoreMenuClose()
+            onSelectAll()
+          }}
+        >Select all</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMoreMenuClose()
+            onReverseSelect()
+          }}
+        >Reverse select</MenuItem>
+      </Menu>
+    )
+  }
   return (
     <Paper className={classes.main}>
       {viewTypeMenu()}
+      {renderMoreMenu()}
       <div className={classes.leading}>
         <IconButton
           onClick={() => homeModel.onBack()}
@@ -207,6 +240,9 @@ const HomeToolbar = ({}: HomeToolbarPropsType):ReactElement => {
         </IconButton>
         <IconButton aria-label='delete' onClick={handleViewTypeMenuClick} >
           <Notes fontSize='inherit' className={classes.actionIcon} />
+        </IconButton>
+        <IconButton onClick={handleMoreMenuClick}>
+          <MoreVert className={classes.actionIcon} />
         </IconButton>
       </div>
     </Paper>

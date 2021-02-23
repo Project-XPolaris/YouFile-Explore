@@ -39,7 +39,6 @@ const HomeModel = () => {
   const [favorite, setFavourite] = useState<FavouriteItem[]>()
   const tabController = useTabsController({
     onTabChange: (tab) => {
-      console.log(tab)
       switch (tab.type) {
         case 'Explore':
           setMode('display')
@@ -239,10 +238,6 @@ const HomeModel = () => {
     }
     return []
   }
-  useEffect(() => {
-    console.log(searchResult)
-  }, [searchResult])
-
   const addFavourite = (item :FavouriteItem) => {
     FavouriteManager.getInstance().addFavourite(item)
     setFavourite([...FavouriteManager.getInstance().items])

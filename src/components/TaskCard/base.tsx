@@ -1,13 +1,13 @@
 import { Task } from '../../api/task'
 import CopyFileTaskCard from '../CopyFileTaskCard'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import DeleteFileTaskCard from '../DeleteFileTaskCard'
 
 export const TaskCard = ({
   task,
   className,
   cardProps
-}: { task: Task<any>, className?: any, cardProps:any }) => {
+}: { task: Task<any>, className?: any, cardProps:any }):ReactElement => {
   switch (task.type) {
     case 'Copy':
       return (
