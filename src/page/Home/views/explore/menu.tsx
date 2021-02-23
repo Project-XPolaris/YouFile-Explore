@@ -13,6 +13,7 @@ export interface FileContextMenuPropsType {
     controller:FileContextMenuController,
     onRename:(file:FileNode) => void,
     onCopy:(file:FileContext) => void
+    onMove:(file:FileContext) => void
     onSelectAll:() => void
     onReverseSelect:() => void
 }
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onReverseSelect }: FileContextMenuPropsType):ReactElement => {
+const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onReverseSelect,onMove }: FileContextMenuPropsType):ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
@@ -73,11 +74,7 @@ const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onReverseS
         if (!controller.file) {
           return
         }
-        fileModel.setMoveFile({
-          name: controller.file.name,
-          path: controller.file.path,
-          type: controller.file.type
-        })
+        onMove(controller.file)
       }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)}/>Move</MenuItem>
       {
             controller.file?.type === 'Directory' &&

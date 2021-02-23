@@ -18,6 +18,6 @@ export const TaskCard = ({
         <DeleteFileTaskCard task={task} className={className} {...cardProps}/>
       )
     default:
-      return null
+      return <></>
   }
 }

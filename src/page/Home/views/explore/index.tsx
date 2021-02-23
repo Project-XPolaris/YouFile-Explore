@@ -105,9 +105,29 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
         }
         fileModel.setCopyFile(copyFile)
       })
+    }
+  }
+  const handlerMove = () => {
+    const file = fileContextMenuController.file
+    if (!file) {
       return
     }
-    fileModel.setCopyFile([
+    if (itemSelectController.selectPaths.length > 0) {
+      const moveFile: CopyFile[] = []
+      itemSelectController.selectPaths.forEach(selected => {
+        const target = homeModel.currentContent.find(it => it.path === selected)
+        if (target) {
+          moveFile.push({
+            name: target.name,
+            path: target.path,
+            type: target.type
+          })
+        }
+        fileModel.setMoveFile(moveFile)
+      })
+      return
+    }
+    fileModel.setMoveFile([
       {
         name: file.name,
         path: file.path,
@@ -119,7 +139,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
     itemSelectController.setSelect(homeModel.currentContent.map(it => it.path))
   }
   const handleReverseSelect = () => {
-    const reverseSelectList : string[] = []
+    const reverseSelectList: string[] = []
     homeModel.currentContent.forEach(it => {
       const isExist = itemSelectController.selectPaths.find(selected => selected === it.path) !== undefined
       if (!isExist) {
@@ -137,6 +157,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
           onCopy={handlerCopy}
           onSelectAll={handleSelectAll}
           onReverseSelect={handleReverseSelect}
+          onMove={handlerMove}
         />
         {
           homeModel.viewType === 'List' &&
@@ -151,7 +172,11 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
             }}
             onContextClick={(x, y, file) => {
               fileContextMenuController.openMenu({
-                left: x, top: y, name: file.name, type: file.type, path: file.path
+                left: x,
+                top: y,
+                name: file.name,
+                type: file.type,
+                path: file.path
               })
             }}
             fileContextMenuController={fileContextMenuController}
@@ -171,7 +196,11 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
             }}
             onContextClick={(x, y, file) => {
               fileContextMenuController.openMenu({
-                left: x, top: y, name: file.name, type: file.type, path: file.path
+                left: x,
+                top: y,
+                name: file.name,
+                type: file.type,
+                path: file.path
               })
             }}
             onCopy={handlerCopy}

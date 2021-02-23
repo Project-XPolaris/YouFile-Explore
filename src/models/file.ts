@@ -15,7 +15,7 @@ export interface CopyFile {
 }
 const FileModel = () => {
   const [copyFile, setCopyFile] = useState<CopyFile[] | undefined>()
-  const [moveFile, setMoveFile] = useState<CopyFile | undefined>()
+  const [moveFile, setMoveFile] = useState<CopyFile[] | undefined>()
   const homeModel = useHomeModel()
   const appModel = useAppModel()
   const pasteFile = () => {
@@ -28,8 +28,10 @@ const FileModel = () => {
   }
   const move = async () => {
     if (moveFile && homeModel.currentPath && appModel.info) {
-      const movePath = [homeModel.currentPath, moveFile.name].join(appModel.info.sep)
-      await renameFile(moveFile.path, movePath)
+      for (const item of moveFile) {
+        const movePath = [homeModel.currentPath, item.name].join(appModel.info.sep)
+        await renameFile(item.path, movePath)
+      }
       await homeModel.loadContent()
     }
   }

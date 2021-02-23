@@ -1,8 +1,8 @@
 import React from 'react'
 import useFileModel from '../../../../models/file'
-import { Avatar, Button, Card } from '@material-ui/core'
-import { Description } from '@material-ui/icons'
+import { Button } from '@material-ui/core'
 import useStyles from './style'
+import FileItemListPopover from '../../../../components/FileItemListPopover'
 
 export interface CutPopoverPropsType {
   onMove: () => void
@@ -10,32 +10,25 @@ export interface CutPopoverPropsType {
 const CutPopover = ({ onMove }: CutPopoverPropsType): React.ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
+  const clearAllHandler = () => {
+    fileModel.setMoveFile([])
+  }
+  const renderActions = () => {
+    return (
+      <Button color={'primary'} fullWidth className={classes.button} onClick={async () => {
+        await fileModel.move()
+        onMove()
+      }}>
+        Move to here
+      </Button>
+    )
+  }
   return (
-    <Card elevation={0}>
-      {
-        fileModel.moveFile ? <>
-          <div>
-            <div className={classes.content}>
-              <Avatar>
-                <Description />
-              </Avatar>
-              <div className={classes.filename}>
-                {fileModel.moveFile?.name}
-              </div>
-            </div>
-            <Button color={'primary'} fullWidth className={classes.button} onClick={async () => {
-              await fileModel.move()
-              onMove()
-            }}>
-                Move to here
-            </Button>
-          </div>
-        </>
-          : <div className={classes.noContent}>
-            no file to move
-          </div>
-      }
-    </Card>
+    <FileItemListPopover
+      actions={renderActions()}
+      items={fileModel.moveFile}
+      onClearAll={clearAllHandler}
+    />
   )
 }
 
