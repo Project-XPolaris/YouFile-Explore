@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { Delete, Edit, ExitToApp, FileCopy, Tab } from '@material-ui/icons'
 import clsx from 'clsx'
-import { FileContextMenuController } from '../../hooks/fileContentMenu'
+import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
 import { makeStyles } from '@material-ui/core/styles'
 import { red } from '@material-ui/core/colors'
 import useFileModel from '../../../../models/file'
@@ -11,7 +11,8 @@ import { FileNode } from '../../tree'
 
 export interface FileContextMenuPropsType {
     controller:FileContextMenuController,
-    onRename:(file:FileNode) => void
+    onRename:(file:FileNode) => void,
+    onCopy:(file:FileContext) => void
 }
 const useStyles = makeStyles(theme => ({
   menuIcon: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-const FileContextMenu = ({ controller, onRename }: FileContextMenuPropsType):ReactElement => {
+const FileContextMenu = ({ controller, onRename,onCopy }: FileContextMenuPropsType):ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
@@ -45,10 +46,7 @@ const FileContextMenu = ({ controller, onRename }: FileContextMenuPropsType):Rea
           if (!controller.file) {
             return
           }
-          fileModel.setCopyFile({
-            name: controller.file.name,
-            path: controller.file.path
-          })
+          onCopy(controller.file)
         }}><FileCopy className={clsx(classes.menuIcon, classes.copyIcon)} />Copy</MenuItem>
 
       <MenuItem onClick={() => {
@@ -75,7 +73,8 @@ const FileContextMenu = ({ controller, onRename }: FileContextMenuPropsType):Rea
         }
         fileModel.setMoveFile({
           name: controller.file.name,
-          path: controller.file.path
+          path: controller.file.path,
+          type: controller.file.type
         })
       }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)}/>Move</MenuItem>
       {

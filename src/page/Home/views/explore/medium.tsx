@@ -5,7 +5,7 @@ import FileItemMedium from '../../../../components/FileItemMedium'
 import { FileNode } from '../../tree'
 import { red } from '@material-ui/core/colors'
 import { FlexGrid } from '../../../../components/FlexGrid'
-import useFileContextMenu from '../../hooks/fileContentMenu'
+import useFileContextMenu, { FileContext } from '../../hooks/fileContentMenu'
 import FileContextMenu from './menu'
 
 const useStyles = makeStyles(theme => ({
@@ -37,14 +37,19 @@ interface MediumViewPropsType {
   onItemClick:(file:FileNode) => void
   onItemClickAway:(file:FileNode) => void
   selectPaths:string[]
+  onCopy:(file:FileContext) => void
 }
-export default function MediumView ({ onRename, onItemClick,onItemClickAway,selectPaths }: MediumViewPropsType):ReactElement {
+export default function MediumView ({ onRename, onItemClick, onItemClickAway, selectPaths, onCopy }: MediumViewPropsType):ReactElement {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileContextMenuController = useFileContextMenu()
   return (
     <div className={classes.main}>
-      <FileContextMenu controller={fileContextMenuController} onRename={onRename} />
+      <FileContextMenu
+        controller={fileContextMenuController}
+        onRename={onRename}
+        onCopy={onCopy}
+      />
       <FlexGrid dataSource={homeModel.currentContent} rowWidth={120} columnHeight={120} itemRender={(it) => {
         return (
           <FileItemMedium
@@ -64,7 +69,7 @@ export default function MediumView ({ onRename, onItemClick,onItemClickAway,sele
             }}
             onClick={() => onItemClick(it)}
             contextSelected={
-              (fileContextMenuController.file?.path === it.path && fileContextMenuController.open ) ||
+              (fileContextMenuController.file?.path === it.path && fileContextMenuController.open) ||
                 selectPaths.find(selected => selected === it.path) !== undefined
             }
             onClickAway={() => onItemClickAway(it)}

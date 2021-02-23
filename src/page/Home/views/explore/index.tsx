@@ -8,6 +8,8 @@ import { FileNode } from '../../tree'
 import ExploreListView from './list'
 import { useEventListener } from 'ahooks'
 import useFileSelect from '../../hooks/select'
+import { FileContext } from '../../hooks/fileContentMenu'
+import useFileModel, { CopyFile } from '../../../../models/file'
 
 const useStyles = makeStyles({
   main: {
@@ -44,6 +46,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
   const homeModel = useHomeModel()
   const [selectMode, setSelectMode] = useState<boolean>(false)
   const itemSelectController = useFileSelect({ initValue: [] })
+  const fileModel = useFileModel()
   useEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Control') {
       if (!selectMode) {
@@ -74,6 +77,30 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
       }
     }
   }
+  const handlerCopy = (file: FileContext) => {
+    if (itemSelectController.selectPaths.length > 0) {
+      const copyFile: CopyFile[] = []
+      itemSelectController.selectPaths.forEach(selected => {
+        const target = homeModel.currentContent.find(it => it.path === selected)
+        if (target) {
+          copyFile.push({
+            name: target.name,
+            path: target.path,
+            type: target.type
+          })
+        }
+        fileModel.setCopyFile(copyFile)
+      })
+      return
+    }
+    fileModel.setCopyFile([
+      {
+        name: file.name,
+        path: file.path,
+        type: file.type
+      }
+    ])
+  }
   const renderDisplayMode = () => {
     return (
       <>
@@ -88,6 +115,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
                 itemSelectController.setSelect([])
               }
             }}
+            onCopy={handlerCopy}
           />
         }
         {
@@ -101,6 +129,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
                 itemSelectController.setSelect([])
               }
             }}
+            onCopy={handlerCopy}
           />
         }
       </>

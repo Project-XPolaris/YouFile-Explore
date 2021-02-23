@@ -11,20 +11,19 @@ import useAppModel from './app'
 export interface CopyFile {
   name : string
   path:string
+  type:string
 }
 const FileModel = () => {
-  const [copyFile, setCopyFile] = useState<CopyFile | undefined>()
+  const [copyFile, setCopyFile] = useState<CopyFile[] | undefined>()
   const [moveFile, setMoveFile] = useState<CopyFile | undefined>()
   const homeModel = useHomeModel()
   const appModel = useAppModel()
   const pasteFile = () => {
     if (copyFile && homeModel.currentPath) {
-      copyFileService([
-        {
-          src: copyFile?.path,
-          dest: `${homeModel.currentPath}/${copyFile.name}`
-        }
-      ])
+      copyFileService(copyFile.map(it => ({
+        src: it.path,
+        dest: `${homeModel.currentPath}/${it.name}`
+      })))
     }
   }
   const move = async () => {
@@ -40,7 +39,7 @@ const FileModel = () => {
         name: data.name,
         properties: {
           path: homeModel.currentPath,
-          comment: undefinedOrString(data.comment),
+          comment: undefinedOrString(data.comment) ?? '',
           public: booleanToYesNo(data.public),
           writable: booleanToYesNo(data.writable),
           'directory mask': data.directory_mask,

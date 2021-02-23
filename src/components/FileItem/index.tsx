@@ -1,11 +1,11 @@
 import React, { useRef } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
 import FileIcon from '../FileIcon'
 import { FileNode } from '../../page/Home/tree'
 import clsx from 'clsx'
 import { useClickAway } from 'ahooks'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
   root: {
