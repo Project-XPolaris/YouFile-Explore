@@ -5,6 +5,8 @@ import theme from '../../theme'
 import { IconButton, Paper } from '@material-ui/core'
 import { Add, Close } from '@material-ui/icons'
 import useHomeModel from './model'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { TabItem } from './hooks/tab'
 
 const useStyles = makeStyles({
   main: {
@@ -19,7 +21,8 @@ const useStyles = makeStyles({
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
     flexGrow: 1,
-    maxWidth: theme.spacing(30)
+    maxWidth: theme.spacing(30),
+    cursor: 'default'
   },
   addHead: {
     height: theme.spacing(4),
@@ -59,40 +62,76 @@ const useStyles = makeStyles({
     '-webkit-app-region': 'drag',
     height: '100%',
     flexGrow: 1
+  },
+  tabContainer: {
+    display: 'flex'
   }
 })
 
 interface HomeTabsPropsType {
   className?: any
 }
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  result.splice(endIndex, 0, removed)
 
-export default function HomeTabs ({ className }: HomeTabsPropsType) : ReactElement {
+  return result
+}
+export default function HomeTabs ({ className }: HomeTabsPropsType): ReactElement {
   const classes = useStyles()
   const homeModel = useHomeModel()
+  const onDragEnd = (result:any) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return
+    }
+
+    const items:TabItem[] = reorder(
+      homeModel.tabController.list,
+      result.source.index,
+      result.destination.index
+    )
+    homeModel.tabController.setList(items)
+  }
   return (
     <div className={clsx(className, classes.main)}>
-      {
-        homeModel.tabController.list.map((item, idx) => {
-          return (
-            <Paper
-              className={clsx(classes.tabHead, item.active ? classes.active : classes.inactive)}
-              key={idx}
-            >
-              <div className={classes.title} onClick={() => {
-                homeModel.tabController.setActiveWithIndex(idx)
-              }}>{item.name}</div>
-              <IconButton
-                size={'small'}
-                onClick={() => {
-                  homeModel.tabController.closeTab(idx)
-                }}
-              >
-                <Close className={classes.icon} />
-              </IconButton>
-            </Paper>
-          )
-        })
-      }
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId='droppable' direction='horizontal'>
+          {(provided, snapshot) => (
+            <div ref={provided.innerRef} {...provided.droppableProps} className={classes.tabContainer} >
+              {
+                homeModel.tabController.list.map((item, idx) => {
+                  return (
+                    <Draggable key={item.id} draggableId={item.id } index={idx}>
+                      {(provided, snapshot) => (
+                        <Paper
+                          className={clsx(classes.tabHead, item.active ? classes.active : classes.inactive)}
+                          key={idx}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <div className={classes.title} onClick={() => {
+                            homeModel.tabController.setActiveWithIndex(idx)
+                          }}>{item.name}</div>
+                          <IconButton
+                            size={'small'}
+                            onClick={() => {
+                              homeModel.tabController.closeTab(idx)
+                            }}
+                          >
+                            <Close className={classes.icon} />
+                          </IconButton>
+                        </Paper>)}
+                    </Draggable>
+                  )
+                })
+              }
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <div className={classes.addHead}>
         <IconButton
           size={'small'}
@@ -100,7 +139,7 @@ export default function HomeTabs ({ className }: HomeTabsPropsType) : ReactEleme
             homeModel.tabController.newTab({ type: 'Start' })
           }}
         >
-          <Add className={classes.addIcon}/>
+          <Add className={classes.addIcon} />
         </IconButton>
       </div>
       <div className={classes.dragZone}>

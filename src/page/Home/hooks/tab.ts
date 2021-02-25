@@ -1,5 +1,6 @@
 import { useDynamicList } from 'ahooks'
 import { useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 export type TabType = 'Explore' | 'Search' | 'Start'
 export interface TabItem {
@@ -7,7 +8,7 @@ export interface TabItem {
   name : string
   active:boolean,
   type : TabType,
-  id?: string
+  id: string
 }
 export const useTabsController = ({
   onTabChange,
@@ -20,14 +21,10 @@ export const useTabsController = ({
     name: 'new tab',
     path: undefined,
     active: true,
-    type: 'Start'
+    type: 'Start',
+    id: uuidv4()
   }]
-  const tabsListController = useDynamicList<TabItem>([{
-    name: 'new tab',
-    path: undefined,
-    active: true,
-    type: 'Start'
-  }])
+  const tabsListController = useDynamicList<TabItem>(init)
   const addTab = (item : TabItem) => {
     tabsListController.push(item)
   }
@@ -76,7 +73,8 @@ export const useTabsController = ({
       name: 'new tab',
       path: undefined,
       active: true,
-      type: type
+      type: type,
+      id: uuidv4()
     })
     tabsListController.resetList(newList)
   }
@@ -91,7 +89,8 @@ export const useTabsController = ({
       name: name,
       path: path,
       active: true,
-      type: 'Explore'
+      type: 'Explore',
+      id: uuidv4()
     })
     tabsListController.resetList(newList)
   }
@@ -164,6 +163,7 @@ export const useTabsController = ({
     setCurrentTabFolder,
     newSearchTab,
     openNewExploreByPath,
-    startPageToExplore
+    startPageToExplore,
+    setList: tabsListController.resetList
   }
 }
