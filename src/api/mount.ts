@@ -10,6 +10,7 @@ export interface Mount {
   freq:number
   // eslint-disable-next-line camelcase
   pass_no:number
+  mountName?:string
 }
 export const fetchFstabMounts = async ():Promise<Mount[]> => {
   return apiRequest.get(ApplicationConfig.apiPaths.fstabMounts, {})
@@ -27,4 +28,8 @@ export const removeFstabMount = async (filePath:string) => {
       dirPath: filePath
     }
   })
+}
+
+export const remountFstab = async () => {
+  return apiRequest.get(ApplicationConfig.apiPaths.remountFstab,{})
 }

@@ -4,6 +4,7 @@ import useAppModel from '../../../../models/app'
 import FileItemMedium from '../../../../components/FileItemMedium'
 import useHomeModel from '../../model'
 import { FavouriteManager } from '../../../../favourite'
+import useMountModel from '../../../../models/mount';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,6 +44,7 @@ const StartView = ({}: StartViewPropsType) => {
   const classes = useStyles()
   const appModel = useAppModel()
   const homeModel = useHomeModel()
+  const mountModel = useMountModel()
   return (
     <div className={classes.root}>
       {
@@ -119,6 +121,32 @@ const StartView = ({}: StartViewPropsType) => {
                 className={classes.item}
                 onDoubleClick={() => {
                   homeModel.tabController.startPageToExplore(item.path)
+                }}
+              />
+            )
+          })
+        }
+
+      </div>
+      <div className={classes.label}>
+        Mounts
+      </div>
+      <div className={classes.itemContainer}>
+        {
+          mountModel.mountList.map(item => {
+            return (
+              <FileItemMedium
+                file={{
+                  name: item.mountName ?? "",
+                  path: item.file,
+                  type: "MountDirectory",
+                  parent: undefined,
+                  children: undefined
+                }}
+                key={item.file}
+                className={classes.item}
+                onDoubleClick={() => {
+                  homeModel.tabController.startPageToExplore(item.file)
                 }}
               />
             )

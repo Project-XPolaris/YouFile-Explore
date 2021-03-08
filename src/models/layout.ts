@@ -5,6 +5,7 @@ export type DialogKey = 'global/addSMB' | 'global/taskDrawer' | 'home/createDire
 const LayoutModel = () => {
   const [dialogs, setDialogs] = useState< { [key:string]:boolean }>({})
   const switchDialog = (dialogKey:DialogKey) => {
+    console.log(dialogKey)
     const newDialog = {
       ...dialogs
     }

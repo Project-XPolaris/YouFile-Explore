@@ -17,14 +17,26 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
-      }
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
     ]
   },
+  plugins: [
+
+  ],
   node: {
     __dirname: false
   },
   output: {
     path: path.resolve(rootPath, 'dist'),
-    filename: '[name].js'
+    filename: '[name].js',
+    publicPath: 'public',
   }
 }

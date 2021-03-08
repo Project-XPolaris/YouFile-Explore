@@ -1,6 +1,17 @@
 import React, { ReactElement } from 'react'
 import { Divider, Menu, MenuItem } from '@material-ui/core'
-import { Delete, Edit, ExitToApp, FileCopy, Refresh, SelectAll, Tab } from '@material-ui/icons'
+import {
+  Delete,
+  Edit,
+  ExitToApp,
+  FileCopy,
+  Folder,
+  LinkOff,
+  OfflineBolt,
+  Refresh,
+  SelectAll,
+  Tab,
+} from '@material-ui/icons';
 import clsx from 'clsx'
 import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,6 +19,8 @@ import { red } from '@material-ui/core/colors'
 import useFileModel from '../../../../models/file'
 import useHomeModel from '../../model'
 import { FileNode } from '../../tree'
+import useMountModel from '../../../../models/mount';
+import file from '../../../../models/file';
 
 export interface FileContextMenuPropsType {
     controller:FileContextMenuController,
@@ -16,6 +29,7 @@ export interface FileContextMenuPropsType {
     onMove:(file:FileContext) => void
     onSelectAll:() => void
     onReverseSelect:() => void
+    onAsMountPoint:() => void
 }
 const useStyles = makeStyles(theme => ({
   menuIcon: {
@@ -28,21 +42,22 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onReverseSelect,onMove }: FileContextMenuPropsType):ReactElement => {
+const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll,onAsMountPoint, onReverseSelect,onMove }: FileContextMenuPropsType):ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
+  const mountModel = useMountModel()
   const handleContextClose = () => {
     controller.closeMenu()
   }
+  const mountPoint =   mountModel.mountList.find(it => it.file === controller.file?.path)
   return (
     <Menu
       keepMounted
       open={controller.open}
       onClose={handleContextClose}
       anchorReference="anchorPosition"
-      anchorPosition={controller.getAnchor()}
-    >
+      anchorPosition={controller.getAnchor()}>
       <MenuItem
         onClick={() => {
           handleContextClose()
@@ -95,6 +110,21 @@ const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onReverseS
         onReverseSelect()
         handleContextClose()
       }}><Refresh className={clsx(classes.menuIcon, classes.copyIcon)} />Reverse select</MenuItem>
+      <Divider/>
+      {
+        controller.file?.type === "Directory"?
+          mountPoint ?
+            <MenuItem onClick={() => {
+              mountModel.removeMount(mountPoint.file)
+              handleContextClose()
+            }}><LinkOff className={clsx(classes.menuIcon, classes.copyIcon)} />Unmount</MenuItem>
+            :
+            <MenuItem onClick={() => {
+              onAsMountPoint()
+              handleContextClose()
+            }}><Folder className={clsx(classes.menuIcon, classes.copyIcon)} />As smb mount point</MenuItem>
+         :<></>
+      }
     </Menu>
   )
 }

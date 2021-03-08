@@ -102,23 +102,11 @@ const HomePage = ():React.ReactElement => {
 
   return (
     <div className={classes.main}>
+
       <HomeTitleBar />
       {homeModel.mode === 'search' && <SearchToolbar />}
       {homeModel.mode === 'blank' && <StartToolbar />}
       <RenameFileDialog onClose={switchRenameDialog} onOk={onRenameOk} open={renameDialogOpen} file={contextFile} />
-      <AddMountDialog
-        onClose={() => layoutModel.switchDialog('home/addMount')}
-        open={Boolean(layoutModel.dialogs['home/addMount'])}
-        onOk={(data) => {
-          layoutModel.switchDialog('home/addMount')
-          if (homeModel.currentPath) {
-            mountModel.mount({
-              ...data,
-              file: homeModel.currentPath
-            })
-          }
-        }}
-      />
       <AddSMBDialog
         onClose={() => layoutModel.switchDialog('global/addSMB')}
         open={Boolean(layoutModel.dialogs['global/addSMB'])}

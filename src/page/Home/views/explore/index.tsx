@@ -15,6 +15,9 @@ import HomeToolbar from './toolbar'
 import TextInputDialog from '../../../../components/TextInputDialog'
 import useLayoutModel from '../../../../models/layout'
 import theme from '../../../../theme'
+import AddSmbMountDialog from '../../../../components/AddSmbMountDialog';
+import useMountModel from '../../../../models/mount';
+
 
 const useStyles = makeStyles({
   main: {
@@ -56,6 +59,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
   const itemSelectController = useFileSelect({ initValue: [] })
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
+  const mountModel = useMountModel()
   const fileContextMenuController = useFileContextMenu()
   useEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Control') {
@@ -165,7 +169,9 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
           onSelectAll={handleSelectAll}
           onReverseSelect={handleReverseSelect}
           onMove={handlerMove}
+          onAsMountPoint={() => layoutModel.switchDialog('home/addMount')}
         />
+
         {
           homeModel.viewType === 'List' &&
           <ExploreListView
@@ -225,6 +231,29 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
     homeModel.loadContent()
     onSwitchCreateDirectoryDialog()
   }
+  const onMount = async ({address,username,password}:{address:string,password:string,username:string}) => {
+    if (!fileContextMenuController.file) {
+      return
+    }
+    const options : {[key:string]:string} = {
+      iocharset:"utf8",
+      file_mode:"0777",
+      dir_mode:"0777",
+    }
+    if (username.length > 0) {
+      options.username = username
+      options.password = password
+    }
+    await mountModel.mount({
+      device: address,
+      options:options,
+      file:fileContextMenuController.file.path,
+      dump:"0",
+      fsck:"0",
+      type:"cifs"
+    })
+    layoutModel.switchDialog("home/addMount")
+  }
   return (
     <div className={classes.main}>
       <TextInputDialog
@@ -235,6 +264,11 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
         open={layoutModel.dialogs['home/createDirectory']}
         contentClassName={classes.createDirectory}
         maxWidth={'xl'}
+      />
+      <AddSmbMountDialog
+        open={Boolean(layoutModel.dialogs['home/addMount'])}
+        onMount={onMount}
+        onClose={() => layoutModel.switchDialog("home/addMount")}
       />
       <HomeToolbar
         onSelectAll={handleSelectAll}

@@ -11,11 +11,12 @@ export const ApplicationConfig = {
     fstabAddMount: '/fstab/mounts',
     fsRemoveMount: '/fstab/mounts',
     newSearchTask: '/task/search',
+    remountFstab: '/fstab/reload',
     getTask: '/task/get',
     info: '/info'
   },
   yousmb: {
-    apiUrl: 'http://192.168.99.101:8200',
+    apiUrl: 'http://192.168.31.186:8200',
     apiPaths: {
       addFolder: '/folders/add',
       config: '/config'

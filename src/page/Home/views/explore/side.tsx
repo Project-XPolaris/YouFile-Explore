@@ -10,11 +10,13 @@ import {
   ListItemText,
   ListSubheader
 } from '@material-ui/core'
-import { Delete, Folder } from '@material-ui/icons'
+import { Delete, Eject, Folder } from '@material-ui/icons';
 import useAppModel from '../../../../models/app'
 import { DiskFileIcon } from '../../../../components/FileIcon/DiskFileIcon'
 import FolderIcon from '@material-ui/icons/Folder'
 import { FavouriteManager } from '../../../../favourite'
+import useMountModel from '../../../../models/mount';
+import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -27,6 +29,7 @@ const HomeSide = (): React.ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const appModel = useAppModel()
+  const mountModel = useMountModel()
   return (
     <div className={classes.main}>
       {
@@ -90,6 +93,26 @@ const HomeSide = (): React.ReactElement => {
                   <Folder />
                 </ListItemIcon>
                 <ListItemText primary={smbDir.name} />
+              </ListItem>
+            ))
+          }
+        </List>
+      }
+      {
+        mountModel.mountList.length > 0 &&
+        <List subheader={<ListSubheader>Mounts</ListSubheader>} dense>
+          {
+            mountModel.mountList.map(mount => (
+              <ListItem id={mount.file} button onClick={() => homeModel.setCurrentPath(mount.file)} key={mount.file}>
+                <ListItemIcon>
+                  <MountFolderFileIcon />
+                </ListItemIcon>
+                <ListItemText primary={mount.mountName} />
+                <ListItemSecondaryAction>
+                  <IconButton  size={'small'} onClick={() => mountModel.removeMount(mount.file)}>
+                    <Eject />
+                  </IconButton>
+                </ListItemSecondaryAction>
               </ListItem>
             ))
           }

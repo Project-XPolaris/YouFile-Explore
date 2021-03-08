@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import theme from '../../../../theme'
-import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
+import React, { ReactElement } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import theme from '../../../../theme';
+import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core';
 import {
   ArrowBack,
   ArrowForwardIos,
@@ -12,17 +12,22 @@ import {
   MoreVert,
   Notes,
   Refresh,
-  Search
-} from '@material-ui/icons'
-import useHomeModel from '../../model'
-import PopoverImageButton from '../../../../components/PopoverImageButton'
-import CopyPopover from '../../../../layout/Frame/parts/CopyPopover'
-import useFileModel from '../../../../models/file'
-import usePopoverController from '../../../../hooks/PopoverController'
-import CutPopover from '../../../../layout/Frame/parts/CutPopover'
-import useLayoutModel from '../../../../models/layout'
-import SearchPopover from '../../../../layout/Frame/parts/SearchPopover'
-import useAppModel from '../../../../models/app'
+  Search,
+  Check,
+  CreateNewFolder,
+} from '@material-ui/icons';
+import useHomeModel from '../../model';
+import PopoverImageButton from '../../../../components/PopoverImageButton';
+import CopyPopover from '../../../../layout/Frame/parts/CopyPopover';
+import useFileModel from '../../../../models/file';
+import usePopoverController from '../../../../hooks/PopoverController';
+import CutPopover from '../../../../layout/Frame/parts/CutPopover';
+import useLayoutModel from '../../../../models/layout';
+import SearchPopover from '../../../../layout/Frame/parts/SearchPopover';
+import useAppModel from '../../../../models/app';
+import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon';
+import { remountFstab } from '../../../../api/mount';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles({
   main: {
@@ -80,6 +85,9 @@ const useStyles = makeStyles({
   },
   actionIcon: {
     color: theme.palette.primary.contrastText
+  },
+  menuIcon:{
+    marginRight: theme.spacing(2)
   }
 
 })
@@ -92,6 +100,7 @@ interface HomeToolbarPropsType {
 
 const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: HomeToolbarPropsType):ReactElement => {
   const classes = useStyles()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
@@ -162,20 +171,28 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
             handleMoreMenuClose()
             onCreateNewDirectory()
           }}
-        >New directory</MenuItem>
+        ><CreateNewFolder className={classes.menuIcon} />New directory</MenuItem>
         <Divider />
         <MenuItem
           onClick={() => {
             handleMoreMenuClose()
             onSelectAll()
           }}
-        >Select all</MenuItem>
+        ><Check className={classes.menuIcon} />Select all</MenuItem>
         <MenuItem
           onClick={() => {
             handleMoreMenuClose()
             onReverseSelect()
           }}
-        >Reverse select</MenuItem>
+        ><Refresh className={classes.menuIcon}/>Reverse select</MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={async () => {
+            handleMoreMenuClose()
+            await remountFstab()
+            enqueueSnackbar("Remount success",{variant:"success",anchorOrigin:{horizontal:"right",vertical:"bottom"}})
+          }}
+        ><MountFolderFileIcon className={classes.menuIcon}/>Remount</MenuItem>
       </Menu>
     )
   }

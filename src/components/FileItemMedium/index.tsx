@@ -8,6 +8,7 @@ import { yellow } from '@material-ui/core/colors'
 import { useDoubleClick } from '../../hooks/DoubleClick'
 import { DiskFileIcon } from '../FileIcon/DiskFileIcon'
 import { useClickAway } from 'ahooks'
+import { MountFolderFileIcon } from '../FileIcon/MountFolderFileIcon';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -94,6 +95,9 @@ const FileItemMedium = ({
       }
       {
         file.type === 'Directory' && <FolderIcon className={clsx(classes.icon, classes.folder)} />
+      }
+      {
+        file.type === 'MountDirectory' && <MountFolderFileIcon className={clsx(classes.icon, classes.folder)} />
       }
       {
         file.type === 'Parted' && <DiskFileIcon className={clsx(classes.icon)} />
