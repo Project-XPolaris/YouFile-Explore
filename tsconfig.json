@@ -12,7 +12,11 @@
     "jsx": "react",
     "sourceMap": true,
     "outDir": "./dist",
-    "strict": true ,
+    "strict": false ,
     "esModuleInterop": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true,
+
   }
 }
