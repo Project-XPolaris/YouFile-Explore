@@ -9,7 +9,7 @@ import {
   CopyFileOutput,
   DeleteFileOutput,
   fetchTaskById,
-  newSearchFileTask,
+  newSearchFileTask, newUnarchiveTask,
   SearchFileOutput,
   SearchFileResult,
   Task
@@ -246,6 +246,9 @@ const HomeModel = () => {
     FavouriteManager.getInstance().removeFavourite(path)
     setFavourite([...FavouriteManager.getInstance().items])
   }
+  const unarchiveInPlace = async (source:string) => {
+    await newUnarchiveTask(source, { inPlace: true })
+  }
   return {
     initData,
     loadFile,
@@ -270,7 +273,8 @@ const HomeModel = () => {
     searchId,
     getSearchResult,
     addFavourite,
-    removeFavourite
+    removeFavourite,
+    unarchiveInPlace
   }
 }
 const useHomeModel = createModel(HomeModel)

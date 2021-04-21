@@ -7,7 +7,8 @@ import clsx from 'clsx'
 import { useClickAway } from 'ahooks'
 import { makeStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(theme => ({
+// @ts-ignore
+const useStyles:any = makeStyles(theme => ({
   root: {
     height: theme.spacing(8),
     width: '100%',
@@ -69,7 +70,7 @@ const FileItem = ({ file, onClick, style, onContextClick, contextSelected, onCli
       return <FileIcon fileName={file.name} />
     }
   }
-  const ref = useRef<any>()
+  const ref : any= useRef<any>()
   useClickAway(() => {
     if (onClickAway) {
       onClickAway()
@@ -90,6 +91,7 @@ const FileItem = ({ file, onClick, style, onContextClick, contextSelected, onCli
       onContextMenu={handleClick}
       ref={ref}
       onClick={onClick}
+      button
     >
       <ListItemAvatar>
         <Avatar className={classes.avatar}>

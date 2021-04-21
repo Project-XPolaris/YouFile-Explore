@@ -73,3 +73,12 @@ export const fetchTaskById = async (id:string) :Promise<Task<any>> => {
     }
   })
 }
+
+export const newUnarchiveTask = (archPath:string, options:{ target?: string, inPlace?:boolean }) => {
+  return apiRequest.post(ApplicationConfig.apiPaths.unarchive, {
+    data: {
+      source: archPath,
+      ...options
+    }
+  })
+}

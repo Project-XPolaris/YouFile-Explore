@@ -13,6 +13,7 @@ export const ApplicationConfig = {
     newSearchTask: '/task/search',
     remountFstab: '/fstab/reload',
     getTask: '/task/get',
+    unarchive: '/task/unarchive',
     info: '/info'
   },
   yousmb: {

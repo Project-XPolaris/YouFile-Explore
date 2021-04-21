@@ -10,8 +10,8 @@ import {
   OfflineBolt,
   Refresh,
   SelectAll,
-  Tab,
-} from '@material-ui/icons';
+  Tab, Unarchive
+} from '@material-ui/icons'
 import clsx from 'clsx'
 import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
 import { makeStyles } from '@material-ui/core/styles'
@@ -19,8 +19,9 @@ import { red } from '@material-ui/core/colors'
 import useFileModel from '../../../../models/file'
 import useHomeModel from '../../model'
 import { FileNode } from '../../tree'
-import useMountModel from '../../../../models/mount';
-import file from '../../../../models/file';
+import useMountModel from '../../../../models/mount'
+import file from '../../../../models/file'
+import useAppModel from '../../../../models/app'
 
 export interface FileContextMenuPropsType {
     controller:FileContextMenuController,
@@ -42,15 +43,16 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll,onAsMountPoint, onReverseSelect,onMove }: FileContextMenuPropsType):ReactElement => {
+const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onAsMountPoint, onReverseSelect, onMove }: FileContextMenuPropsType):ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
   const mountModel = useMountModel()
+  const appModel = useAppModel()
   const handleContextClose = () => {
     controller.closeMenu()
   }
-  const mountPoint =   mountModel.mountList.find(it => it.file === controller.file?.path)
+  const mountPoint = mountModel.mountList.find(it => it.file === controller.file?.path)
   return (
     <Menu
       keepMounted
@@ -112,19 +114,25 @@ const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll,onAsMountPo
       }}><Refresh className={clsx(classes.menuIcon, classes.copyIcon)} />Reverse select</MenuItem>
       <Divider/>
       {
-        controller.file?.type === "Directory"?
-          mountPoint ?
-            <MenuItem onClick={() => {
+        controller.file?.type === 'Directory'
+          ? mountPoint
+            ? <MenuItem onClick={() => {
               mountModel.removeMount(mountPoint.file)
               handleContextClose()
             }}><LinkOff className={clsx(classes.menuIcon, classes.copyIcon)} />Unmount</MenuItem>
-            :
-            <MenuItem onClick={() => {
+            : <MenuItem onClick={() => {
               onAsMountPoint()
               handleContextClose()
             }}><Folder className={clsx(classes.menuIcon, classes.copyIcon)} />As smb mount point</MenuItem>
-         :<></>
+          : <></>
       }
+      <Divider/>
+      <MenuItem onClick={() => {
+        if (controller.file && appModel.info.sep) {
+          homeModel.unarchiveInPlace(controller.file.path)
+        }
+        handleContextClose()
+      }}><Unarchive className={clsx(classes.menuIcon, classes.copyIcon)} />Extract here</MenuItem>
     </Menu>
   )
 }

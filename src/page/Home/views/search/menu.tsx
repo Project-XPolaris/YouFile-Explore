@@ -43,10 +43,11 @@ const SearchContextMenu = ({ controller }: SearchContextMenuPropsType) : ReactEl
           if (!controller.file) {
             return
           }
-          fileModel.setCopyFile({
+          fileModel.setCopyFile([{
             name: controller.file.name,
-            path: controller.file.path
-          })
+            path: controller.file.path,
+            type: controller.file.type
+          }])
         }}><FileCopy className={clsx(classes.menuIcon, classes.copyIcon)} />Copy</MenuItem>
 
       <MenuItem onClick={() => {

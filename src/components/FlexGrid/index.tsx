@@ -43,7 +43,7 @@ export const FlexGrid = ({ dataSource, rowWidth, itemRender, columnHeight }:Flex
   const {
     width,
     ref
-  } = useResizeDetector()
+  } : any = useResizeDetector()
   const [gridData, setGridData] = useState<any[][]>([[]])
   const getFileGrid = () => {
     if (dataSource.length === 0) {
