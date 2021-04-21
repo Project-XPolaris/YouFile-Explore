@@ -1,9 +1,9 @@
 import React from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
-import HomePage from '../../page/Home'
 import FstabPage from '../../page/Fstab'
 import LoginPage from '../../page/Login'
 import StartPage from '../../page/Start'
+import HomePage from '../../page/Home';
 
 const RouterLayout = () => {
   return (

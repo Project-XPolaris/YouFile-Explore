@@ -4,6 +4,7 @@ export type ConnectionConfig = {
   id:string
   name:string
   apiUrl?: string
+  smbUrl?:string
 }
 export class ConfigManager {
   public static StoreKey = 'Configs'
@@ -56,6 +57,7 @@ export class ConfigManager {
     const config = this.getConfigWithId(id)
     if (config) {
       localStorage.setItem('ServiceUrl', config.apiUrl ?? '')
+      localStorage.setItem('YouSmbUrl', config.smbUrl ?? '')
     }
   }
 

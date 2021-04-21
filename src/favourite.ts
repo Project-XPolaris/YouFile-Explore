@@ -1,5 +1,6 @@
 const FavouriteKey = 'favourite'
 export interface FavouriteItem {
+  apiUrl:string
   name:string
   type:string
   path:string
@@ -14,6 +15,10 @@ export class FavouriteManager {
     }
   }
 
+  public getItems() : FavouriteItem[]{
+    return this.items.filter(it => it.apiUrl === localStorage.getItem("ServiceUrl"))
+  }
+
   public static getInstance () : FavouriteManager {
     if (!this.instance) {
       this.instance = new this()
@@ -25,11 +30,14 @@ export class FavouriteManager {
     localStorage.setItem(FavouriteKey, JSON.stringify(this.items))
   }
 
-  public addFavourite (item:FavouriteItem):void {
+  public addFavourite (item: { name:string,path:string,type:string }):void {
     if (this.items.find(it => it.path === item.path) !== undefined) {
       return
     }
-    this.items.push(item)
+    this.items.push({
+      ...item,
+      apiUrl:localStorage.getItem("ServiceUrl") ?? ""
+    })
     this.saveData()
   }
 

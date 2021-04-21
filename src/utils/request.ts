@@ -6,7 +6,6 @@ const apiRequest = extend({
   credentials: 'omit'
 })
 export const yousmbRequest = extend({
-  prefix: ApplicationConfig.yousmb.apiUrl,
   timeout: 10000,
   credentials: 'omit'
 })
@@ -14,6 +13,13 @@ export const yousmbRequest = extend({
 apiRequest.use(async (ctx, next) => {
   const req = ctx.req
   req.url = localStorage.getItem('ServiceUrl') + req.url
+  console.log(req.url)
+  await next()
+})
+
+yousmbRequest.use(async (ctx, next) => {
+  const req = ctx.req
+  req.url = localStorage.getItem('YouSmbUrl') + req.url
   console.log(req.url)
   await next()
 })

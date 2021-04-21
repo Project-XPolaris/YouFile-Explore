@@ -62,6 +62,17 @@ const ConfigContent = ({
                   })
                 }}
               />
+                <TextInputOption
+                  label={'YouSmb api (empty for not use)'}
+                  value={config.smbUrl}
+                  icon={<Language />}
+                  onOk={(value) => {
+                    onConfigUpdate({
+                      ...config,
+                      smbUrl: value
+                    })
+                  }}
+                />
             </List>
           </Paper>
         </>

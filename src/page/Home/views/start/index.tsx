@@ -55,7 +55,7 @@ const StartView = ({}: StartViewPropsType) => {
           </div>
           <div className={classes.itemContainer}>
             {
-              FavouriteManager.getInstance().items.map(item => {
+              FavouriteManager.getInstance().getItems().map(item => {
                 return (
                   <FileItemMedium
                     file={{

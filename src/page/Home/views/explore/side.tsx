@@ -36,7 +36,7 @@ const HomeSide = (): React.ReactElement => {
         FavouriteManager.getInstance().items.length > 0 &&
         <List subheader={<ListSubheader>Favourite</ListSubheader>} dense>
           {
-            FavouriteManager.getInstance().items.map(item => (
+            FavouriteManager.getInstance().getItems().map(item => (
               <ListItem button onClick={() => homeModel.setCurrentPath(item.path)} key={item.path}>
                 <ListItemIcon>
                   <Folder />
