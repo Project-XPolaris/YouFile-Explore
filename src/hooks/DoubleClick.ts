@@ -1,7 +1,6 @@
 import { useCallback, useRef } from 'react'
 
 export const useDoubleClick = (doubleClick: any, click: any, timeout = 200) => {
-  // we're using useRef here for the useCallback to rememeber the timeout
   const clickTimeout : any = useRef()
 
   const clearClickTimeout = () => {

@@ -107,12 +107,12 @@ const HomeModel = () => {
       }
     })
   }
-  const onUnarchiveFileDoneHandler = async (event:NotificationMessage & { target: string,context:string }) => {
-   if (currentPath) {
-     if (event.context.startsWith(currentPath)) {
-       loadContent()
-     }
-   }
+  const onUnarchiveFileDoneHandler = async (event:NotificationMessage & { target: string, context:string }) => {
+    if (currentPath) {
+      if (event.context.startsWith(currentPath)) {
+        loadContent()
+      }
+    }
   }
   DefaultApiWebsocket.connect()
   DefaultApiWebsocket.addListener('homeModel', {
@@ -248,7 +248,7 @@ const HomeModel = () => {
     }
     return []
   }
-  const addFavourite = (item : { name:string,path:string,type:string }) => {
+  const addFavourite = (item : { name:string, path:string, type:string }) => {
     FavouriteManager.getInstance().addFavourite(item)
     setFavourite([...FavouriteManager.getInstance().items])
   }

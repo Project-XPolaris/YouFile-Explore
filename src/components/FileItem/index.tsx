@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { useClickAway } from 'ahooks'
 import { makeStyles } from '@material-ui/core/styles'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const useStyles:any = makeStyles(theme => ({
   root: {
@@ -70,7 +71,7 @@ const FileItem = ({ file, onClick, style, onContextClick, contextSelected, onCli
       return <FileIcon fileName={file.name} />
     }
   }
-  const ref : any= useRef<any>()
+  const ref : any = useRef<any>()
   useClickAway(() => {
     if (onClickAway) {
       onClickAway()

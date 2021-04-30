@@ -3,7 +3,7 @@ import useHomeModel from '../../model'
 import { SearchFileMediumView } from './medium'
 import { makeStyles } from '@material-ui/core/styles'
 import { SearchFileListView } from './list'
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   main: {
     width: '100%', height: '100%'
   }

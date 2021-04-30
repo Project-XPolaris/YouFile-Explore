@@ -69,7 +69,7 @@ const useStyles = makeStyles({
 })
 
 interface HomeTabsPropsType {
-  className?: any
+  className?: string
 }
 const reorder = (list:any, startIndex:number, endIndex:number):any => {
   const result = Array.from(list)
@@ -98,13 +98,13 @@ export default function HomeTabs ({ className }: HomeTabsPropsType): ReactElemen
     <div className={clsx(className, classes.main)}>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='droppable' direction='horizontal'>
-          {(provided, snapshot) => (
+          {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps} className={classes.tabContainer} >
               {
                 homeModel.tabController.list.map((item, idx) => {
                   return (
                     <Draggable key={item.id} draggableId={item.id } index={idx}>
-                      {(provided, snapshot) => (
+                      {(provided) => (
                         <Paper
                           className={clsx(classes.tabHead, item.active ? classes.active : classes.inactive)}
                           key={idx}

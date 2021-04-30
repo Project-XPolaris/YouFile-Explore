@@ -19,10 +19,9 @@ interface AddMountDialogPropsType {
 
 const AddMountDialog = ({ open = false, onClose, onOk }: AddMountDialogPropsType):React.ReactElement => {
   const classes = useStyles()
-  const { register, handleSubmit, setValue } = useForm()
+  const { register, handleSubmit } = useForm()
   const onSubmit = (data:any) => {
     onOk(data)
-    console.log(data)
   }
 
   return (

@@ -1,16 +1,14 @@
-import React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { IconButton, Popover } from '@material-ui/core'
 import useStyles from './style'
 
 export interface PopoverImageButtonPropsType {
-  children?:any
-  icon:any
+  children?:ReactNode
+  icon:ReactNode
   controller:any
 }
 
-const PopoverImageButton = ({ children, icon, controller }: PopoverImageButtonPropsType) => {
-  const classes = useStyles()
-
+const PopoverImageButton = ({ children, icon, controller }: PopoverImageButtonPropsType):ReactElement => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     controller.setAnchorEl(event.currentTarget)
   }

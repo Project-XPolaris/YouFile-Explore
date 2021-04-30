@@ -63,11 +63,8 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText
   }
 }))
-interface HomeTitleBarPropsType {
 
-}
-
-const HomeTitleBar = ({}: HomeTitleBarPropsType) : ReactElement => {
+const HomeTitleBar = () : ReactElement => {
   const classes = useStyles()
   const onClose = () => {
     electronApp.exit()

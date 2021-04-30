@@ -11,8 +11,7 @@ export interface TabItem {
   id: string
 }
 export const useTabsController = ({
-  onTabChange,
-  onEmptyTab
+  onTabChange
 }:{
   onTabChange:(tab:TabItem) => void
   onEmptyTab?:() => void

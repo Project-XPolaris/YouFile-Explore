@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import useHomeModel from '../../model'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import FileItem from '../../../../components/FileItem'
 import { AutoSizer, List } from 'react-virtualized'
 import useFileContextMenu from '../../hooks/fileContentMenu'
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   }
 }))
-export const SearchFileListView = () => {
+export const SearchFileListView = ():ReactElement => {
   const homeModel = useHomeModel()
   const classes = useStyles()
   const fileContextMenuController = useFileContextMenu()

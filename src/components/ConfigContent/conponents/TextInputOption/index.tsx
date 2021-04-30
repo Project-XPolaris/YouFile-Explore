@@ -8,7 +8,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  TextField,
+  TextField
 } from '@material-ui/core'
 
 export interface TextInputOptionPropsType {

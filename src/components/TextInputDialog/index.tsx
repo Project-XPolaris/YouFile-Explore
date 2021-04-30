@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import {
   Button,
   Dialog,
@@ -17,7 +17,7 @@ export interface TextInputDialogPropsType {
   onOk:(value:string) => void
   label?:string
   title:string
-  contentClassName?:any
+  contentClassName?:string
 }
 
 const TextInputDialog = ({ open = false, onClose, description, onOk, contentClassName, title, label = '', ...other }: TextInputDialogPropsType & DialogProps):React.ReactElement => {
@@ -44,7 +44,7 @@ const TextInputDialog = ({ open = false, onClose, description, onOk, contentClas
           label={label}
           fullWidth
           variant="standard"
-          onChange={(e:any) => setText(e.target.value)}
+          onChange={(e:ChangeEvent<HTMLInputElement>) => setText(e.target.value)}
         />
       </DialogContent>
       <DialogActions>

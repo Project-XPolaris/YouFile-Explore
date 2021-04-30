@@ -7,7 +7,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
-  ListItemText,
+  ListItemText
 } from '@material-ui/core'
 import { DefaultConfigManager } from '../../store/config'
 import { Add, Delete, Link, Settings } from '@material-ui/icons'
@@ -18,11 +18,7 @@ import useAppModel from '../../models/app'
 import { DefaultApiWebsocket } from '../../api/websocket/client'
 import StartTitleBar from './titlebar'
 
-export interface StartPagePropsType {
-
-}
-
-const StartPage = ({}: StartPagePropsType):React.ReactElement => {
+const StartPage = ():React.ReactElement => {
   const classes = useStyles()
   const update = useUpdate()
   const [currentConfigId, setCurrentConfigId] = useState<string | undefined>()

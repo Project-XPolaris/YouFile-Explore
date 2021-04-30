@@ -26,7 +26,7 @@ interface ApplicationBarPropsType {
   moreMenu?:ReactElement
   controller:ApplicationBarController
   onBack?:() => void,
-  className?:any
+  className?:string
 }
 
 const ApplicationBar = ({ actions, moreMenu, title = 'YouFile', controller, onBack, className }: ApplicationBarPropsType):React.ReactElement => {

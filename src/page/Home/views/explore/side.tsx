@@ -10,15 +10,15 @@ import {
   ListItemText,
   ListSubheader
 } from '@material-ui/core'
-import { Delete, Eject, Folder } from '@material-ui/icons';
+import { Delete, Eject, Folder } from '@material-ui/icons'
 import useAppModel from '../../../../models/app'
 import { DiskFileIcon } from '../../../../components/FileIcon/DiskFileIcon'
 import FolderIcon from '@material-ui/icons/Folder'
 import { FavouriteManager } from '../../../../favourite'
-import useMountModel from '../../../../models/mount';
-import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon';
+import useMountModel from '../../../../models/mount'
+import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   main: {
     width: '100%',
     height: 'calc(100% - 64px)'
@@ -109,7 +109,7 @@ const HomeSide = (): React.ReactElement => {
                 </ListItemIcon>
                 <ListItemText primary={mount.mountName} />
                 <ListItemSecondaryAction>
-                  <IconButton  size={'small'} onClick={() => mountModel.removeMount(mount.file)}>
+                  <IconButton size={'small'} onClick={() => mountModel.removeMount(mount.file)}>
                     <Eject />
                   </IconButton>
                 </ListItemSecondaryAction>

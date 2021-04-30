@@ -1,11 +1,7 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
 
-export interface SecurityLayoutPropsType {
-
-}
-
-const SecurityLayout = ({}: SecurityLayoutPropsType) => {
+const SecurityLayout = ():ReactElement => {
   const history = useHistory()
   if (localStorage.getItem('ServiceUrl') === null) {
     history.replace('/login')

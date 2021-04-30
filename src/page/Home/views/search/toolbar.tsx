@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
 import { IconButton, Menu, MenuItem, Paper, Typography } from '@material-ui/core'
@@ -40,7 +40,7 @@ const useStyles = makeStyles({
     flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
-    flexDirection: 'row-reverse',
+    flexDirection: 'row-reverse'
   },
   actionIcon: {
     color: theme.palette.primary.contrastText
@@ -48,11 +48,7 @@ const useStyles = makeStyles({
 
 })
 
-interface SearchToolbarPropsType {
-
-}
-
-export default function SearchToolbar ({}: SearchToolbarPropsType) {
+const SearchToolbar = ():ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
@@ -126,3 +122,4 @@ export default function SearchToolbar ({}: SearchToolbarPropsType) {
     </Paper>
   )
 }
+export default SearchToolbar

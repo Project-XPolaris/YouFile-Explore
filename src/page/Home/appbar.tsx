@@ -28,11 +28,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-interface AppBarPropsType {
-
-}
-
-const AppBar = ({}: AppBarPropsType):ReactElement => {
+const AppBar = ():ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()

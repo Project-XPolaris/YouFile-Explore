@@ -1,5 +1,4 @@
 import { extend } from 'umi-request'
-import { ApplicationConfig } from '../config'
 
 const apiRequest = extend({
   timeout: 10000,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { electronApp, electronRemote } from '../../remote'
 import useLayoutModel from '../../models/layout'
@@ -64,25 +64,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface FrameLayoutPropsType {
-  children?: any
+  children?: ReactNode
 }
 
-const FrameLayout = ({ children }: FrameLayoutPropsType) => {
+const FrameLayout = ({ children }: FrameLayoutPropsType):ReactElement => {
   const classes = useStyles()
-  const onClose = () => {
-    electronApp.exit()
-  }
-  const onMin = () => {
-    electronRemote.BrowserWindow.getFocusedWindow().minimize()
-  }
-  const onMax = () => {
-    const currentWindow = electronRemote.BrowserWindow.getFocusedWindow()
-    if (currentWindow.isMaximized()) {
-      currentWindow.unmaximize()
-    } else {
-      currentWindow.maximize()
-    }
-  }
   const layoutModel = useLayoutModel()
   return (
     <div className={classes.main}>

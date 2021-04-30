@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { FileItem } from '../../api/dir'
 
 const useStyles = makeStyles(theme => ({
   root: {

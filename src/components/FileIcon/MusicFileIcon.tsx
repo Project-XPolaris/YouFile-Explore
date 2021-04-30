@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const MusicFileIcon = ({ className }: { className?: any }): React.ReactElement => {
+export const MusicFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
     <svg version='1.1' width='24' height='24' viewBox='0 0 24 24' className={className}>
       <path fill='currentColor'

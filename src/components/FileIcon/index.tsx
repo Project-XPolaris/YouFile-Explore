@@ -1,5 +1,4 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { ReactElement } from 'react'
 import { convertSlash, getPathBasename } from '../../utils/path'
 import DescriptionIcon from '@material-ui/icons/Description'
 import { JSFileIcon } from './JSFileIcon'
@@ -21,17 +20,12 @@ import { EXEFileIcon } from './EXEFileIcon'
 import { MarkdownFileIcon } from './MarkdownFileIcon'
 import { ArchiveFileIcon } from './ArchiveFileIcon'
 
-const useStyles = makeStyles({
-  main: {}
-})
-
 interface FileIconPropsType {
   fileName: string
-  className?:any,
+  className?:string,
 }
 
-export default function FileIcon ({ fileName, className }: FileIconPropsType) {
-  const classes = useStyles()
+const FileIcon = ({ fileName, className }: FileIconPropsType):ReactElement => {
   fileName = convertSlash(fileName)
   if (fileName.endsWith('/')) {
     fileName = fileName.slice(0, fileName.length - 1)
@@ -105,3 +99,4 @@ export default function FileIcon ({ fileName, className }: FileIconPropsType) {
       return <DescriptionIcon className={className}/>
   }
 }
+export default FileIcon

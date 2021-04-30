@@ -1,7 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron'
 import * as path from 'path'
 import * as url from 'url'
-import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer'
+
 let mainWindow: Electron.BrowserWindow | null
 
 function createWindow () {
@@ -13,11 +13,11 @@ function createWindow () {
       webSecurity: false
     },
     frame: false,
-    icon:__dirname + '/build/icon.png',
-    title: "YouFile"
+    icon: path.join(__dirname, '/build/icon.png'),
+    title: 'YouFile'
 
   })
-  mainWindow.setTitle("YouFile")
+  mainWindow.setTitle('YouFile')
 
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL('http://localhost:4000')

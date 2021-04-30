@@ -15,9 +15,8 @@ import HomeToolbar from './toolbar'
 import TextInputDialog from '../../../../components/TextInputDialog'
 import useLayoutModel from '../../../../models/layout'
 import theme from '../../../../theme'
-import AddSmbMountDialog from '../../../../components/AddSmbMountDialog';
-import useMountModel from '../../../../models/mount';
-
+import AddSmbMountDialog from '../../../../components/AddSmbMountDialog'
+import useMountModel from '../../../../models/mount'
 
 const useStyles = makeStyles({
   main: {
@@ -43,7 +42,7 @@ const useStyles = makeStyles({
     width: 240,
     overflowY: 'auto'
   },
-  createDirectory:{
+  createDirectory: {
     width: theme.spacing(40)
   }
 })
@@ -105,6 +104,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
     }
     if (itemSelectController.selectPaths.length > 0) {
       const copyFile: CopyFile[] = []
+      console.log(itemSelectController.selectPaths)
       itemSelectController.selectPaths.forEach(selected => {
         const target = homeModel.currentContent.find(it => it.path === selected)
         if (target) {
@@ -116,7 +116,15 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
         }
         fileModel.setCopyFile(copyFile)
       })
+      return
     }
+    fileModel.setCopyFile([
+      {
+        name: file.name,
+        path: file.path,
+        type: file.type
+      }
+    ])
   }
   const handlerMove = () => {
     const file = fileContextMenuController.file
@@ -226,19 +234,23 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
   const onSwitchCreateDirectoryDialog = () => {
     layoutModel.switchDialog('home/createDirectory')
   }
-  const onCreateDirectory = async (value:string) => {
+  const onCreateDirectory = async (value: string) => {
     await fileModel.mkdir(value)
     homeModel.loadContent()
     onSwitchCreateDirectoryDialog()
   }
-  const onMount = async ({address,username,password}:{address:string,password:string,username:string}) => {
+  const onMount = async ({
+    address,
+    username,
+    password
+  }: { address: string, password: string, username: string }) => {
     if (!fileContextMenuController.file) {
       return
     }
-    const options : {[key:string]:string} = {
-      iocharset:"utf8",
-      file_mode:"0777",
-      dir_mode:"0777",
+    const options: { [key: string]: string } = {
+      iocharset: 'utf8',
+      file_mode: '0777',
+      dir_mode: '0777'
     }
     if (username.length > 0) {
       options.username = username
@@ -246,21 +258,21 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
     }
     await mountModel.mount({
       device: address,
-      options:options,
-      file:fileContextMenuController.file.path,
-      dump:"0",
-      fsck:"0",
-      type:"cifs"
+      options: options,
+      file: fileContextMenuController.file.path,
+      dump: '0',
+      fsck: '0',
+      type: 'cifs'
     })
-    layoutModel.switchDialog("home/addMount")
+    layoutModel.switchDialog('home/addMount')
   }
   return (
     <div className={classes.main}>
       <TextInputDialog
         onClose={onSwitchCreateDirectoryDialog}
         onOk={onCreateDirectory}
-        title="Create directory"
-        label="Directory name"
+        title='Create directory'
+        label='Directory name'
         open={layoutModel.dialogs['home/createDirectory']}
         contentClassName={classes.createDirectory}
         maxWidth={'xl'}
@@ -268,7 +280,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
       <AddSmbMountDialog
         open={Boolean(layoutModel.dialogs['home/addMount'])}
         onMount={onMount}
-        onClose={() => layoutModel.switchDialog("home/addMount")}
+        onClose={() => layoutModel.switchDialog('home/addMount')}
       />
       <HomeToolbar
         onSelectAll={handleSelectAll}

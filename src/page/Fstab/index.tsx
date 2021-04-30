@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import useStyles from './style'
 import ApplicationBar from '../../components/ApplicationBar'
 import useApplicationBarController from '../../components/ApplicationBar/hook'
@@ -7,11 +7,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import useMountModel from '../../models/mount'
 import MountRow from './row'
 
-interface FstabPagePropsType {
-
-}
-
-const FstabPage = ({}: FstabPagePropsType) => {
+const FstabPage = ():ReactElement => {
   const classes = useStyles()
   const controller = useApplicationBarController()
   const history = useHistory()
@@ -29,7 +25,6 @@ const FstabPage = ({}: FstabPagePropsType) => {
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell></TableCell>
                 <TableCell>Drive</TableCell>
                 <TableCell>Dir</TableCell>
                 <TableCell>Type</TableCell>

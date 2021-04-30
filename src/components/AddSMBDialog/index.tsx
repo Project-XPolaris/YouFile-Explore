@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
-  TextField,
+  TextField
 } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 
@@ -28,7 +28,7 @@ interface AddSMBDialogPropsType {
 
 const AddSMBDialog = ({ open = false, onClose, onOk }: AddSMBDialogPropsType):React.ReactElement => {
   const classes = useStyles()
-  const { register, handleSubmit, setValue } = useForm()
+  const { register, handleSubmit } = useForm()
   const onSubmit = (data:any) => {
     onOk(data)
     console.log(data)

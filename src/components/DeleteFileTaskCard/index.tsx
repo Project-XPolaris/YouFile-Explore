@@ -67,7 +67,7 @@ const useStyles = makeStyles({
 })
 
 interface DeleteFileTaskCardPropsType {
-  className?: any
+  className?: string
   onStop:() => void
   task:Task<DeleteFileOutput>
 }

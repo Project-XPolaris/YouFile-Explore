@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import useAppModel from '../../../../models/app'
 import FileItemMedium from '../../../../components/FileItemMedium'
 import useHomeModel from '../../model'
 import { FavouriteManager } from '../../../../favourite'
-import useMountModel from '../../../../models/mount';
+import useMountModel from '../../../../models/mount'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,11 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export interface StartViewPropsType {
-
-}
-
-const StartView = ({}: StartViewPropsType) => {
+const StartView = ():ReactElement => {
   const classes = useStyles()
   const appModel = useAppModel()
   const homeModel = useHomeModel()
@@ -137,9 +133,9 @@ const StartView = ({}: StartViewPropsType) => {
             return (
               <FileItemMedium
                 file={{
-                  name: item.mountName ?? "",
+                  name: item.mountName ?? '',
                   path: item.file,
-                  type: "MountDirectory",
+                  type: 'MountDirectory',
                   parent: undefined,
                   children: undefined
                 }}

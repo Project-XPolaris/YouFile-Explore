@@ -67,7 +67,7 @@ const useStyles = makeStyles({
 })
 
 interface CopyFileTaskCardPropsType {
-  className?: any
+  className?: string
   task:Task<CopyFileOutput>
   onStop:() => void
 }

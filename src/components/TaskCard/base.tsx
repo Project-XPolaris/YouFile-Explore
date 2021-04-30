@@ -7,7 +7,7 @@ export const TaskCard = ({
   task,
   className,
   cardProps
-}: { task: Task<any>, className?: any, cardProps:any }):ReactElement => {
+}: { task: Task<any>, className?: string, cardProps:any }):ReactElement => {
   switch (task.type) {
     case 'Copy':
       return (

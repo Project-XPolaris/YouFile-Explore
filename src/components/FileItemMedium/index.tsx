@@ -8,7 +8,7 @@ import { yellow } from '@material-ui/core/colors'
 import { useDoubleClick } from '../../hooks/DoubleClick'
 import { DiskFileIcon } from '../FileIcon/DiskFileIcon'
 import { useClickAway } from 'ahooks'
-import { MountFolderFileIcon } from '../FileIcon/MountFolderFileIcon';
+import { MountFolderFileIcon } from '../FileIcon/MountFolderFileIcon'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -59,7 +59,7 @@ const FileItemMedium = ({
   contextSelected = false
 }: {
   file: FileNode,
-  className?: any,
+  className?: string,
   onDoubleClick?: () => void
   onContextClick?: (x: number, y: number) => void
   contextSelected?: boolean

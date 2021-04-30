@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import FstabPage from '../../page/Fstab'
 import LoginPage from '../../page/Login'
 import StartPage from '../../page/Start'
-import HomePage from '../../page/Home';
+import HomePage from '../../page/Home'
 
-const RouterLayout = () => {
+const RouterLayout = ():ReactElement => {
   return (
     <Router>
       <Switch>

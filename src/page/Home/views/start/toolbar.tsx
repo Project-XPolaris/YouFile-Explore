@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
 import { IconButton, Paper, Typography } from '@material-ui/core'
@@ -42,11 +42,7 @@ const useStyles = makeStyles({
 
 })
 
-interface StartToolbarPropsType {
-
-}
-
-export default function StartToolbar ({}: StartToolbarPropsType) {
+const StartToolbar = ():ReactElement => {
   const classes = useStyles()
 
   const layoutModel = useLayoutModel()
@@ -67,3 +63,4 @@ export default function StartToolbar ({}: StartToolbarPropsType) {
     </Paper>
   )
 }
+export default StartToolbar

@@ -7,10 +7,10 @@ import {
   FileCopy,
   Folder,
   LinkOff,
-  OfflineBolt,
   Refresh,
   SelectAll,
-  Tab, Unarchive
+  Tab,
+  Unarchive
 } from '@material-ui/icons'
 import clsx from 'clsx'
 import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
@@ -20,7 +20,6 @@ import useFileModel from '../../../../models/file'
 import useHomeModel from '../../model'
 import { FileNode } from '../../tree'
 import useMountModel from '../../../../models/mount'
-import file from '../../../../models/file'
 import useAppModel from '../../../../models/app'
 
 export interface FileContextMenuPropsType {
@@ -128,7 +127,7 @@ const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onAsMountP
       }
       <Divider/>
       <MenuItem onClick={() => {
-        if (controller.file && appModel.info.sep) {
+        if (controller.file && appModel.info?.sep) {
           homeModel.unarchiveInPlace(controller.file.path)
         }
         handleContextClose()

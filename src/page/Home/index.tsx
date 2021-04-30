@@ -6,8 +6,6 @@ import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
 import 'react-virtualized/styles.css'
 import { FileNode } from './tree'
-import useMountModel from '../../models/mount'
-import useAppModel from '../../models/app'
 import SearchView from './views/search/search'
 import RenameFileDialog from '../../components/RenameFileDialog'
 import HomeTitleBar from './titlebar'
@@ -67,14 +65,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const HomePage = ():React.ReactElement => {
-  const [searchText, setSearchText] = useState<string | undefined>()
   const [contextFile, setContextFile] = useState<FileNode | undefined>()
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
-  const mountModel = useMountModel()
-  const appModel = useAppModel()
   const [renameDialogOpen, switchRenameDialog] = layoutModel.useDialogController('home/rename')
   useEffect(() => {
     homeModel.initData()
@@ -89,14 +84,6 @@ const HomePage = ():React.ReactElement => {
     }
     switchRenameDialog()
     homeModel.rename(contextFile, name)
-  }
-
-  const onSwitchCreateDirectoryDialog = () => {
-    layoutModel.switchDialog('home/createDirectory')
-  }
-  const onCreateDirectory = async (value:string) => {
-    await fileModel.mkdir(value)
-    onSwitchCreateDirectoryDialog()
   }
 
   return (
@@ -114,7 +101,6 @@ const HomePage = ():React.ReactElement => {
           fileModel.addSMBFolder(data)
         }}
       />
-
 
       <div className={classes.contentContainer}>
         {

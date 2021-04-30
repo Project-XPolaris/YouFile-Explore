@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Paper, TextField, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
@@ -27,11 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export interface LoginPagePropsType {
-
-}
-
-const LoginPage = ({}: LoginPagePropsType) => {
+const LoginPage = ():ReactElement => {
   const classes = useStyles()
   const [apiUrl, setApiUrl] = useState<string>()
   const history = useHistory()

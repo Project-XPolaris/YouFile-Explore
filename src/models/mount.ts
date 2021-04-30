@@ -1,6 +1,6 @@
 import { createModel } from 'hox'
-import { addFstabMount, fetchFstabMounts, Mount, remountFstab, removeFstabMount } from '../api/mount';
-import { useEffect, useState } from 'react';
+import { addFstabMount, fetchFstabMounts, Mount, remountFstab, removeFstabMount } from '../api/mount'
+import { useEffect, useState } from 'react'
 
 const MountModel = () => {
   const [mountList, setMountList] = useState<Mount[]>([])
@@ -35,7 +35,7 @@ const MountModel = () => {
   }
   useEffect(() => {
     loadMounts()
-  },[])
+  }, [])
   return {
     mount, loadMounts, mountList, removeMount, remount
   }

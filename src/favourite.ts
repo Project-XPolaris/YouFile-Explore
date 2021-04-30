@@ -15,8 +15,8 @@ export class FavouriteManager {
     }
   }
 
-  public getItems() : FavouriteItem[]{
-    return this.items.filter(it => it.apiUrl === localStorage.getItem("ServiceUrl"))
+  public getItems () : FavouriteItem[] {
+    return this.items.filter(it => it.apiUrl === localStorage.getItem('ServiceUrl'))
   }
 
   public static getInstance () : FavouriteManager {
@@ -30,13 +30,13 @@ export class FavouriteManager {
     localStorage.setItem(FavouriteKey, JSON.stringify(this.items))
   }
 
-  public addFavourite (item: { name:string,path:string,type:string }):void {
+  public addFavourite (item: { name:string, path:string, type:string }):void {
     if (this.items.find(it => it.path === item.path) !== undefined) {
       return
     }
     this.items.push({
       ...item,
-      apiUrl:localStorage.getItem("ServiceUrl") ?? ""
+      apiUrl: localStorage.getItem('ServiceUrl') ?? ''
     })
     this.saveData()
   }

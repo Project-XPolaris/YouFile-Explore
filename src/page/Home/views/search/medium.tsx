@@ -1,7 +1,7 @@
 import useHomeModel from '../../model'
 import { FlexGrid } from '../../../../components/FlexGrid'
 import FileItemMedium from '../../../../components/FileItemMedium'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { red } from '@material-ui/core/colors'
 import useFileContextMenu from '../../hooks/fileContentMenu'
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export const SearchFileMediumView = () => {
+export const SearchFileMediumView = ():ReactElement => {
   const homeMode = useHomeModel()
   const classes = useStyles()
   const fileContextMenuController = useFileContextMenu()

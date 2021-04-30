@@ -1,16 +1,16 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
 
     },
-    content:{
+    content: {
       width: theme.spacing(40)
     },
-    input:{
+    input: {
       marginBottom: theme.spacing(2)
     }
-  }),
-);
-export default useStyles;
+  })
+)
+export default useStyles

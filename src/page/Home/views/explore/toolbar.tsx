@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import theme from '../../../../theme';
-import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core';
+import React, { ReactElement } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import theme from '../../../../theme'
+import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
 import {
   ArrowBack,
   ArrowForwardIos,
@@ -14,20 +14,20 @@ import {
   Refresh,
   Search,
   Check,
-  CreateNewFolder,
-} from '@material-ui/icons';
-import useHomeModel from '../../model';
-import PopoverImageButton from '../../../../components/PopoverImageButton';
-import CopyPopover from '../../../../layout/Frame/parts/CopyPopover';
-import useFileModel from '../../../../models/file';
-import usePopoverController from '../../../../hooks/PopoverController';
-import CutPopover from '../../../../layout/Frame/parts/CutPopover';
-import useLayoutModel from '../../../../models/layout';
-import SearchPopover from '../../../../layout/Frame/parts/SearchPopover';
-import useAppModel from '../../../../models/app';
-import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon';
-import { remountFstab } from '../../../../api/mount';
-import { useSnackbar } from 'notistack';
+  CreateNewFolder
+} from '@material-ui/icons'
+import useHomeModel from '../../model'
+import PopoverImageButton from '../../../../components/PopoverImageButton'
+import CopyPopover from '../../../../layout/Frame/parts/CopyPopover'
+import useFileModel from '../../../../models/file'
+import usePopoverController from '../../../../hooks/PopoverController'
+import CutPopover from '../../../../layout/Frame/parts/CutPopover'
+import useLayoutModel from '../../../../models/layout'
+import SearchPopover from '../../../../layout/Frame/parts/SearchPopover'
+import useAppModel from '../../../../models/app'
+import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon'
+import { remountFstab } from '../../../../api/mount'
+import { useSnackbar } from 'notistack'
 
 const useStyles = makeStyles({
   main: {
@@ -86,7 +86,7 @@ const useStyles = makeStyles({
   actionIcon: {
     color: theme.palette.primary.contrastText
   },
-  menuIcon:{
+  menuIcon: {
     marginRight: theme.spacing(2)
   }
 
@@ -100,7 +100,7 @@ interface HomeToolbarPropsType {
 
 const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: HomeToolbarPropsType):ReactElement => {
   const classes = useStyles()
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
@@ -168,6 +168,12 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
       >
         <MenuItem
           onClick={() => {
+            handlerAddToFavourite()
+            onCreateNewDirectory()
+          }}
+        ><Favorite className={classes.menuIcon} />Add to favourite</MenuItem>
+        <MenuItem
+          onClick={() => {
             handleMoreMenuClose()
             onCreateNewDirectory()
           }}
@@ -190,7 +196,7 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
           onClick={async () => {
             handleMoreMenuClose()
             await remountFstab()
-            enqueueSnackbar("Remount success",{variant:"success",anchorOrigin:{horizontal:"right",vertical:"bottom"}})
+            enqueueSnackbar('Remount success', { variant: 'success', anchorOrigin: { horizontal: 'right', vertical: 'bottom' } })
           }}
         ><MountFolderFileIcon className={classes.menuIcon}/>Remount</MenuItem>
       </Menu>
@@ -230,11 +236,8 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
             }
           </Breadcrumbs>
         </Paper>
-        <IconButton onClick={handlerAddToFavourite} >
-          <Favorite fontSize='inherit' className={classes.actionIcon}/>
-        </IconButton>
         {
-          fileModel.copyFile &&
+          fileModel.copyFile && fileModel.copyFile.length > 0 &&
           <PopoverImageButton icon={<FileCopy className={classes.actionIcon} />} controller={copyPopoverController}>
             <CopyPopover onPaste={() => {
               copyPopoverController.setAnchorEl(null)
@@ -243,7 +246,7 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
           </PopoverImageButton>
         }
         {
-          fileModel.moveFile &&
+          fileModel.moveFile && fileModel.moveFile.length > 0 &&
           <PopoverImageButton icon={<ExitToApp className={classes.actionIcon} />} controller={movePopoverController}>
             <CutPopover onMove={() => {
               movePopoverController.setAnchorEl(null)

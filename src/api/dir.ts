@@ -1,5 +1,6 @@
 import apiRequest from '../utils/request'
 import { ApplicationConfig } from '../config'
+import { BaseResponse } from './base'
 
 export interface FileItem {
   name:string
@@ -8,15 +9,15 @@ export interface FileItem {
   size:number
 }
 export const readDir = async (dirPath:string):Promise<FileItem[]> => {
-  const response:any = await apiRequest.get(ApplicationConfig.apiPaths.readdir, {
+  const response:{ result:FileItem[] } = await apiRequest.get(ApplicationConfig.apiPaths.readdir, {
     params: {
       readPath: dirPath
     }
   })
   return response.result
 }
-export const createDirectory = async (dirPath:string) => {
-  const response:any = await apiRequest.get(ApplicationConfig.apiPaths.mkdir, {
+export const createDirectory = async (dirPath:string):Promise<BaseResponse> => {
+  const response = await apiRequest.get(ApplicationConfig.apiPaths.mkdir, {
     params: {
       dirPath,
       perm: 755

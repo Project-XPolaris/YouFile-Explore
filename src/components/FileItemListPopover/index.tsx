@@ -1,20 +1,9 @@
 import React, { ReactElement } from 'react'
 import useStyles from '../../layout/Frame/parts/CopyPopover/style'
-import useFileModel from '../../models/file'
 import FolderIcon from '@material-ui/icons/Folder'
 import FileIcon from '../FileIcon'
 import { useVirtualList } from 'ahooks'
-import {
-  Avatar,
-  Button,
-  Card,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Tooltip
-} from '@material-ui/core'
+import { Avatar, Card, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core'
 import { ClearAll } from '@material-ui/icons'
 
 export interface FileItemListPopoverItem {

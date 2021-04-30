@@ -1,21 +1,21 @@
-import React from 'react';
-import useStyles from './style';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
-import { useForm, Controller } from 'react-hook-form';
+import React, { ReactElement } from 'react'
+import useStyles from './style'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core'
+import { useForm, Controller } from 'react-hook-form'
 
 export interface AddSmbMountPropsType {
   open?: boolean
-  onMount:(data:{username:string,address:string,password:string}) => void
+  onMount:(data:{username:string, address:string, password:string}) => void
   onClose:() => void
 }
 
-const AddSmbMountDialog = ({ onMount,onClose,open = false }: AddSmbMountPropsType) => {
-  const classes = useStyles();
-  const { control, handleSubmit } = useForm();
+const AddSmbMountDialog = ({ onMount, onClose, open = false }: AddSmbMountPropsType):ReactElement => {
+  const classes = useStyles()
+  const { control, handleSubmit } = useForm()
 
-  const onSubmit = (data:{username:string,address:string,password:string}) => {
+  const onSubmit = (data:{username:string, address:string, password:string}) => {
     onMount(data)
-  };
+  }
   return (
     <Dialog open={open} maxWidth='xl' onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -81,7 +81,7 @@ const AddSmbMountDialog = ({ onMount,onClose,open = false }: AddSmbMountPropsTyp
         </DialogActions>
       </form>
     </Dialog>
-  );
-};
+  )
+}
 
-export default AddSmbMountDialog;
+export default AddSmbMountDialog
