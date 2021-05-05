@@ -17,16 +17,16 @@ module.exports = {
         test: /\.(js|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'ts-loader',
+          loader: 'babel-loader',
           options: {
-            // plugins: [
-            //   "@babel/plugin-proposal-class-properties",
-            //   ["@babel/plugin-transform-runtime",
-            //     {
-            //       "regenerator": true
-            //     }
-            //   ]
-            // ]
+            plugins: [
+              "@babel/plugin-proposal-class-properties",
+              ["@babel/plugin-transform-runtime",
+                {
+                  "regenerator": true
+                }
+              ]
+            ]
           },
         },
       },

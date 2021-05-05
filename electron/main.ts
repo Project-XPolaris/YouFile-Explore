@@ -13,7 +13,7 @@ function createWindow () {
       webSecurity: false
     },
     frame: false,
-    icon: path.join(__dirname, '/build/icon.png'),
+    icon: path.join(__dirname, '/icon.png'),
     title: 'YouFile'
 
   })

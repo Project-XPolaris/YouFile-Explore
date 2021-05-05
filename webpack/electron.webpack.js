@@ -1,6 +1,7 @@
 const path = require('path')
 
 const rootPath = path.resolve(__dirname, '..')
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   resolve: {
@@ -29,7 +30,11 @@ module.exports = {
     ]
   },
   plugins: [
-
+    new CopyPlugin({
+      patterns: [
+        { from: "assets/icon.png", to: "icon.png" },
+      ],
+    }),
   ],
   node: {
     __dirname: false
