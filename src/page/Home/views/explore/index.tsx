@@ -17,35 +17,7 @@ import useLayoutModel from '../../../../models/layout'
 import theme from '../../../../theme'
 import AddSmbMountDialog from '../../../../components/AddSmbMountDialog'
 import useMountModel from '../../../../models/mount'
-
-const useStyles = makeStyles({
-  main: {
-    width: '100%',
-    backgroundColor: '#EEEEEE',
-    display: 'flex'
-  },
-  fileContent: {
-    width: '100%',
-    flex: '1 1'
-  },
-  container: {
-    backgroundColor: '#EEEEEE',
-    width: '100%',
-    overflowX: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    overflowY: 'auto'
-  },
-  side: {
-    backgroundColor: 'white',
-    height: '100%',
-    width: 240,
-    overflowY: 'auto'
-  },
-  createDirectory: {
-    width: theme.spacing(40)
-  }
-})
+import useStyles from './style';
 
 interface ExploreViewPropsType {
   onRename: (file: FileNode) => void
@@ -104,7 +76,6 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
     }
     if (itemSelectController.selectPaths.length > 0) {
       const copyFile: CopyFile[] = []
-      console.log(itemSelectController.selectPaths)
       itemSelectController.selectPaths.forEach(selected => {
         const target = homeModel.currentContent.find(it => it.path === selected)
         if (target) {
@@ -125,6 +96,17 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
         type: file.type
       }
     ])
+  }
+  const handlerDelete = () => {
+    const file = fileContextMenuController.file
+    if (!file) {
+      return
+    }
+    if (itemSelectController.selectPaths.length > 0) {
+      fileModel.deleteFile( itemSelectController.selectPaths)
+      return
+    }
+    fileModel.deleteFile([file.path])
   }
   const handlerMove = () => {
     const file = fileContextMenuController.file
@@ -167,6 +149,12 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
     })
     itemSelectController.setSelect(reverseSelectList)
   }
+  const getBottomInfoText = () => {
+    if (itemSelectController.selectPaths.length > 1) {
+      return `select ${itemSelectController.selectPaths.length} items`
+    }
+    return homeModel.currentContent.find(it => it.path === itemSelectController.selectPaths[0])?.name ?? ""
+  }
   const renderDisplayMode = () => {
     return (
       <>
@@ -176,6 +164,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
           onCopy={handlerCopy}
           onSelectAll={handleSelectAll}
           onReverseSelect={handleReverseSelect}
+          onDelete={handlerDelete}
           onMove={handlerMove}
           onAsMountPoint={() => layoutModel.switchDialog('home/addMount')}
         />
@@ -296,7 +285,13 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
         <div className={classes.fileContent}>
           {homeModel.mode === 'display' && renderDisplayMode()}
         </div>
+        <div className={classes.bottomInfo}>
+          <div className={classes.fileName}>
+            {getBottomInfoText()}
+          </div>
+        </div>
       </div>
+
     </div>
   )
 }

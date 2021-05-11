@@ -27,6 +27,7 @@ export interface FileContextMenuPropsType {
     onRename:(file:FileNode) => void,
     onCopy:(file:FileContext) => void
     onMove:(file:FileContext) => void
+  onDelete:(file:FileContext) => void
     onSelectAll:() => void
     onReverseSelect:() => void
     onAsMountPoint:() => void
@@ -42,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onAsMountPoint, onReverseSelect, onMove }: FileContextMenuPropsType):ReactElement => {
+const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, onAsMountPoint, onReverseSelect, onMove }: FileContextMenuPropsType):ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
@@ -73,7 +74,7 @@ const FileContextMenu = ({ controller, onRename, onCopy, onSelectAll, onAsMountP
         if (!controller.file) {
           return
         }
-        fileModel.deleteFile([controller.file.path])
+        onDelete(controller.file)
       }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)}/>Delete</MenuItem>
       <MenuItem onClick={() => {
         handleContextClose()

@@ -88,7 +88,8 @@ const FileItemMedium = ({
     <div
       className={clsx(classes.root, className, contextSelected ? classes.contextSelected : undefined)}
       onContextMenu={handleClick}
-      onClick={hybridClick} ref={ref}
+      onClick={hybridClick}
+      ref={ref}
     >
       {
         file.type === 'File' && <FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)} />
