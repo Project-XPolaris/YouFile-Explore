@@ -45,6 +45,11 @@ const useStyles = makeStyles(theme => ({
     wordBreak: 'break-all',
     textAlign: 'center',
     height: '2rem'
+  },
+  thumbnail:{
+    width: 72,
+    height:72,
+    objectFit: 'contain'
   }
 
 }))
@@ -83,7 +88,18 @@ const FileItemMedium = ({
       )
     }
   }
-
+  const renderIcon = (type:string) => {
+    switch (type) {
+      case 'Directory':
+        return (<FolderIcon className={clsx(classes.icon, classes.folder)} />)
+      case 'MountDirectory':
+        return (<MountFolderFileIcon className={clsx(classes.icon, classes.folder)} />)
+      case  'Parted' :
+        return ( <DiskFileIcon className={clsx(classes.icon)} />)
+      default:
+        return (<FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)} />)
+    }
+  }
   return (
     <div
       className={clsx(classes.root, className, contextSelected ? classes.contextSelected : undefined)}
@@ -92,16 +108,7 @@ const FileItemMedium = ({
       ref={ref}
     >
       {
-        file.type === 'File' && <FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)} />
-      }
-      {
-        file.type === 'Directory' && <FolderIcon className={clsx(classes.icon, classes.folder)} />
-      }
-      {
-        file.type === 'MountDirectory' && <MountFolderFileIcon className={clsx(classes.icon, classes.folder)} />
-      }
-      {
-        file.type === 'Parted' && <DiskFileIcon className={clsx(classes.icon)} />
+        file.thumbnail ? (<img src={file.thumbnail} className={classes.thumbnail}/>): renderIcon(file.type)
       }
       <div className={classes.name}>
         {file.name}

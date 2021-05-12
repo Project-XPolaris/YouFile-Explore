@@ -22,6 +22,8 @@ import useStyles from './style';
 interface ExploreViewPropsType {
   onRename: (file: FileNode) => void
 }
+export const allowOpenImage = ["jpg","png","jpeg"]
+export const allowOpenVideo = ["mp4"]
 
 const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => {
   const classes = useStyles()

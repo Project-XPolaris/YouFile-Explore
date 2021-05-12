@@ -2,12 +2,13 @@ import { useDynamicList } from 'ahooks'
 import { useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-export type TabType = 'Explore' | 'Search' | 'Start'
+export type TabType = 'Explore' | 'Search' | 'Start' | 'Image' | 'Video'
 export interface TabItem {
   path : string | undefined
   name : string
   active:boolean,
   type : TabType,
+  target?:string
   id: string
 }
 export const useTabsController = ({
@@ -93,7 +94,41 @@ export const useTabsController = ({
     })
     tabsListController.resetList(newList)
   }
-
+  const openImageViewTab = (name:string, path:string,target:string) => {
+    const newList = tabsListController.list.map(it => {
+      return {
+        ...it,
+        active: false
+      }
+    })
+    newList.push({
+      name: name,
+      path: path,
+      active: true,
+      type: 'Image',
+      id: uuidv4(),
+      target
+    })
+    tabsListController.resetList(newList)
+  }
+  const openVideoTab = (name:string, path:string,target:string) => {
+    const newList = tabsListController.list.map(it => {
+      return {
+        ...it,
+        active: false
+      }
+    })
+    console.log(target)
+    newList.push({
+      name: name,
+      path: path,
+      active: true,
+      type: 'Video',
+      id: uuidv4(),
+      target
+    })
+    tabsListController.resetList(newList)
+  }
   const setCurrentTabFolder = (name:string, path?:string) => {
     tabsListController.resetList(tabsListController.list.map(it => {
       if (it.active && it.type === 'Explore') {
@@ -163,6 +198,8 @@ export const useTabsController = ({
     newSearchTab,
     openNewExploreByPath,
     startPageToExplore,
+    openImageViewTab,
+    openVideoTab,
     setList: tabsListController.resetList
   }
 }

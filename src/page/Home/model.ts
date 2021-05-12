@@ -25,7 +25,7 @@ export interface SearchResult {
   result:SearchFileResult[]
 }
 export type ViewType = 'List' | 'Medium';
-export type Mode = 'display' | 'search' | 'blank'
+export type Mode = 'display' | 'search' | 'blank' | 'image' | 'video'
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
 const HomeModel = () => {
   const appModel = useAppModel()
@@ -37,6 +37,8 @@ const HomeModel = () => {
   const [searchResult, setSearchResult] = useState<SearchResult[]>([])
   const [searchId, setSearchId] = useState<string | undefined>()
   const [favorite, setFavourite] = useState<FavouriteItem[]>()
+  const [imageViewUrl,setImageViewUrl] = useState<string | undefined>()
+  const [videoViewUrl,setVideoViewUrl] = useState<string | undefined>()
   const tabController = useTabsController({
     onTabChange: (tab) => {
       switch (tab.type) {
@@ -50,6 +52,15 @@ const HomeModel = () => {
           break
         case 'Start':
           setMode('blank')
+          break
+        case 'Image':
+          setMode('image')
+          setImageViewUrl(tab.target)
+          break;
+        case 'Video':
+          setMode('video')
+          setVideoViewUrl(tab.target)
+          break;
       }
     },
     onEmptyTab: () => {
@@ -114,6 +125,13 @@ const HomeModel = () => {
       }
     }
   }
+  const onGenerateThumbnailsDoneHandler = async (event:NotificationMessage & { path:string }) => {
+    if (currentPath) {
+      if (event.path.startsWith(currentPath)) {
+        loadContent("0")
+      }
+    }
+  }
   DefaultApiWebsocket.connect()
   DefaultApiWebsocket.addListener('homeModel', {
     onMessage (data: string) {
@@ -131,6 +149,9 @@ const HomeModel = () => {
       if (event.event === 'UnarchiveTaskComplete') {
         onUnarchiveFileDoneHandler(event)
       }
+      if (event.event === 'GenerateThumbnailComplete') {
+        onGenerateThumbnailsDoneHandler(event)
+      }
     }
   })
   const initData = async () => {
@@ -144,15 +165,17 @@ const HomeModel = () => {
       path: source.path,
       children: undefined,
       parent: undefined,
-      type: source.type
+      type: source.type,
+      thumbnail: source.getThumbnailsUrl(),
+      target: source.getTarget()
     }
   }
-  const loadContent = async () => {
+  const loadContent = async (thumbnail = "1") => {
     if (currentPath === undefined) {
       setCurrentContent([])
       return
     }
-    const response = await readDir(currentPath)
+    const response = await readDir(currentPath,thumbnail)
     setCurrentContent(response.map(it => generateNode(it)))
   }
   useEffect(() => {
@@ -284,7 +307,9 @@ const HomeModel = () => {
     getSearchResult,
     addFavourite,
     removeFavourite,
-    unarchiveInPlace
+    unarchiveInPlace,
+    imageViewUrl,
+    videoViewUrl
   }
 }
 const useHomeModel = createModel(HomeModel)

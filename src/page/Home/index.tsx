@@ -13,6 +13,8 @@ import ExploreView from './views/explore'
 import SearchToolbar from './views/search/toolbar'
 import StartView from './views/start'
 import StartToolbar from './views/start/toolbar'
+import ImageView from './views/image/image';
+import VideoView from './views/video/video';
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -111,6 +113,12 @@ const HomePage = ():React.ReactElement => {
         }
         {
           homeModel.mode === 'blank' && <StartView />
+        }
+        {
+          homeModel.mode === 'image' && <ImageView />
+        }
+        {
+          homeModel.mode === 'video' && <VideoView />
         }
       </div>
 
