@@ -5,6 +5,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { chunk } from 'lodash'
 import { useDebounceEffect } from 'ahooks'
 import { AutoSizer, Grid } from 'react-virtualized'
+import clsx from 'clsx'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -33,12 +34,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 export interface FlexGridProp {
+  className?:string
   dataSource:any[]
   rowWidth:number
   columnHeight: number
   itemRender:(data:any) => any
 }
-export const FlexGrid = ({ dataSource, rowWidth, itemRender, columnHeight }:FlexGridProp):ReactElement => {
+export const FlexGrid = ({ dataSource, rowWidth, itemRender, columnHeight, className }:FlexGridProp):ReactElement => {
   const classes = useStyles()
   const {
     width,
@@ -97,7 +99,7 @@ export const FlexGrid = ({ dataSource, rowWidth, itemRender, columnHeight }:Flex
             rowCount={gridData?.length ?? 0}
             rowHeight={columnHeight}
             width={width}
-            className={classes.grid}
+            className={clsx(classes.grid, className)}
           />
         )}
       </AutoSizer>

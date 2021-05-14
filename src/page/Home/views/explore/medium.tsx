@@ -6,7 +6,7 @@ import { FileNode } from '../../tree'
 import { red } from '@material-ui/core/colors'
 import { FlexGrid } from '../../../../components/FlexGrid'
 import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
-import { allowOpenImage, allowOpenVideo } from './index';
+import { allowOpenImage, allowOpenVideo } from './index'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   },
   deleteIcon: {
     color: red['500']
+  },
+  content: {
+    padding: theme.spacing(2)
   }
 }))
 
@@ -54,36 +57,40 @@ export default function MediumView ({
   const homeModel = useHomeModel()
   return (
     <div className={classes.main} onClick={() => onItemClickAway()}>
-      <FlexGrid dataSource={homeModel.currentContent} rowWidth={120} columnHeight={120} itemRender={(it:FileNode) => {
-        return (
-          <FileItemMedium
-            file={it}
-            key={it.path}
-            className={classes.mediumItem}
-            onDoubleClick={() => {
-              if (it.type === 'Directory') {
-                homeModel.tabController.setCurrentTabFolder(it.name, it.path)
-                homeModel.setCurrentPath(it.path)
-                return
-              }
-              if (allowOpenImage.find(ext => it.name.toLowerCase().endsWith(ext)) !== undefined){
-                homeModel.tabController.openImageViewTab(it.name,it.path,it.target)
-              }
-              if (allowOpenVideo.find(ext => it.name.toLowerCase().endsWith(ext)) !== undefined){
-                homeModel.tabController.openVideoTab(it.name,it.path,it.target)
-              }
-            }}
-            onContextClick={(x, y) => {
-              onContextClick(x, y, it)
-            }}
-            onClick={() => onItemClick(it)}
-            contextSelected={
-              (fileContextMenuController.file?.path === it.path && fileContextMenuController.open) ||
+      <FlexGrid
+        dataSource={homeModel.currentContent}
+        rowWidth={120}
+        columnHeight={120}
+        itemRender={(it:FileNode) => {
+          return (
+            <FileItemMedium
+              file={it}
+              key={it.path}
+              className={classes.mediumItem}
+              onDoubleClick={() => {
+                if (it.type === 'Directory') {
+                  homeModel.tabController.setCurrentTabFolder(it.name, it.path)
+                  homeModel.setCurrentPath(it.path)
+                  return
+                }
+                if (allowOpenImage.find(ext => it.name.toLowerCase().endsWith(ext)) !== undefined) {
+                  homeModel.tabController.openImageViewTab(it.name, it.path, it.target)
+                }
+                if (allowOpenVideo.find(ext => it.name.toLowerCase().endsWith(ext)) !== undefined) {
+                  homeModel.tabController.openVideoTab(it.name, it.path, it.target)
+                }
+              }}
+              onContextClick={(x, y) => {
+                onContextClick(x, y, it)
+              }}
+              onClick={() => onItemClick(it)}
+              contextSelected={
+                (fileContextMenuController.file?.path === it.path && fileContextMenuController.open) ||
               selectPaths.find(selected => selected === it.path) !== undefined
-            }
-          />
-        )
-      }} />
+              }
+            />
+          )
+        }} />
     </div>
   )
 }

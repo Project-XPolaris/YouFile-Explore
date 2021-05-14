@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core'
 import HomeSide from './side'
 import useHomeModel from '../../model'
@@ -14,26 +13,54 @@ import FileContextMenu from './menu'
 import HomeToolbar from './toolbar'
 import TextInputDialog from '../../../../components/TextInputDialog'
 import useLayoutModel from '../../../../models/layout'
-import theme from '../../../../theme'
 import AddSmbMountDialog from '../../../../components/AddSmbMountDialog'
 import useMountModel from '../../../../models/mount'
-import useStyles from './style';
+import useStyles from './style'
+import RenameFileDialog from '../../../../components/RenameFileDialog'
+import { useKeyHold } from '../../../../hooks/keyhold'
 
 interface ExploreViewPropsType {
-  onRename: (file: FileNode) => void
-}
-export const allowOpenImage = ["jpg","png","jpeg"]
-export const allowOpenVideo = ["mp4"]
 
-const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => {
+}
+export const allowOpenImage = ['jpg', 'png', 'jpeg']
+export const allowOpenVideo = ['mp4']
+
+const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const [selectMode, setSelectMode] = useState<boolean>(false)
+  const [contextFile, setContextFile] = useState<FileNode | undefined>()
   const itemSelectController = useFileSelect({ initValue: [] })
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
   const mountModel = useMountModel()
   const fileContextMenuController = useFileContextMenu()
+  const [renameDialogOpen, switchRenameDialog] = layoutModel.useDialogController('home/rename')
+  const [isShiftHold] = useKeyHold('shift')
+  const onRename = (file:FileNode) => {
+    setContextFile(file)
+    switchRenameDialog()
+  }
+  const onRenameOk = async (name:string) => {
+    switchRenameDialog()
+    const file = fileContextMenuController.file
+    if (!file) {
+      return
+    }
+
+    if (itemSelectController.selectPaths.length > 0) {
+      for (const selectPath of itemSelectController.selectPaths) {
+        const parts = selectPath.split('.')
+        let filename = name
+        if (parts.length > 1) {
+          filename = filename + '.' + parts[parts.length - 1]
+        }
+        await homeModel.rename(selectPath, filename)
+      }
+      return
+    }
+    homeModel.rename(file.path, name)
+  }
   useEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Control') {
       if (!selectMode) {
@@ -55,7 +82,20 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
   }, {
     events: ['keydown']
   })
+
   const handleItemClick = (file: FileNode) => {
+    if (isShiftHold && itemSelectController.selectPaths.length !== 0) {
+      const pos1 = homeModel.currentContent.findIndex(it => it.path === itemSelectController.selectPaths[0])
+      if (pos1 === -1) {
+        return
+      }
+      const pos2 = homeModel.currentContent.findIndex(it => it.path === file.path)
+      if (pos2 === -1) {
+        return
+      }
+      itemSelectController.setSelect(homeModel.currentContent.slice(Math.min(pos1, pos2), Math.max(pos2, pos1) + 1).map(it => it.path))
+      return
+    }
     if (selectMode) {
       itemSelectController.switchSelect(file.path)
     } else {
@@ -105,7 +145,7 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
       return
     }
     if (itemSelectController.selectPaths.length > 0) {
-      fileModel.deleteFile( itemSelectController.selectPaths)
+      fileModel.deleteFile(itemSelectController.selectPaths)
       return
     }
     fileModel.deleteFile([file.path])
@@ -155,11 +195,17 @@ const ExploreView = ({ onRename }: ExploreViewPropsType): React.ReactElement => 
     if (itemSelectController.selectPaths.length > 1) {
       return `select ${itemSelectController.selectPaths.length} items`
     }
-    return homeModel.currentContent.find(it => it.path === itemSelectController.selectPaths[0])?.name ?? ""
+    return homeModel.currentContent.find(it => it.path === itemSelectController.selectPaths[0])?.name ?? ''
   }
   const renderDisplayMode = () => {
     return (
       <>
+        <RenameFileDialog
+          onClose={switchRenameDialog}
+          onOk={onRenameOk}
+          open={renameDialogOpen}
+          file={contextFile}
+        />
         <FileContextMenu
           controller={fileContextMenuController}
           onRename={onRename}

@@ -1,10 +1,10 @@
-import { makeStyles } from '@material-ui/core/styles';
-import theme from '../../../../theme';
+import { makeStyles } from '@material-ui/core/styles'
+import theme from '../../../../theme'
 
 const useStyles = makeStyles({
   main: {
     width: '100%',
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#F9F9F9',
     display: 'flex'
   },
   fileContent: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     flex: '1 1'
   },
   container: {
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#F9F9F9',
     width: '100%',
     overflowX: 'hidden',
     display: 'flex',
@@ -28,16 +28,16 @@ const useStyles = makeStyles({
   createDirectory: {
     width: theme.spacing(40)
   },
-  bottomInfo:{
-    width: "100%",
+  bottomInfo: {
+    width: '100%',
     height: theme.spacing(3),
-    backgroundColor: '#CCCCCC',
+    backgroundColor: '#EEEEEE',
     display: 'flex',
     alignItems: 'center',
-    paddingLeft:theme.spacing(2),
+    paddingLeft: theme.spacing(2),
     overflow: 'hidden'
   },
-  fileName:{
+  fileName: {
     ...theme.typography.body2
   }
 })

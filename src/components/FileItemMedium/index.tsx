@@ -46,9 +46,9 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     height: '2rem'
   },
-  thumbnail:{
+  thumbnail: {
     width: 72,
-    height:72,
+    height: 72,
     objectFit: 'contain'
   }
 
@@ -94,8 +94,8 @@ const FileItemMedium = ({
         return (<FolderIcon className={clsx(classes.icon, classes.folder)} />)
       case 'MountDirectory':
         return (<MountFolderFileIcon className={clsx(classes.icon, classes.folder)} />)
-      case  'Parted' :
-        return ( <DiskFileIcon className={clsx(classes.icon)} />)
+      case 'Parted' :
+        return (<DiskFileIcon className={clsx(classes.icon)} />)
       default:
         return (<FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)} />)
     }
@@ -108,7 +108,7 @@ const FileItemMedium = ({
       ref={ref}
     >
       {
-        file.thumbnail ? (<img src={file.thumbnail} className={classes.thumbnail}/>): renderIcon(file.type)
+        file.thumbnail ? (<img src={file.thumbnail} className={classes.thumbnail}/>) : renderIcon(file.type)
       }
       <div className={classes.name}>
         {file.name}

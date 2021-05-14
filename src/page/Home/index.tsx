@@ -67,34 +67,20 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const HomePage = ():React.ReactElement => {
-  const [contextFile, setContextFile] = useState<FileNode | undefined>()
   const classes = useStyles()
   const homeModel = useHomeModel()
   const fileModel = useFileModel()
   const layoutModel = useLayoutModel()
-  const [renameDialogOpen, switchRenameDialog] = layoutModel.useDialogController('home/rename')
   useEffect(() => {
     homeModel.initData()
   }, [])
-  const onRename = (file:FileNode) => {
-    setContextFile(file)
-    switchRenameDialog()
-  }
-  const onRenameOk = (name:string) => {
-    if (!contextFile) {
-      return
-    }
-    switchRenameDialog()
-    homeModel.rename(contextFile, name)
-  }
-
   return (
     <div className={classes.main}>
 
       <HomeTitleBar />
       {homeModel.mode === 'search' && <SearchToolbar />}
       {homeModel.mode === 'blank' && <StartToolbar />}
-      <RenameFileDialog onClose={switchRenameDialog} onOk={onRenameOk} open={renameDialogOpen} file={contextFile} />
+
       <AddSMBDialog
         onClose={() => layoutModel.switchDialog('global/addSMB')}
         open={Boolean(layoutModel.dialogs['global/addSMB'])}
@@ -106,7 +92,7 @@ const HomePage = ():React.ReactElement => {
 
       <div className={classes.contentContainer}>
         {
-          homeModel.mode === 'display' && <ExploreView onRename={onRename} />
+          homeModel.mode === 'display' && <ExploreView />
         }
         {
           homeModel.mode === 'search' && <SearchView />

@@ -256,9 +256,9 @@ const HomeModel = () => {
     setSearchResult([...searchResult])
     tabController.newSearchTab(getBreadcrumbs().pop() ?? '', response.id)
   }
-  const rename = async (file:FileNode, name:string) => {
+  const rename = async (path:string, name:string) => {
     const renamePath = [currentPath, name].join(appModel.info?.sep)
-    await renameFile(file.path, renamePath)
+    await renameFile(path, renamePath)
     await loadContent()
   }
   const getSearchResult = ():SearchFileResult[] => {
