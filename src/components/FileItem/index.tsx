@@ -1,11 +1,11 @@
 import React, { useRef } from 'react'
 import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
-import FolderIcon from '@material-ui/icons/Folder'
 import FileIcon from '../FileIcon'
 import { FileNode } from '../../page/Home/tree'
 import clsx from 'clsx'
 import { useClickAway } from 'ahooks'
 import { makeStyles } from '@material-ui/core/styles'
+import { FolderIcon } from '../FileIcon/FolderIcon';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -49,7 +49,12 @@ const useStyles:any = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
-  }
+  },
+  icon:{
+    width: 64,
+    height: 64,
+    padding: 8
+  },
 }))
 
 interface FileItemPropsType {
@@ -65,10 +70,10 @@ const FileItem = ({ file, onClick, style, onContextClick, contextSelected, onCli
   const classes = useStyles()
   const renderIcon = () => {
     if (file.type === 'Directory') {
-      return <FolderIcon />
+      return <FolderIcon  className={classes.icon}/>
     }
     if (file.type === 'File') {
-      return <FileIcon fileName={file.name} />
+      return <FileIcon fileName={file.name} className={classes.icon}/>
     }
   }
   const ref : any = useRef<any>()
@@ -95,9 +100,7 @@ const FileItem = ({ file, onClick, style, onContextClick, contextSelected, onCli
       button
     >
       <ListItemAvatar>
-        <Avatar className={classes.avatar}>
           {renderIcon()}
-        </Avatar>
       </ListItemAvatar>
       <ListItemText primary={file.name}/>
     </ListItem>

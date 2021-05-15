@@ -3,35 +3,22 @@ import FileIcon from '../FileIcon'
 import React, { useRef } from 'react'
 import clsx from 'clsx'
 import { FileNode } from '../../page/Home/tree'
-import FolderIcon from '@material-ui/icons/Folder'
 import { yellow } from '@material-ui/core/colors'
 import { useDoubleClick } from '../../hooks/DoubleClick'
 import { DiskFileIcon } from '../FileIcon/DiskFileIcon'
 import { useClickAway } from 'ahooks'
 import { MountFolderFileIcon } from '../FileIcon/MountFolderFileIcon'
-
+import { FolderIcon } from '../FileIcon/FolderIcon'
+import { DriveFileIcon } from '../FileIcon/DriveFileIcon';
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    transition: '0.3s',
-    cubicBezier: '(.17,.67,.83,.67)',
-    '&:hover': {
-      backgroundColor: 'rgba(0,0,0,0.05)'
-    },
-    borderRadius: theme.spacing(2)
+    padding: theme.spacing(1),
   },
   contextSelected: {
     backgroundColor: 'rgba(0,0,0,0.05)'
   },
   avatar: {
     backgroundColor: theme.palette.primary.dark
-  },
-  icon: {
-    fontSize: 52,
-    width: 52,
-    height: 52
   },
   folder: {
     color: yellow['800']
@@ -44,12 +31,34 @@ const useStyles = makeStyles(theme => ({
     whiteSpace: 'normal',
     wordBreak: 'break-all',
     textAlign: 'center',
-    height: '2rem'
+    display: '-webkit-box',
+    '-webkit-line-clamp':2,
+    '-webkit-box-orient':'vertical',
+    overflow: 'hidden',
+    fontSize: 14,
+    lineHeight: undefined,
+    marginTop: 4
   },
   thumbnail: {
-    width: 72,
-    height: 72,
+    height: 48,
+    width: '100%',
     objectFit: 'contain'
+  },
+  content:{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    transition: '0.3s',
+    cubicBezier: '(.17,.67,.83,.67)',
+    '&:hover': {
+      backgroundColor: 'rgba(0,0,0,0.05)'
+    },
+    borderRadius: theme.spacing(2),
+    height:"100%",
+    padding: theme.spacing(1),
+  },
+  icon:{
+    height: 48,
   }
 
 }))
@@ -95,24 +104,32 @@ const FileItemMedium = ({
       case 'MountDirectory':
         return (<MountFolderFileIcon className={clsx(classes.icon, classes.folder)} />)
       case 'Parted' :
-        return (<DiskFileIcon className={clsx(classes.icon)} />)
+        return (<DriveFileIcon className={clsx(classes.icon,classes.file)} />)
       default:
         return (<FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)} />)
     }
   }
   return (
     <div
-      className={clsx(classes.root, className, contextSelected ? classes.contextSelected : undefined)}
-      onContextMenu={handleClick}
-      onClick={hybridClick}
-      ref={ref}
+      className={clsx(classes.root, className)}
     >
-      {
-        file.thumbnail ? (<img src={file.thumbnail} className={classes.thumbnail}/>) : renderIcon(file.type)
-      }
-      <div className={classes.name}>
-        {file.name}
+      <div
+
+        className={clsx(classes.content, contextSelected ? classes.contextSelected : undefined)}
+        onContextMenu={handleClick}
+        onClick={hybridClick}
+        ref={ref}
+      >
+        <div className={classes.icon}>
+          {
+            file.thumbnail ? (<img src={file.thumbnail} className={classes.thumbnail}/>) : renderIcon(file.type)
+          }
+        </div>
+        <div className={classes.name}>
+          {file.name}
+        </div>
       </div>
+
 
     </div>
   )

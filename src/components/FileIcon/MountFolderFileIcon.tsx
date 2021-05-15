@@ -1,10 +1,16 @@
-import React from 'react'
+import React from 'react';
 
 export const MountFolderFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
-    <svg version='1.1' width='24' height='24' viewBox='0 0 24 24' className={className}>
-      <path fill='currentColor'
-        d='M3,15V5A2,2 0 0,1 5,3H11L13,5H19A2,2 0 0,1 21,7V15A2,2 0 0,1 19,17H13V19H14A1,1 0 0,1 15,20H22V22H15A1,1 0 0,1 14,23H10A1,1 0 0,1 9,22H2V20H9A1,1 0 0,1 10,19H11V17H5A2,2 0 0,1 3,15Z' />
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56.77 45.41' className={className}>
+      <path d='M51.09,5.68H25.55L19.87,0H5.68A5.69,5.69,0,0,0,0,5.68V17H56.77V11.35a5.69,5.69,0,0,0-5.68-5.67Z'
+            fill='#f49c19' />
+      <path
+        d='M51.09,5.68H5.68A5.69,5.69,0,0,0,0,11.35V39.74a5.69,5.69,0,0,0,5.68,5.67H51.09a5.69,5.69,0,0,0,5.68-5.67V11.35a5.69,5.69,0,0,0-5.68-5.67Z'
+        fill='#f5c432' />
+      <path
+        d='M35.41,20.71H30.87V23h4.54a3.41,3.41,0,0,1,0,6.81H30.87v2.27h4.54a5.68,5.68,0,0,0,0-11.35ZM28.6,29.79H24.06a3.41,3.41,0,1,1,0-6.81H28.6V20.71H24.06a5.68,5.68,0,1,0,0,11.35H28.6Zm-3.41-4.54h9.08v2.27H25.19Z'
+        fill='#fff' />
     </svg>
-  )
-}
+  );
+};

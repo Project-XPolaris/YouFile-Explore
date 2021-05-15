@@ -236,6 +236,10 @@ const HomeModel = () => {
   }
   const loadSmbDirs = async () => {
     const response = await fetchSmbConfig()
+    if (!response) {
+      setSmbDirs([])
+      return
+    }
     const dirs: { name: string, path: string }[] = response.sections.filter(it => ignoreSmbSectionNames.find(ignoreName => ignoreName === it.name) === undefined).map(dir => ({
       name: dir.name,
       path: dir.fields.path

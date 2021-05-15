@@ -1,9 +1,15 @@
-import React from 'react'
+import React from 'react';
 
-export const HTMLFileIcon = ({ className }:{className?:string}):React.ReactElement => {
+export const HTMLFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
-    <svg version="1.1" width="24" height="24" viewBox="0 0 24 24" className={className}>
-      <path fill="currentColor" d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z" />
+    <svg viewBox='0 0 50.09 59.72' className={className}>
+      <path
+        d='M3,0A2.84,2.84,0,0,0,.89.9,3.14,3.14,0,0,0,0,3V56.74a2.86,2.86,0,0,0,.9,2.09A2.91,2.91,0,0,0,3,59.72h43.8a2.86,2.86,0,0,0,2.09-.89,3,3,0,0,0,.89-2.09V16.92L32.84,0Z'
+        transform='translate(0.01)' fill='#e94b1b' />
+      <path d='M49.76,16.92H35.83a3.06,3.06,0,0,1-3-3V0Z' transform='translate(0.01)' fill='#fff' opacity='0.5' />
+      <path
+        d='M18.93,36.14,15.42,33.3l3.51-2.84a.65.65,0,0,0,0-.94.66.66,0,0,0-.95,0l-4.05,3.24a.78.78,0,0,0-.2.54.62.62,0,0,0,.2.47L18,37a.66.66,0,0,0,.95,0,.57.57,0,0,0,0-.87Zm14.86-3.38-4.05-3.24a.66.66,0,0,0-.95,0,.65.65,0,0,0,0,.94L32.3,33.3l-3.51,2.84a.65.65,0,0,0,0,.94.66.66,0,0,0,.95,0l4.05-3.24a.71.71,0,0,0,.2-.47.8.8,0,0,0-.2-.61Zm-5.2-8.38a.7.7,0,0,0-.95.27L19.2,40.93c-.2.34-.13.81.27.88a.74.74,0,0,0,1-.27l8.37-16.21a.74.74,0,0,0-.2-.95Z'
+        transform='translate(0.01)' fill='#fff' />
     </svg>
-  )
-}
+  );
+};

@@ -168,7 +168,8 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
     if (!elm) {
       return;
     }
-    setNavChip(getCollapsePath(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})), elm.clientWidth / 15,15))
+    // setNavChip(getCollapsePath(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})), elm.clientWidth / 12,15))
+    setNavChip(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})))
   }, [pathSize, homeModel.currentPath]);
   const renderMoreMenu = () => {
     return (

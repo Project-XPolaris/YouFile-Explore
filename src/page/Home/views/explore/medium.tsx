@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
     width: 120,
     height: 120,
     overflow: 'hidden',
-    padding: theme.spacing(2)
   },
   row: {
     display: 'flex'

@@ -124,8 +124,9 @@ const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, 
               onAsMountPoint()
               handleContextClose()
             }}><Folder className={clsx(classes.menuIcon, classes.copyIcon)} />As smb mount point</MenuItem>
-          : <></>
+          : null
       }
+
       <Divider/>
       <MenuItem onClick={() => {
         if (controller.file && appModel.info?.sep) {
