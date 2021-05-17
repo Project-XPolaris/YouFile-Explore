@@ -168,8 +168,8 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
     if (!elm) {
       return;
     }
-    // setNavChip(getCollapsePath(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})), elm.clientWidth / 12,15))
-    setNavChip(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})))
+    setNavChip(getCollapsePath(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})), (elm.clientWidth / 8.2539) - 1,(42 / 8.2539) - 1))
+    // setNavChip(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})))
   }, [pathSize, homeModel.currentPath]);
   const renderMoreMenu = () => {
     return (
@@ -181,8 +181,8 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
       >
         <MenuItem
           onClick={() => {
+            handleMoreMenuClose();
             handlerAddToFavourite();
-            onCreateNewDirectory();
           }}
         ><Favorite className={classes.menuIcon} />Add to favourite</MenuItem>
         <MenuItem
