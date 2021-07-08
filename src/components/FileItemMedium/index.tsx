@@ -12,7 +12,7 @@ import { FolderIcon } from '../FileIcon/FolderIcon'
 import { DriveFileIcon } from '../FileIcon/DriveFileIcon';
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(0),
   },
   contextSelected: {
     backgroundColor: 'rgba(0,0,0,0.05)'

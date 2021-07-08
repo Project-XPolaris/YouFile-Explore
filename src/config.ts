@@ -14,7 +14,9 @@ export const ApplicationConfig = {
     remountFstab: '/fstab/reload',
     getTask: '/task/get',
     unarchive: '/task/unarchive',
-    info: '/info'
+    info: '/info',
+    serviceInfo: '/service/info',
+    userAuth: '/user/auth'
   },
   yousmb: {
     apiPaths: {

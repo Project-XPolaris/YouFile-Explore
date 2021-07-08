@@ -1,9 +1,9 @@
 import { createModel } from 'hox'
 import { useState } from 'react'
-import { fetchInfo, ServiceInfo } from '../api/info'
+import { fetchInfo, SystemInfo } from '../api/info'
 
 const AppModel = () => {
-  const [info, setInfo] = useState<ServiceInfo | undefined>()
+  const [info, setInfo] = useState<SystemInfo | undefined>()
   const loadInfo = async () => {
     setInfo(await fetchInfo())
   }

@@ -6,10 +6,20 @@ export type RootPath = {
   name: string,
   type: string
 }
-export type ServiceInfo = {
+export type SystemInfo = {
   sep: string
   root_paths: RootPath[]
 }
-export const fetchInfo = async (): Promise<ServiceInfo> => {
+export const fetchInfo = async (): Promise<SystemInfo> => {
   return apiRequest.get(ApplicationConfig.apiPaths.info, {})
+}
+
+export type ServiceInfo = {
+  "auth": boolean,
+  "name": string,
+  "success": boolean,
+  "youPlusPath": boolean
+}
+export const fetchServiceInfo = async ():Promise<ServiceInfo> => {
+  return apiRequest.get(ApplicationConfig.apiPaths.serviceInfo, {})
 }

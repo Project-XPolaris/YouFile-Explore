@@ -19,9 +19,8 @@ const App = () => {
       <GlobalStyle />
       <ThemeProvider theme={theme}>
         <SnackbarProvider maxSnack={3}>
-          <FrameLayout>
+
             <RouterLayout />
-          </FrameLayout>
         </SnackbarProvider>
       </ThemeProvider>
     </>

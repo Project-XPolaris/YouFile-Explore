@@ -98,26 +98,6 @@ const HomeSide = (): React.ReactElement => {
           }
         </List>
       }
-      {
-        mountModel.mountList.length > 0 &&
-        <List subheader={<ListSubheader>Mounts</ListSubheader>} dense>
-          {
-            mountModel.mountList.map(mount => (
-              <ListItem id={mount.file} button onClick={() => homeModel.setCurrentPath(mount.file)} key={mount.file}>
-                <ListItemIcon>
-                  <MountFolderFileIcon />
-                </ListItemIcon>
-                <ListItemText primary={mount.mountName} />
-                <ListItemSecondaryAction>
-                  <IconButton size={'small'} onClick={() => mountModel.removeMount(mount.file)}>
-                    <Eject />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))
-          }
-        </List>
-      }
     </div>
   )
 }

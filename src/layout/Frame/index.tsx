@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { electronApp, electronRemote } from '../../remote'
 import useLayoutModel from '../../models/layout'
 import TaskDrawer from './parts/TaskDrawer'
+import { useInterval } from 'ahooks';
+import useTasksModel from '../../models/tasks';
 
 const useStyles = makeStyles((theme) => ({
   main: {},
@@ -70,6 +72,10 @@ interface FrameLayoutPropsType {
 const FrameLayout = ({ children }: FrameLayoutPropsType):ReactElement => {
   const classes = useStyles()
   const layoutModel = useLayoutModel()
+  const taskModel = useTasksModel()
+  useInterval(async () => {
+    taskModel.refreshTask()
+  }, 1000)
   return (
     <div className={classes.main}>
       <TaskDrawer

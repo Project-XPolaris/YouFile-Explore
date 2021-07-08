@@ -5,6 +5,8 @@ export type ConnectionConfig = {
   name:string
   apiUrl?: string
   smbUrl?:string
+  token?:string
+  username?:string
 }
 export class ConfigManager {
   public static StoreKey = 'Configs'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, Paper, Typography } from '@material-ui/core'
+import { List, ListItem, ListItemText, Paper, Typography } from '@material-ui/core';
 import TextInputOption from './conponents/TextInputOption'
 import { ConnectionConfig } from '../../store/config'
 import { Language, Settings } from '@material-ui/icons'
@@ -75,6 +75,26 @@ const ConfigContent = ({
               />
             </List>
           </Paper>
+          {
+            config.token &&
+              <>
+                <div className={classes.title}>
+                  <Typography variant={'subtitle1'} >
+                    YouPlus
+                  </Typography>
+                </div>
+                <Paper>
+                  <List>
+                    <ListItem>
+                      <ListItemText primary={config.username} secondary={"username"} />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary={"******"} secondary={"token"} />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </>
+          }
         </>
       }
     </div>
