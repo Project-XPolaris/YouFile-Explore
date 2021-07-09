@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Paper } from '@material-ui/core'
+import { Paper, TextField } from '@material-ui/core'
 import HomeSide from './side'
 import useHomeModel from '../../model'
 import MediumView from './medium'
@@ -18,6 +18,7 @@ import useMountModel from '../../../../models/mount'
 import useStyles from './style'
 import RenameFileDialog from '../../../../components/RenameFileDialog'
 import { useKeyHold } from '../../../../hooks/keyhold'
+import ExtractArchiveFileDialog from '../../../../components/ExtractArchiveFileDialog'
 
 interface ExploreViewPropsType {
 
@@ -36,6 +37,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
   const mountModel = useMountModel()
   const fileContextMenuController = useFileContextMenu()
   const [renameDialogOpen, switchRenameDialog] = layoutModel.useDialogController('home/rename')
+  const [extractDialogOpen, switchExtractDialog] = layoutModel.useDialogController('home/extract')
   const [isShiftHold] = useKeyHold('shift')
   const onRename = (file:FileNode) => {
     setContextFile(file)
@@ -191,6 +193,9 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
     })
     itemSelectController.setSelect(reverseSelectList)
   }
+  const handleExtract = () => {
+    switchExtractDialog()
+  }
   const getBottomInfoText = () => {
     if (itemSelectController.selectPaths.length > 1) {
       return `select ${itemSelectController.selectPaths.length} items`
@@ -214,6 +219,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
           onReverseSelect={handleReverseSelect}
           onDelete={handlerDelete}
           onMove={handlerMove}
+          onExtract={handleExtract}
           onAsMountPoint={() => layoutModel.switchDialog('home/addMount')}
         />
 
@@ -318,6 +324,17 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
         open={Boolean(layoutModel.dialogs['home/addMount'])}
         onMount={onMount}
         onClose={() => layoutModel.switchDialog('home/addMount')}
+      />
+      <ExtractArchiveFileDialog
+        open={extractDialogOpen}
+        onClose={switchExtractDialog}
+        onOK={({ password }) => {
+          switchExtractDialog()
+          if (!fileContextMenuController.file) {
+            return
+          }
+          homeModel.unarchiveInPlace(fileContextMenuController.file.path, { password })
+        }}
       />
       <HomeToolbar
         onSelectAll={handleSelectAll}

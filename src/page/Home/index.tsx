@@ -13,6 +13,7 @@ import StartView from './views/start'
 import StartToolbar from './views/start/toolbar'
 import ImageView from './views/image/image';
 import VideoView from './views/video/video';
+import ExtractArchiveFileDialog from '../../components/ExtractArchiveFileDialog'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -74,7 +75,6 @@ const HomePage = ():React.ReactElement => {
   }, [])
   return (
     <div className={classes.main}>
-
       <HomeTitleBar />
       {homeModel.mode === 'search' && <SearchToolbar />}
       {homeModel.mode === 'blank' && <StartToolbar />}

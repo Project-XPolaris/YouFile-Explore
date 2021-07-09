@@ -21,17 +21,21 @@ import useHomeModel from '../../model'
 import { FileNode } from '../../tree'
 import useMountModel from '../../../../models/mount'
 import useAppModel from '../../../../models/app'
-
+const ExtractExtensions = [
+  'zip', 'rar', 'tar', 'bz', 'bz2', 'gz', '7z'
+]
 export interface FileContextMenuPropsType {
-    controller:FileContextMenuController,
-    onRename:(file:FileNode) => void,
-    onCopy:(file:FileContext) => void
-    onMove:(file:FileContext) => void
-  onDelete:(file:FileContext) => void
-    onSelectAll:() => void
-    onReverseSelect:() => void
-    onAsMountPoint:() => void
+  controller: FileContextMenuController,
+  onRename: (file: FileNode) => void,
+  onCopy: (file: FileContext) => void
+  onMove: (file: FileContext) => void
+  onDelete: (file: FileContext) => void
+  onExtract: (file: FileContext) => void
+  onSelectAll: () => void
+  onReverseSelect: () => void
+  onAsMountPoint: () => void
 }
+
 const useStyles = makeStyles(theme => ({
   menuIcon: {
     marginRight: theme.spacing(2)
@@ -43,7 +47,17 @@ const useStyles = makeStyles(theme => ({
     color: red['500']
   }
 }))
-const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, onAsMountPoint, onReverseSelect, onMove }: FileContextMenuPropsType):ReactElement => {
+const FileContextMenu = ({
+  controller,
+  onRename,
+  onCopy,
+  onDelete,
+  onSelectAll,
+  onAsMountPoint,
+  onReverseSelect,
+  onMove,
+  onExtract
+}: FileContextMenuPropsType): ReactElement => {
   const classes = useStyles()
   const fileModel = useFileModel()
   const homeModel = useHomeModel()
@@ -53,12 +67,23 @@ const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, 
     controller.closeMenu()
   }
   const mountPoint = mountModel.mountList.find(it => it.file === controller.file?.path)
+  const canExtract = () => {
+    if (!controller.file) {
+      return false
+    }
+    for (const extension of ExtractExtensions) {
+      if (controller.file.name.endsWith(extension)) {
+        return true
+      }
+    }
+    return false
+  }
   return (
     <Menu
       keepMounted
       open={controller.open}
       onClose={handleContextClose}
-      anchorReference="anchorPosition"
+      anchorReference='anchorPosition'
       anchorPosition={controller.getAnchor()}>
       <MenuItem
         onClick={() => {
@@ -75,7 +100,7 @@ const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, 
           return
         }
         onDelete(controller.file)
-      }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)}/>Delete</MenuItem>
+      }}><Delete className={clsx(classes.menuIcon, classes.deleteIcon)} />Delete</MenuItem>
       <MenuItem onClick={() => {
         handleContextClose()
         if (!controller.file) {
@@ -85,25 +110,25 @@ const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, 
         if (target) {
           onRename(target)
         }
-      }}><Edit className={clsx(classes.menuIcon, classes.copyIcon)}/>Rename</MenuItem>
+      }}><Edit className={clsx(classes.menuIcon, classes.copyIcon)} />Rename</MenuItem>
       <MenuItem onClick={() => {
         handleContextClose()
         if (!controller.file) {
           return
         }
         onMove(controller.file)
-      }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)}/>Move</MenuItem>
+      }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)} />Move</MenuItem>
       {
-            controller.file?.type === 'Directory' &&
-            <MenuItem onClick={() => {
-              handleContextClose()
-              if (!controller.file) {
-                return
-              }
-              homeModel.tabController.openNewExploreByPath(controller.file.name, controller.file.path)
-            }}><Tab className={clsx(classes.menuIcon, classes.copyIcon)}/>Open in new tab</MenuItem>
+        controller.file?.type === 'Directory' &&
+        <MenuItem onClick={() => {
+          handleContextClose()
+          if (!controller.file) {
+            return
+          }
+          homeModel.tabController.openNewExploreByPath(controller.file.name, controller.file.path)
+        }}><Tab className={clsx(classes.menuIcon, classes.copyIcon)} />Open in new tab</MenuItem>
       }
-      <Divider/>
+      <Divider />
       <MenuItem onClick={() => {
         onSelectAll()
         handleContextClose()
@@ -112,7 +137,7 @@ const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, 
         onReverseSelect()
         handleContextClose()
       }}><Refresh className={clsx(classes.menuIcon, classes.copyIcon)} />Reverse select</MenuItem>
-      <Divider/>
+      <Divider />
       {
         controller.file?.type === 'Directory'
           ? mountPoint
@@ -127,13 +152,16 @@ const FileContextMenu = ({ controller, onRename, onCopy, onDelete, onSelectAll, 
           : null
       }
 
-      <Divider/>
-      <MenuItem onClick={() => {
-        if (controller.file && appModel.info?.sep) {
-          homeModel.unarchiveInPlace(controller.file.path)
-        }
-        handleContextClose()
-      }}><Unarchive className={clsx(classes.menuIcon, classes.copyIcon)} />Extract here</MenuItem>
+      <Divider />
+      {
+        canExtract() && <MenuItem onClick={() => {
+          if (controller.file) {
+            onExtract(controller.file)
+          }
+          handleContextClose()
+        }}><Unarchive className={clsx(classes.menuIcon, classes.copyIcon)} />Extract here</MenuItem>
+      }
+
     </Menu>
   )
 }

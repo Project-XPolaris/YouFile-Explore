@@ -37,8 +37,8 @@ const HomeModel = () => {
   const [searchResult, setSearchResult] = useState<SearchResult[]>([])
   const [searchId, setSearchId] = useState<string | undefined>()
   const [favorite, setFavourite] = useState<FavouriteItem[]>()
-  const [imageViewUrl,setImageViewUrl] = useState<string | undefined>()
-  const [videoViewUrl,setVideoViewUrl] = useState<string | undefined>()
+  const [imageViewUrl, setImageViewUrl] = useState<string | undefined>()
+  const [videoViewUrl, setVideoViewUrl] = useState<string | undefined>()
   const tabController = useTabsController({
     onTabChange: (tab) => {
       switch (tab.type) {
@@ -56,11 +56,11 @@ const HomeModel = () => {
         case 'Image':
           setMode('image')
           setImageViewUrl(tab.target)
-          break;
+          break
         case 'Video':
           setMode('video')
           setVideoViewUrl(tab.target)
-          break;
+          break
       }
     },
     onEmptyTab: () => {
@@ -118,17 +118,17 @@ const HomeModel = () => {
       }
     })
   }
-  const onUnarchiveFileDoneHandler = async (event:NotificationMessage & { target: string, context:string }) => {
+  const onUnarchiveFileDoneHandler = async (event:NotificationMessage & { target: string, dir:string }) => {
     if (currentPath) {
-      if (event.context.startsWith(currentPath)) {
-        loadContent()
+      if (event.dir.startsWith(currentPath)) {
+        await loadContent()
       }
     }
   }
   const onGenerateThumbnailsDoneHandler = async (event:NotificationMessage & { path:string }) => {
     if (currentPath) {
       if (event.path.startsWith(currentPath)) {
-        loadContent("0")
+        loadContent('0')
       }
     }
   }
@@ -146,7 +146,7 @@ const HomeModel = () => {
       if (event.event === 'DeleteTaskDone') {
         onDeleteFileDoneHandler(event)
       }
-      if (event.event === 'UnarchiveTaskComplete') {
+      if (event.event === 'UnarchiveFileComplete') {
         onUnarchiveFileDoneHandler(event)
       }
       if (event.event === 'GenerateThumbnailComplete') {
@@ -170,12 +170,12 @@ const HomeModel = () => {
       target: source.getTarget()
     }
   }
-  const loadContent = async (thumbnail = "1") => {
+  const loadContent = async (thumbnail = '1') => {
     if (currentPath === undefined) {
       setCurrentContent([])
       return
     }
-    const response = await readDir(currentPath,thumbnail)
+    const response = await readDir(currentPath, thumbnail)
     setCurrentContent(response.map(it => generateNode(it)))
   }
   useEffect(() => {
@@ -283,8 +283,14 @@ const HomeModel = () => {
     FavouriteManager.getInstance().removeFavourite(path)
     setFavourite([...FavouriteManager.getInstance().items])
   }
-  const unarchiveInPlace = async (source:string) => {
-    await newUnarchiveTask(source, { inPlace: true })
+  const unarchiveInPlace = async (source:string,{password}:{password?:string}) => {
+    await newUnarchiveTask([
+      {
+        input: source,
+        inPlace: true,
+        password
+      }
+    ])
   }
   return {
     initData,

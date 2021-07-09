@@ -74,11 +74,16 @@ export const fetchTaskById = async (id:string) :Promise<Task<any>> => {
   })
 }
 
-export const newUnarchiveTask = (archPath:string, options:{ target?: string, inPlace?:boolean }) => {
+export interface ExtractArchiveFileInput {
+  input:string
+  output?:string
+  inPlace:boolean
+  password?:string
+}
+export const newUnarchiveTask = (input:ExtractArchiveFileInput[]) => {
   return apiRequest.post(ApplicationConfig.apiPaths.unarchive, {
     data: {
-      source: archPath,
-      ...options
+      input
     }
   })
 }

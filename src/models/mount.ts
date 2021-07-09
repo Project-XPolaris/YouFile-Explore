@@ -27,8 +27,7 @@ const MountModel = () => {
     await loadMounts()
   }
   const loadMounts = async () => {
-    const mounts = await fetchFstabMounts()
-    setMountList(mounts)
+
   }
   const remount = async () => {
     await remountFstab()
