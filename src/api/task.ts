@@ -9,15 +9,16 @@ export interface CopyFileOutput {
   complete: number
   // eslint-disable-next-line camelcase
   complete_length: number
-  list:Array<{
-    src:string,
-    dest:string
+  list: Array<{
+    src: string,
+    dest: string
   }>
   // eslint-disable-next-line camelcase
   current_copy: string
   progress: number
   speed: number
 }
+
 export interface DeleteFileOutput {
   // eslint-disable-next-line camelcase
   file_count: number;
@@ -30,60 +31,71 @@ export interface DeleteFileOutput {
 }
 
 export interface SearchFileResult {
-  name:string
-  path:string
-  type:string
-  size:number
+  name: string
+  path: string
+  type: string
+  size: number
 }
+
 export interface SearchFileOutput {
-  result:SearchFileResult[]
+  result: SearchFileResult[]
 }
+
+export interface ExtractFileOutput {
+  total: number
+  complete: number
+  files: string[]
+  path: string[]
+}
+
 export interface Task<T> {
-  id :string
-  type: 'Copy' | 'Delete' | 'Search'
+  id: string
+  type: 'Copy' | 'Delete' | 'Search' | 'Unarchive'
   status: 'Running' | 'Complete' | 'Error' | 'Analyze'
   output: T
 }
-export const getTaskList = ():Promise<{result:Task<any>[]}> => {
+
+export const getTaskList = (): Promise<{ result: Task<any>[] }> => {
   return apiRequest.get(ApplicationConfig.apiPaths.getAllTasks)
 }
 
-export const stopTask = async (id:string):Promise<any> => {
+export const stopTask = async (id: string): Promise<any> => {
   return apiRequest.post(ApplicationConfig.apiPaths.stopTask, {
     params: {
-      taskId: id
-    }
+      taskId: id,
+    },
   })
 }
 
-export const newSearchFileTask = async (rootPath : string, searchKey:string) :Promise<Task<SearchFileOutput>> => {
+export const newSearchFileTask = async (rootPath: string, searchKey: string): Promise<Task<SearchFileOutput>> => {
   return apiRequest.post(ApplicationConfig.apiPaths.newSearchTask, {
     params: {
       searchPath: rootPath,
       searchKey,
-      limit: 0
-    }
+      limit: 0,
+    },
   })
 }
 
-export const fetchTaskById = async (id:string) :Promise<Task<any>> => {
+export const fetchTaskById = async (id: string): Promise<Task<any>> => {
   return apiRequest.post(ApplicationConfig.apiPaths.getTask, {
     params: {
-      taskId: id
-    }
+      taskId: id,
+    },
   })
 }
 
 export interface ExtractArchiveFileInput {
-  input:string
-  output?:string
-  inPlace:boolean
-  password?:string
+  input: string
+  output?: string
+  inPlace: boolean
+  password?: string
 }
-export const newUnarchiveTask = (input:ExtractArchiveFileInput[]) => {
+
+export const newUnarchiveTask = (input: ExtractArchiveFileInput[]) => {
   return apiRequest.post(ApplicationConfig.apiPaths.unarchive, {
     data: {
-      input
-    }
+      input,
+    },
   })
 }

@@ -5,14 +5,14 @@ import clsx from 'clsx'
 import { FileNode } from '../../page/Home/tree'
 import { yellow } from '@material-ui/core/colors'
 import { useDoubleClick } from '../../hooks/DoubleClick'
-import { DiskFileIcon } from '../FileIcon/DiskFileIcon'
 import { useClickAway } from 'ahooks'
 import { MountFolderFileIcon } from '../FileIcon/MountFolderFileIcon'
 import { FolderIcon } from '../FileIcon/FolderIcon'
-import { DriveFileIcon } from '../FileIcon/DriveFileIcon';
+import { DriveFileIcon } from '../FileIcon/DriveFileIcon'
+
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(0),
+    padding: theme.spacing(0)
   },
   contextSelected: {
     backgroundColor: 'rgba(0,0,0,0.05)'
@@ -32,8 +32,8 @@ const useStyles = makeStyles(theme => ({
     wordBreak: 'break-all',
     textAlign: 'center',
     display: '-webkit-box',
-    '-webkit-line-clamp':2,
-    '-webkit-box-orient':'vertical',
+    '-webkit-line-clamp': 2,
+    '-webkit-box-orient': 'vertical',
     overflow: 'hidden',
     fontSize: 14,
     lineHeight: undefined,
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     objectFit: 'contain'
   },
-  content:{
+  content: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -54,11 +54,12 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: 'rgba(0,0,0,0.05)'
     },
     borderRadius: theme.spacing(2),
-    height:"100%",
+    height: '100%',
     padding: theme.spacing(1),
+    justifyContent: 'center'
   },
-  icon:{
-    height: 48,
+  icon: {
+    height: 48
   }
 
 }))
@@ -104,7 +105,7 @@ const FileItemMedium = ({
       case 'MountDirectory':
         return (<MountFolderFileIcon className={clsx(classes.icon, classes.folder)} />)
       case 'Parted' :
-        return (<DriveFileIcon className={clsx(classes.icon,classes.file)} />)
+        return (<DriveFileIcon className={clsx(classes.icon, classes.file)} />)
       default:
         return (<FileIcon fileName={file.name} className={clsx(classes.icon, classes.file)} />)
     }
@@ -129,7 +130,6 @@ const FileItemMedium = ({
           {file.name}
         </div>
       </div>
-
 
     </div>
   )

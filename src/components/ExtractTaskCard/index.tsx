@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, IconButton, LinearProgress, Menu, MenuItem, Paper } from '@material-ui/core'
 import theme from '../../theme'
 import clsx from 'clsx'
-import { FileCopy, MoreVert } from '@material-ui/icons'
-import { CopyFileOutput, Task } from '../../api/task'
+import { FileCopy, MoreVert, VerticalAlignTop } from '@material-ui/icons'
+import { CopyFileOutput, ExtractFileOutput, Task } from '../../api/task'
 import { fileSize } from 'humanize-plus'
 import { getPathBasename } from '../../utils/path'
 const useStyles = makeStyles({
@@ -66,16 +66,16 @@ const useStyles = makeStyles({
   }
 })
 
-interface CopyFileTaskCardPropsType {
+interface ExtractFileCardPropsType {
   className?: string
-  task:Task<CopyFileOutput>
+  task:Task<ExtractFileOutput>
   onStop:() => void
 }
 
-const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType): React.ReactElement => {
+const ExtractFileCard = ({ className, task, onStop }: ExtractFileCardPropsType): React.ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-
+  console.log(task)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -100,10 +100,10 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
     )
   }
   const getTaskName = () => {
-    if (task.output.list.length === 1) {
-      return getPathBasename(task.output.list[0].src)
+    if (task.output.files.length === 1) {
+      return getPathBasename(task.output.files[0])
     } else {
-      return `${getPathBasename(task.output.list[0].src)} and other ${task.output.list.length - 1} tasks`
+      return `${getPathBasename(task.output.files[0])} and other ${task.output.files.length - 1} files`
     }
   }
   return (
@@ -113,7 +113,7 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
       }
       <div className={classes.header}>
         <Avatar className={classes.avatar}>
-          <FileCopy className={classes.icon} />
+          <VerticalAlignTop className={classes.icon} />
         </Avatar>
         <div className={classes.titleWrap}>
           <div className={classes.title}>
@@ -128,39 +128,9 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
         </IconButton>
       </div>
       <div className={classes.content}>
-        <div className={classes.info}>
-          <div className={classes.field}>
-            <div className={classes.label}>
-              Count:
-            </div>
-            <div className={classes.text2}>
-              {task.output.complete}/{task.output.file_count}
-            </div>
-          </div>
-
-          <div className={classes.field}>
-            <div className={classes.label}>
-              Size:
-            </div>
-            <div className={classes.text2}>
-              {fileSize(task.output.complete_length)}/{fileSize(task.output.total_length)}
-            </div>
-          </div>
-          <div className={classes.field}>
-            <div className={classes.label}>
-              Speed:
-            </div>
-            <div className={classes.text2}>
-              {fileSize(task.output.speed)}/s
-            </div>
-          </div>
-        </div>
-        <div className={classes.text}>
-          {getPathBasename(task.output.current_copy)}
-        </div>
-        <LinearProgress variant='determinate' value={task.output.progress * 100} />
+        <LinearProgress variant='determinate' value={task.output.complete / task.output.total * 100} />
       </div>
     </Paper>
   )
 }
-export default CopyFileTaskCard
+export default ExtractFileCard
