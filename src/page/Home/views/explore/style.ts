@@ -35,10 +35,19 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     paddingLeft: theme.spacing(2),
-    overflow: 'hidden'
+    overflow: 'hidden',
+  },
+  bottomAction:{
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(1)
   },
   fileName: {
-    ...theme.typography.body2
-  }
+    ...theme.typography.body2,
+    flex: 1
+  },
+  datasetPopover:{
+    width: theme.spacing(30),
+    height: theme.spacing(60)
+  },
 })
 export default useStyles

@@ -1,24 +1,32 @@
-import React, { useState } from 'react'
-import { Paper, TextField } from '@material-ui/core'
-import HomeSide from './side'
-import useHomeModel from '../../model'
-import MediumView from './medium'
-import { FileNode } from '../../tree'
-import ExploreListView from './list'
-import { useEventListener, useKeyPress } from 'ahooks'
-import useFileSelect from '../../hooks/select'
-import useFileContextMenu from '../../hooks/fileContentMenu'
-import useFileModel, { CopyFile } from '../../../../models/file'
-import FileContextMenu from './menu'
-import HomeToolbar from './toolbar'
-import TextInputDialog from '../../../../components/TextInputDialog'
-import useLayoutModel from '../../../../models/layout'
-import AddSmbMountDialog from '../../../../components/AddSmbMountDialog'
-import useMountModel from '../../../../models/mount'
-import useStyles from './style'
-import RenameFileDialog from '../../../../components/RenameFileDialog'
-import { useKeyHold } from '../../../../hooks/keyhold'
-import ExtractArchiveFileDialog from '../../../../components/ExtractArchiveFileDialog'
+import React, { useState } from 'react';
+import { Paper } from '@material-ui/core';
+import HomeSide from './side';
+import useHomeModel from '../../model';
+import MediumView from './medium';
+import { FileNode } from '../../tree';
+import ExploreListView from './list';
+import { useEventListener, useKeyPress } from 'ahooks';
+import useFileSelect from '../../hooks/select';
+import useFileContextMenu from '../../hooks/fileContentMenu';
+import useFileModel, { CopyFile } from '../../../../models/file';
+import FileContextMenu from './menu';
+import HomeToolbar from './toolbar';
+import TextInputDialog from '../../../../components/TextInputDialog';
+import useLayoutModel from '../../../../models/layout';
+import AddSmbMountDialog from '../../../../components/AddSmbMountDialog';
+import useMountModel from '../../../../models/mount';
+import useStyles from './style';
+import RenameFileDialog from '../../../../components/RenameFileDialog';
+import { useKeyHold } from '../../../../hooks/keyhold';
+import ExtractArchiveFileDialog from '../../../../components/ExtractArchiveFileDialog';
+import { History } from '@material-ui/icons';
+import {
+  CreateSnapshotDialog,
+  DatasetPopup,
+  DeleteSnapshotDialog,
+  RollbackSnapshotDialog,
+} from '../../../../components';
+import { createDatasetSnapshot, deleteDatasetSnapshot, rollbackDatasetSnapshot, Snapshot } from '../../../../api/dir';
 
 interface ExploreViewPropsType {
 
@@ -38,7 +46,11 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
   const fileContextMenuController = useFileContextMenu()
   const [renameDialogOpen, switchRenameDialog] = layoutModel.useDialogController('home/rename')
   const [extractDialogOpen, switchExtractDialog] = layoutModel.useDialogController('home/extract')
+  const [createSnapshotDialogOpen,setCreateSnapshotDialogOpen] = useState<boolean>(false)
+  const [deleteContextSnapshot,setDeleteContextSnapshot] = useState<Snapshot | undefined>()
+  const [rollbackContextSnapshot,setRollbackContextSnapshot] = useState<Snapshot | undefined>()
   const [isShiftHold] = useKeyHold('shift')
+  const [datasetPopoverAnchor,setDatasetPopoverAnchor] = useState<any | null>()
   const onRename = (file:FileNode) => {
     setContextFile(file)
     switchRenameDialog()
@@ -222,7 +234,6 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
           onExtract={handleExtract}
           onAsMountPoint={() => layoutModel.switchDialog('home/addMount')}
         />
-
         {
           homeModel.viewType === 'List' &&
           <ExploreListView
@@ -309,8 +320,54 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
     })
     layoutModel.switchDialog('home/addMount')
   }
+  const onCreateSnapshot = async (name:string) => {
+    setCreateSnapshotDialogOpen(false)
+    if (!homeModel.currentPath) {
+      return
+    }
+    await createDatasetSnapshot(homeModel.currentPath,name)
+    await homeModel.refreshDatasetInfo()
+  }
+  const onDeleteSnapshot = async () => {
+    if(!deleteContextSnapshot) {
+      return;
+    }
+    if (!homeModel.currentPath) {
+      return
+    }
+    await deleteDatasetSnapshot(homeModel.currentPath,deleteContextSnapshot.name)
+    await homeModel.refreshDatasetInfo()
+    setDeleteContextSnapshot(undefined)
+  }
+  const onRollbackDataset = async () => {
+    if(!rollbackContextSnapshot) {
+      return;
+    }
+    if (!homeModel.currentPath) {
+      return
+    }
+    await rollbackDatasetSnapshot(homeModel.currentPath,rollbackContextSnapshot.name)
+    await homeModel.refresh()
+    setRollbackContextSnapshot(undefined)
+  }
   return (
     <div className={classes.main}>
+      <DatasetPopup
+        open={Boolean(datasetPopoverAnchor)}
+        anchorEl={datasetPopoverAnchor}
+        onClose={() => setDatasetPopoverAnchor(null)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        className={classes.datasetPopover}
+        snapshots={homeModel.datasetInfo?.snapshots ?? []}
+        onCreateSnapshot={() => setCreateSnapshotDialogOpen(true)}
+        onDeleteSnapshot={(snapshot) => setDeleteContextSnapshot(snapshot)}
+        onRollback={snapshot => setRollbackContextSnapshot(snapshot)}
+      >
+
+      </DatasetPopup>
       <TextInputDialog
         onClose={onSwitchCreateDirectoryDialog}
         onOk={onCreateDirectory}
@@ -336,6 +393,21 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
           homeModel.unarchiveInPlace(fileContextMenuController.file.path, { password })
         }}
       />
+      <CreateSnapshotDialog
+        onOk={onCreateSnapshot}
+        open={createSnapshotDialogOpen}
+        onClose={() => setCreateSnapshotDialogOpen(false)}
+      />
+      <DeleteSnapshotDialog
+        onDelete={onDeleteSnapshot}
+        open={Boolean(deleteContextSnapshot)}
+        onClose={() => setDeleteContextSnapshot(undefined)}
+      />
+      <RollbackSnapshotDialog
+        onRollback={onRollbackDataset}
+        open={Boolean(rollbackContextSnapshot)}
+        onClose={() => setRollbackContextSnapshot(undefined)}
+      />
       <HomeToolbar
         onSelectAll={handleSelectAll}
         onReverseSelect={handleReverseSelect}
@@ -353,6 +425,14 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
         <div className={classes.bottomInfo}>
           <div className={classes.fileName}>
             {getBottomInfoText()}
+          </div>
+          <div className={classes.bottomAction}>
+            {
+              homeModel.datasetInfo &&
+                <span onClick={(e) => setDatasetPopoverAnchor(e.currentTarget)}>
+                  <History />
+                </span>
+            }
           </div>
         </div>
       </div>

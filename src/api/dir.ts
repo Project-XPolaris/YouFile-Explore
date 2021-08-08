@@ -8,12 +8,14 @@ export class FileItem {
   path:string
   size:number
   thumbnail?:string
+  isDataset:boolean
   constructor(raw:any) {
     this.name = raw["name"]
     this.type = raw["type"]
     this.path = raw["path"]
     this.size = raw["size"]
     this.thumbnail = raw["thumbnail"]
+    this.isDataset = raw["isDataset"]
   }
   getThumbnailsUrl():string | undefined{
     if (!this.thumbnail) {
@@ -44,4 +46,61 @@ export const createDirectory = async (dirPath:string):Promise<BaseResponse> => {
     }
   })
   return response.result
+}
+export interface Snapshot {
+  name:string
+}
+export interface DatasetInfo {
+  snapshots:Snapshot[]
+}
+export const getDatasetInfo = async (path:string):Promise<BaseResponse & DatasetInfo> => {
+  const response = await apiRequest.get(ApplicationConfig.apiPaths.datasetInfo, {
+    params: {
+      path
+    }
+  })
+  return response
+}
+export const createDatasetSnapshot = async (path:string,name:string):Promise<BaseResponse> => {
+  const response = await apiRequest.post(ApplicationConfig.apiPaths.snapshots, {
+    params: {
+      path,name
+    }
+  })
+  return response
+}
+export const deleteDatasetSnapshot = async (path:string,name:string):Promise<BaseResponse> => {
+  const response = await apiRequest.delete(ApplicationConfig.apiPaths.snapshots, {
+    params: {
+      path,name
+    }
+  })
+  return response
+}
+
+export const rollbackDatasetSnapshot = async (path:string,name:string):Promise<BaseResponse> => {
+  const response = await apiRequest.post(ApplicationConfig.apiPaths.datasetRollback, {
+    params: {
+      path,name
+    }
+  })
+  return response
+}
+
+export const createDataset = async (path:string):Promise<BaseResponse> => {
+  const response = await apiRequest.post(ApplicationConfig.apiPaths.datasetInfo, {
+    params: {
+      path
+    }
+  })
+  return response
+}
+
+export const deleteDataset = async (path:string):Promise<BaseResponse> => {
+  const response = await apiRequest.delete(ApplicationConfig.apiPaths.datasetInfo, {
+    params: {
+      path
+    }
+  })
+  return response
 }

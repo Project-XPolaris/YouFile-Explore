@@ -2,6 +2,9 @@ export const ApplicationConfig = {
   apiPaths: {
     readdir: '/path/read',
     mkdir: '/path/mkdir',
+    datasetInfo: '/path/dataset',
+    datasetRollback:'/path/dataset/rollback',
+    snapshots: '/path/snapshot',
     rename: '/path/rename',
     getAllTasks: '/task/all',
     copyFile: '/task/copy',

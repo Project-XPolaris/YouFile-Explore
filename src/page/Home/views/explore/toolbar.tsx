@@ -14,7 +14,7 @@ import {
   Refresh,
   Search,
   Check,
-  CreateNewFolder, NavigateNext,
+  CreateNewFolder, NavigateNext, Storage,
 } from '@material-ui/icons';
 import useHomeModel from '../../model';
 import PopoverImageButton from '../../../../components/PopoverImageButton';
@@ -30,6 +30,7 @@ import { remountFstab } from '../../../../api/mount';
 import { useSnackbar } from 'notistack';
 import { useSize } from 'ahooks';
 import { getCollapsePath, PathPart } from '../../../../utils/path';
+import { createDataset, deleteDataset } from '../../../../api/dir';
 
 const useStyles = makeStyles({
   main: {
@@ -142,6 +143,20 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
       type: 'Directory',
     });
   };
+  const handlerAsDataset = async () => {
+    if (!homeModel.currentPath) {
+      return;
+    }
+    await createDataset(homeModel.currentPath)
+    await homeModel.refresh()
+  }
+  const handlerRemoveDataset = async () => {
+    if (!homeModel.currentPath) {
+      return;
+    }
+    await deleteDataset(homeModel.currentPath)
+    await homeModel.refresh()
+  }
   const viewTypeMenu = () => {
     return (
       <Menu
@@ -214,7 +229,18 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
               anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
             });
           }}
-        ><MountFolderFileIcon className={classes.menuIcon} />Remount</MenuItem>
+        ><Refresh className={classes.menuIcon} />Remount</MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={() => {
+            handleMoreMenuClose();
+            if (!homeModel.datasetInfo) {
+              handlerAsDataset();
+            }else{
+              handlerRemoveDataset()
+            }
+          }}
+        ><Storage className={classes.menuIcon} />{homeModel.datasetInfo ? "Remove dataset" : "As dataset"}</MenuItem>
       </Menu>
     );
   };
