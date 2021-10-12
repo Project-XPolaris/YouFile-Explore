@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const MsiFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -11,5 +11,5 @@ export const MsiFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M13.58,25h7.61V17.69l-7.61,1.1Zm8.65-7.44V25H32.45V16.05ZM13.58,32.19l7.61,1.11V26H13.58Zm8.65,1.26,10.22,1.48V26H22.23Z'
         transform='translate(0 0)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

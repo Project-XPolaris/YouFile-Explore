@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const PowerShellFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,5 +12,5 @@ export const PowerShellFileIcon = ({ className }: { className?: string }): React
         d='M33.84,25.11a.71.71,0,0,1,.71.92L31.28,40.27a1.21,1.21,0,0,1-1.12.92H13.91a.71.71,0,0,1-.71-.92L16.46,26a1.22,1.22,0,0,1,1.13-.92Zm-7.47,8.32a.87.87,0,0,0-.08-1.1l-5-5.31a1,1,0,0,0-1.39,1.3l4.16,4.42v.1l-6.61,4.79a.95.95,0,0,0,1.11,1.53l7.34-5.26a1.27,1.27,0,0,0,.45-.47Zm-2.49,3.93a.78.78,0,0,0-.58.23A.82.82,0,0,0,23.88,39h3.95a.82.82,0,0,0,.59-.24.79.79,0,0,0,.25-.58.83.83,0,0,0-.25-.59.81.81,0,0,0-.59-.23Z'
         transform='translate(0.01)' fill='#f7f8f8' />
     </svg>
-  );
-};
+  )
+}

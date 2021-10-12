@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const ClangFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -8,7 +8,7 @@ export const ClangFileIcon = ({ className }: { className?: string }): React.Reac
         transform='translate(0.01)' fill='#a7b7c9' />
       <path d='M49.76,16.92H35.83a3.06,3.06,0,0,1-3-3V0Z' transform='translate(0.01)' fill='#fff' opacity='0.5' />
       <path d='M28.18,39.93a4.87,4.87,0,1,1,0-5l4.25-2.42a9.76,9.76,0,1,0,.08,9.78Z' transform='translate(0.01)'
-            fill='#fff' fill-rule='evenodd' />
+        fill='#fff' fillRule='evenodd' />
     </svg>
-  );
-};
+  )
+}

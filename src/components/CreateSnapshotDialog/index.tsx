@@ -1,6 +1,6 @@
-import useStyles from './style';
-import { Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import useStyles from './style'
+import { Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField } from '@material-ui/core'
+import React, { useState } from 'react'
 
 export interface CreateSnapshotDialogPropsType {
   className?: string;
@@ -8,13 +8,12 @@ export interface CreateSnapshotDialogPropsType {
 }
 
 const CreateSnapshotDialog = ({ onOk, ...other }: CreateSnapshotDialogPropsType & DialogProps) => {
-  const classes = useStyles();
-  const [text, setText] = useState<string | undefined>();
+  const [text, setText] = useState<string | undefined>()
   const onDialogOkHandler = () => {
     if (text) {
-      onOk(text);
+      onOk(text)
     }
-  };
+  }
   return (
     <Dialog {...other}>
       <DialogTitle>
@@ -32,14 +31,14 @@ const CreateSnapshotDialog = ({ onOk, ...other }: CreateSnapshotDialogPropsType 
         </Button>
         <Button onClick={(e) => {
           if (other.onClose) {
-            other.onClose(e, 'backdropClick');
+            other.onClose(e, 'backdropClick')
           }
         }}>
           Cancel
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default CreateSnapshotDialog;
+export default CreateSnapshotDialog

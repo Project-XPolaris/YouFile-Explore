@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const TarFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -15,5 +15,5 @@ export const TarFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M31.07,39.82H29.78v2.86H28.17V34.86h2.91a3.22,3.22,0,0,1,2.13.62A2.1,2.1,0,0,1,34,37.22a2.43,2.43,0,0,1-.35,1.34,2.38,2.38,0,0,1-1,.85l1.69,3.19v.08H32.53Zm-1.29-1.31h1.3A1.3,1.3,0,0,0,32,38.2a1.1,1.1,0,0,0,.33-.85,1.17,1.17,0,0,0-.31-.87,1.31,1.31,0,0,0-1-.32h-1.3Z'
         fill='#fff' />
     </svg>
-  );
-};
+  )
+}

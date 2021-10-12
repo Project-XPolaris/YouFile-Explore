@@ -1,23 +1,21 @@
 import React, { ReactElement } from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import useAppModel from '../../../../models/app'
 import FileItemMedium from '../../../../components/FileItemMedium'
 import useHomeModel from '../../model'
 import { FavouriteManager } from '../../../../favourite'
 import useMountModel from '../../../../models/mount'
-import useStyles from './style';
-
+import useStyles from './style'
+import { DefaultWindowShare } from '../../../../window'
 
 const StartView = ():ReactElement => {
+  const info = DefaultWindowShare.getSystemInfo()
   const classes = useStyles()
-  const appModel = useAppModel()
   const homeModel = useHomeModel()
   const mountModel = useMountModel()
   const getParted = () => {
-    return (appModel.info?.root_paths ?? []).filter(it => it.type === 'Parted')
+    return (info?.root_paths ?? []).filter(it => it.type === 'Parted')
   }
   const getDirectory = () => {
-    return (appModel.info?.root_paths ?? []).filter(it => it.type === 'Directory')
+    return (info?.root_paths ?? []).filter(it => it.type === 'Directory')
   }
   return (
     <div className={classes.root}>
@@ -45,7 +43,7 @@ const StartView = ():ReactElement => {
                           key={item.path}
                           className={classes.item}
                           onDoubleClick={() => {
-                            homeModel.tabController.startPageToExplore(item.path)
+                            homeModel.openDirectory(item.path)
                           }}
                         />
                       )
@@ -65,7 +63,7 @@ const StartView = ():ReactElement => {
             </div>
             <div className={classes.itemContainer}>
               {
-                appModel.info?.root_paths.filter(it => it.type === 'Parted').map(item => {
+                info?.root_paths.filter(it => it.type === 'Parted').map(item => {
                   return (
                     <FileItemMedium
                       file={{
@@ -78,7 +76,7 @@ const StartView = ():ReactElement => {
                       key={item.path}
                       className={classes.item}
                       onDoubleClick={() => {
-                        homeModel.tabController.startPageToExplore(item.path)
+                        homeModel.openDirectory(item.path)
                       }}
                     />
                   )
@@ -95,7 +93,7 @@ const StartView = ():ReactElement => {
             </div>
             <div className={classes.itemContainer}>
               {
-                appModel.info?.root_paths.filter(it => it.type === 'Directory').map(item => {
+                info?.root_paths.filter(it => it.type === 'Directory').map(item => {
                   return (
                     <FileItemMedium
                       file={{
@@ -108,7 +106,7 @@ const StartView = ():ReactElement => {
                       key={item.path}
                       className={classes.item}
                       onDoubleClick={() => {
-                        homeModel.tabController.startPageToExplore(item.path)
+                        homeModel.openDirectory(item.path)
                       }}
                     />
                   )
@@ -139,7 +137,7 @@ const StartView = ():ReactElement => {
                       key={item.file}
                       className={classes.item}
                       onDoubleClick={() => {
-                        homeModel.tabController.startPageToExplore(item.file)
+                        homeModel.openDirectory(item.file)
                       }}
                     />
                   )

@@ -1,14 +1,11 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, IconButton, LinearProgress, Menu, MenuItem, Paper } from '@material-ui/core'
-import theme from '../../theme'
 import clsx from 'clsx'
 import { FileCopy, MoreVert } from '@material-ui/icons'
 import { CopyFileOutput, Task } from '../../api/task'
 import { fileSize } from 'humanize-plus'
 import { getPathBasename } from '../../utils/path'
-import useStyles from './style';
-
+import useStyles from './style'
 
 interface CopyFileTaskCardPropsType {
   className?: string
@@ -44,10 +41,10 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
     )
   }
   const getTaskName = () => {
-    if (task.output.list.length === 1) {
-      return getPathBasename(task.output.list[0].src)
+    if (task.output.files.length === 1) {
+      return getPathBasename(task.output.files[0].source.name)
     } else {
-      return `${getPathBasename(task.output.list[0].src)} and other ${task.output.list.length - 1} tasks`
+      return `${getPathBasename(task.output.files[0].source.name)} and other ${task.output.files.length - 1} tasks`
     }
   }
   return (
@@ -78,7 +75,7 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
               Count:
             </div>
             <div className={classes.text2}>
-              {task.output.complete}/{task.output.file_count}
+              {task.output.complete}/{task.output.fileCount}
             </div>
           </div>
 
@@ -87,7 +84,7 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
               Size:
             </div>
             <div className={classes.text2}>
-              {fileSize(task.output.complete_length)}/{fileSize(task.output.total_length)}
+              {fileSize(task.output.completeLength)}/{fileSize(task.output.totalLength)}
             </div>
           </div>
           <div className={classes.field}>
@@ -100,7 +97,7 @@ const CopyFileTaskCard = ({ className, task, onStop }: CopyFileTaskCardPropsType
           </div>
         </div>
         <div className={classes.text}>
-          {getPathBasename(task.output.current_copy)}
+          {getPathBasename(task.output.currentCopy)}
         </div>
         <LinearProgress variant='determinate' value={task.output.progress * 100} />
       </div>

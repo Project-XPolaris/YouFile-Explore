@@ -1,26 +1,16 @@
 import React, { ReactElement } from 'react'
 import { Divider, Menu, MenuItem } from '@material-ui/core'
-import {
-  Delete,
-  Edit,
-  ExitToApp,
-  FileCopy,
-  Folder,
-  LinkOff,
-  Refresh,
-  SelectAll,
-  Tab,
-  Unarchive
-} from '@material-ui/icons'
+import { Delete, Edit, ExitToApp, FileCopy, Folder, LinkOff, Refresh, SelectAll, Unarchive } from '@material-ui/icons'
 import clsx from 'clsx'
 import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
 import { makeStyles } from '@material-ui/core/styles'
 import { red } from '@material-ui/core/colors'
-import useFileModel from '../../../../models/file'
 import useHomeModel from '../../model'
 import { FileNode } from '../../tree'
 import useMountModel from '../../../../models/mount'
-import useAppModel from '../../../../models/app'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../../../../electron/channels'
+
 const ExtractExtensions = [
   'zip', 'rar', 'tar', 'bz', 'bz2', 'gz', '7z'
 ]
@@ -59,10 +49,8 @@ const FileContextMenu = ({
   onExtract
 }: FileContextMenuPropsType): ReactElement => {
   const classes = useStyles()
-  const fileModel = useFileModel()
   const homeModel = useHomeModel()
   const mountModel = useMountModel()
-  const appModel = useAppModel()
   const handleContextClose = () => {
     controller.closeMenu()
   }
@@ -118,16 +106,6 @@ const FileContextMenu = ({
         }
         onMove(controller.file)
       }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)} />Move</MenuItem>
-      {
-        controller.file?.type === 'Directory' &&
-        <MenuItem onClick={() => {
-          handleContextClose()
-          if (!controller.file) {
-            return
-          }
-          homeModel.tabController.openNewExploreByPath(controller.file.name, controller.file.path)
-        }}><Tab className={clsx(classes.menuIcon, classes.copyIcon)} />Open in new tab</MenuItem>
-      }
       <Divider />
       <MenuItem onClick={() => {
         onSelectAll()
@@ -150,6 +128,15 @@ const FileContextMenu = ({
               handleContextClose()
             }}><Folder className={clsx(classes.menuIcon, classes.copyIcon)} />As smb mount point</MenuItem>
           : null
+      }
+      {
+        controller.file?.type === 'Directory' &&
+        <MenuItem onClick={() => {
+          if (controller.file) {
+            ipcRenderer.send(ChannelNames.openNewWindowWithPath, { loadPath: controller.file.path })
+          }
+          handleContextClose()
+        }}><Folder className={clsx(classes.menuIcon, classes.copyIcon)} />Open in new window</MenuItem>
       }
 
       <Divider />

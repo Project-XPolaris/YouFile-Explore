@@ -1,15 +1,14 @@
 import { createModel } from 'hox'
 import { useState } from 'react'
-import { useInterval } from 'ahooks'
-import { getTaskList, Task } from '../api/task'
+import { Task } from '../api/task'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../electron/channels'
 
 const TasksModel = () => {
   const [tasks, setTasks] = useState<Task<any>[]>([])
   const refreshTask = async () => {
-    if (localStorage.getItem('ServiceUrl') !== null) {
-      const response = await getTaskList()
-      setTasks(response.result)
-    }
+    const list = ipcRenderer.sendSync(ChannelNames.getTasks, {})
+    setTasks(list)
   }
   return {
     tasks,

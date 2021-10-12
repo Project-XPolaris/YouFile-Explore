@@ -1,6 +1,8 @@
 import { useDynamicList } from 'ahooks'
 import { useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../../../electron/channels'
 
 export type TabType = 'Explore' | 'Search' | 'Start' | 'Image' | 'Video'
 export interface TabItem {
@@ -17,14 +19,33 @@ export const useTabsController = ({
   onTabChange:(tab:TabItem) => void
   onEmptyTab?:() => void
 }) => {
-  const init : Array<TabItem> = [{
-    name: 'new tab',
-    path: undefined,
-    active: true,
-    type: 'Start',
-    id: uuidv4()
-  }]
-  const tabsListController = useDynamicList<TabItem>(init)
+  const getInitTab = ():TabItem[] => {
+    const urlSearchParams:URLSearchParams = new URLSearchParams(window.location.search)
+    const id = urlSearchParams.get('id')
+    if (id) {
+      const { intent } = ipcRenderer.sendSync(ChannelNames.getWindowIntent, { id })
+      if (intent) {
+        return [{
+          name: name,
+          path: intent.loadPath,
+          active: true,
+          type: 'Explore',
+          id: uuidv4()
+        }]
+        // setMode('display')
+        // setCurrentPath()
+      }
+      console.log(intent)
+    }
+    return [{
+      name: 'new tab',
+      path: undefined,
+      active: true,
+      type: 'Start',
+      id: uuidv4()
+    }]
+  }
+  const tabsListController = useDynamicList<TabItem>(getInitTab())
   const addTab = (item : TabItem) => {
     tabsListController.push(item)
   }
@@ -94,7 +115,7 @@ export const useTabsController = ({
     })
     tabsListController.resetList(newList)
   }
-  const openImageViewTab = (name:string, path:string,target:string) => {
+  const openImageViewTab = (name:string, path:string, target:string) => {
     const newList = tabsListController.list.map(it => {
       return {
         ...it,
@@ -111,7 +132,7 @@ export const useTabsController = ({
     })
     tabsListController.resetList(newList)
   }
-  const openVideoTab = (name:string, path:string,target:string) => {
+  const openVideoTab = (name:string, path:string, target:string) => {
     const newList = tabsListController.list.map(it => {
       return {
         ...it,

@@ -1,17 +1,18 @@
-import useStyles from './style';
-import React from 'react';
-import clsx from 'clsx';
+import useStyles from './style'
+import React, { ReactElement } from 'react'
+import clsx from 'clsx'
 import {
-  Popover,
-  PopoverProps,
+  IconButton,
   List,
   ListItem,
-  ListItemText,
   ListItemAvatar,
-  ListItemSecondaryAction, IconButton,
-} from '@material-ui/core';
-import { Add, Create, Delete, History } from '@material-ui/icons';
-import { Snapshot } from '../../api/dir';
+  ListItemSecondaryAction,
+  ListItemText,
+  Popover,
+  PopoverProps
+} from '@material-ui/core'
+import { Add, Delete, History } from '@material-ui/icons'
+import { Snapshot } from '../../api/dir'
 
 export interface DatasetPopupPropsType {
   className?:string
@@ -21,11 +22,11 @@ export interface DatasetPopupPropsType {
   onRollback:(snapshot:Snapshot) => void
 }
 
-const DatasetPopup = ({ className,snapshots,onCreateSnapshot,onDeleteSnapshot,onRollback,...other }: DatasetPopupPropsType & PopoverProps) => {
-  const classes = useStyles();
+const DatasetPopup = ({ className, snapshots, onCreateSnapshot, onDeleteSnapshot, onRollback, ...other }: DatasetPopupPropsType & PopoverProps):ReactElement => {
+  const classes = useStyles()
   return (
-    <Popover   { ...other }>
-      <div className={clsx(className,classes.root)}>
+    <Popover { ...other }>
+      <div className={clsx(className, classes.root)}>
         <div className={classes.header}>
           Dataset
         </div>
@@ -34,7 +35,7 @@ const DatasetPopup = ({ className,snapshots,onCreateSnapshot,onDeleteSnapshot,on
             {
               snapshots.map(it => {
                 return (
-                  <ListItem button onClick={() => onRollback(it)}>
+                  <ListItem button onClick={() => onRollback(it)} key={it.name}>
                     <ListItemAvatar>
                       <History />
                     </ListItemAvatar>
@@ -52,7 +53,7 @@ const DatasetPopup = ({ className,snapshots,onCreateSnapshot,onDeleteSnapshot,on
               <ListItemAvatar>
                 <Add />
               </ListItemAvatar>
-              <ListItemText primary={"Create snapshot"}  />
+              <ListItemText primary={'Create snapshot'} />
             </ListItem>
           </List>
         </div>
@@ -60,7 +61,7 @@ const DatasetPopup = ({ className,snapshots,onCreateSnapshot,onDeleteSnapshot,on
       </div>
 
     </Popover>
-  );
-};
+  )
+}
 
-export default DatasetPopup;
+export default DatasetPopup

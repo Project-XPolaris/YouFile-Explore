@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const RmvbFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -22,5 +22,5 @@ export const RmvbFileIcon = ({ className }: { className?: string }): React.React
         d='M32.83,54.05V46.94h2.49a3.29,3.29,0,0,1,2,.5A1.7,1.7,0,0,1,38,48.89a1.57,1.57,0,0,1-1,1.51,1.49,1.49,0,0,1,.86.55,1.6,1.6,0,0,1,.32,1,1.89,1.89,0,0,1-.66,1.56,2.9,2.9,0,0,1-1.86.53Zm1.47-4.13h1.08c.74,0,1.11-.31,1.11-.88a.82.82,0,0,0-.28-.7,1.5,1.5,0,0,0-.89-.21h-1Zm0,1v1.92h1.25a1.22,1.22,0,0,0,.81-.25.82.82,0,0,0,.29-.68.89.89,0,0,0-1-1Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

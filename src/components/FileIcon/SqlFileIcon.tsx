@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const SqlFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -16,5 +16,5 @@ export const SqlFileIcon = ({ className }: { className?: string }): React.ReactE
         transform='translate(0.01)' fill='#fff' />
       <path d='M34.64,26.59h2.54v10.9h3.69v2.42H34.64Z' transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

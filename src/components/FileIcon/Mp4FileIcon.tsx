@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const Mp4FileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -18,7 +18,7 @@ export const Mp4FileIcon = ({ className }: { className?: string }): React.ReactE
         d='M24.63,51.55v2.5H23.17V46.94h2.77a3.18,3.18,0,0,1,1.41.3,2.09,2.09,0,0,1,.93.83,2.31,2.31,0,0,1,.33,1.23A2.08,2.08,0,0,1,27.9,51a3,3,0,0,1-2,.6Zm0-1.19h1.31a1.32,1.32,0,0,0,.89-.27,1,1,0,0,0,.3-.78,1.17,1.17,0,0,0-.31-.85,1.16,1.16,0,0,0-.85-.33H24.63Z'
         transform='translate(0.01)' fill='#fff' />
       <path d='M33.64,51.38h.81v1.14h-.81v1.53H32.23V52.52H29.31l-.06-.89,3-4.69h1.43Zm-3,0h1.57V48.87l-.09.16Z'
-            transform='translate(0.01)' fill='#fff' />
+        transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

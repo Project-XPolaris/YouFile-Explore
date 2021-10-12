@@ -11,6 +11,8 @@ import { useHistory } from 'react-router-dom'
 import ApplicationBar from '../../components/ApplicationBar'
 import useApplicationBarController from '../../components/ApplicationBar/hook'
 import CutPopover from '../../layout/Frame/parts/CutPopover'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../../electron/channels'
 
 const useStyles = makeStyles((theme) => ({
   main: {},
@@ -70,21 +72,32 @@ const AppBar = ():ReactElement => {
   const actions = (
     <>
       {
-        fileModel.copyFile &&
+        fileModel.clipboardFile && fileModel.clipboardAction === 'Copy' &&
         <PopoverImageButton icon={<FileCopy className={classes.actionButton} />} controller={copyPopoverController}>
-          <CopyPopover onPaste={() => {
-            copyPopoverController.setAnchorEl(null)
-            fileModel.setCopyFile(undefined)
-          }} />
+          <CopyPopover
+            onPaste={() => {
+              fileModel.pasteFile()
+              copyPopoverController.setAnchorEl(null)
+            }}
+            onClearAll={() => {
+              ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Copy' })
+              copyPopoverController.setAnchorEl(null)
+            }}
+          />
         </PopoverImageButton>
       }
       {
-        fileModel.moveFile &&
+        fileModel.clipboardFile && fileModel.clipboardAction === 'Move' &&
         <PopoverImageButton icon={<ExitToApp className={classes.actionButton} />} controller={movePopoverController}>
           <CutPopover onMove={() => {
-            movePopoverController.setAnchorEl(null)
-            fileModel.setMoveFile(undefined)
-          }} />
+            fileModel.move()
+            copyPopoverController.setAnchorEl(null)
+          }}
+          onClearAll={() => {
+            ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Move' })
+            copyPopoverController.setAnchorEl(null)
+          }}
+          />
         </PopoverImageButton>
       }
       <IconButton

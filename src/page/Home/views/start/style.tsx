@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
       fontWeight: 300
     }
-  }),
-);
-export default useStyles;
+  })
+)
+export default useStyles

@@ -9,27 +9,29 @@ export class FileItem {
   size:number
   thumbnail?:string
   isDataset:boolean
-  constructor(raw:any) {
-    this.name = raw["name"]
-    this.type = raw["type"]
-    this.path = raw["path"]
-    this.size = raw["size"]
-    this.thumbnail = raw["thumbnail"]
-    this.isDataset = raw["isDataset"]
+  constructor (raw:any) {
+    this.name = raw.name
+    this.type = raw.type
+    this.path = raw.path
+    this.size = raw.size
+    this.thumbnail = raw.thumbnail
+    this.isDataset = raw.isDataset
   }
-  getThumbnailsUrl():string | undefined{
+
+  getThumbnailsUrl ():string | undefined {
     if (!this.thumbnail) {
       return undefined
     }
     const url = localStorage.getItem('ServiceUrl')
     return `${url}/thumbnails?name=${this.thumbnail}`
   }
-  getTarget():string {
+
+  getTarget ():string {
     const url = localStorage.getItem('ServiceUrl')
     return `${url}/files?target=${this.path}`
   }
 }
-export const readDir = async (dirPath:string,thumbnail = "1"):Promise<FileItem[]> => {
+export const readDir = async (dirPath:string, thumbnail = '1'):Promise<FileItem[]> => {
   const response:{ result:FileItem[] } = await apiRequest.get(ApplicationConfig.apiPaths.readdir, {
     params: {
       readPath: dirPath,
@@ -61,27 +63,27 @@ export const getDatasetInfo = async (path:string):Promise<BaseResponse & Dataset
   })
   return response
 }
-export const createDatasetSnapshot = async (path:string,name:string):Promise<BaseResponse> => {
+export const createDatasetSnapshot = async (path:string, name:string):Promise<BaseResponse> => {
   const response = await apiRequest.post(ApplicationConfig.apiPaths.snapshots, {
     params: {
-      path,name
+      path, name
     }
   })
   return response
 }
-export const deleteDatasetSnapshot = async (path:string,name:string):Promise<BaseResponse> => {
+export const deleteDatasetSnapshot = async (path:string, name:string):Promise<BaseResponse> => {
   const response = await apiRequest.delete(ApplicationConfig.apiPaths.snapshots, {
     params: {
-      path,name
+      path, name
     }
   })
   return response
 }
 
-export const rollbackDatasetSnapshot = async (path:string,name:string):Promise<BaseResponse> => {
+export const rollbackDatasetSnapshot = async (path:string, name:string):Promise<BaseResponse> => {
   const response = await apiRequest.post(ApplicationConfig.apiPaths.datasetRollback, {
     params: {
-      path,name
+      path, name
     }
   })
   return response

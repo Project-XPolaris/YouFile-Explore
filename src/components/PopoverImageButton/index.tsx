@@ -1,6 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { IconButton, Popover } from '@material-ui/core'
-import useStyles from './style'
 
 export interface PopoverImageButtonPropsType {
   children?:ReactNode

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const WordFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,5 +12,5 @@ export const WordFileIcon = ({ className }: { className?: string }): React.React
         d='M10.15,24.52h4.11L18.38,40h.05L23,24.52h4L31.48,40l4.17-15.49h4l-6.09,20H29.4L24.88,29.14h-.05L20.26,44.43H16.14Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import useHomeModel from './model'
 import useFileModel from '../../models/file'
 import AddSMBDialog from '../../components/AddSMBDialog'
 import useLayoutModel from '../../models/layout'
 import 'react-virtualized/styles.css'
-import SearchView from './views/search/search'
 import HomeTitleBar from './titlebar'
 import ExploreView from './views/explore'
-import SearchToolbar from './views/search/toolbar'
 import StartView from './views/start'
 import StartToolbar from './views/start/toolbar'
-import ImageView from './views/image/image';
-import VideoView from './views/video/video';
-import ExtractArchiveFileDialog from '../../components/ExtractArchiveFileDialog'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -76,9 +71,7 @@ const HomePage = ():React.ReactElement => {
   return (
     <div className={classes.main}>
       <HomeTitleBar />
-      {homeModel.mode === 'search' && <SearchToolbar />}
       {homeModel.mode === 'blank' && <StartToolbar />}
-
       <AddSMBDialog
         onClose={() => layoutModel.switchDialog('global/addSMB')}
         open={Boolean(layoutModel.dialogs['global/addSMB'])}
@@ -93,16 +86,7 @@ const HomePage = ():React.ReactElement => {
           homeModel.mode === 'display' && <ExploreView />
         }
         {
-          homeModel.mode === 'search' && <SearchView />
-        }
-        {
           homeModel.mode === 'blank' && <StartView />
-        }
-        {
-          homeModel.mode === 'image' && <ImageView />
-        }
-        {
-          homeModel.mode === 'video' && <VideoView />
         }
       </div>
 

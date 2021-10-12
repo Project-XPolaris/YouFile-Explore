@@ -1,5 +1,5 @@
 import { createModel } from 'hox'
-import { addFstabMount, fetchFstabMounts, Mount, remountFstab, removeFstabMount } from '../api/mount'
+import { addFstabMount, Mount, remountFstab, removeFstabMount } from '../api/mount'
 import { useEffect, useState } from 'react'
 
 const MountModel = () => {

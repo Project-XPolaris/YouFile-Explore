@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const CmdFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -11,5 +11,5 @@ export const CmdFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M20,31.12l-1.25,1.25,2.9,2.9-2.88,2.89L20,39.41l4.13-4.14Zm4,7.14h4.88v2H24Zm-10.13-12v18h20v-18Zm18,16h-16v-14h16Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

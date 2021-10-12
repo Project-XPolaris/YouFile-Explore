@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const MarkdownFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,5 +12,5 @@ export const MarkdownFileIcon = ({ className }: { className?: string }): React.R
         d='M12.42,41.23V29.39h3l4.44,4.44,4.44-4.44h3V41.23h-3V33.58L19.82,38l-4.44-4.44v7.65h-3M33.14,29.39h4.44v5.92h3.7L35.36,42l-5.92-6.66h3.7Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

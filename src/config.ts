@@ -3,7 +3,7 @@ export const ApplicationConfig = {
     readdir: '/path/read',
     mkdir: '/path/mkdir',
     datasetInfo: '/path/dataset',
-    datasetRollback:'/path/dataset/rollback',
+    datasetRollback: '/path/dataset/rollback',
     snapshots: '/path/snapshot',
     rename: '/path/rename',
     getAllTasks: '/task/all',
@@ -17,6 +17,7 @@ export const ApplicationConfig = {
     remountFstab: '/fstab/reload',
     getTask: '/task/get',
     unarchive: '/task/unarchive',
+    moveTask: '/task/move',
     info: '/info',
     serviceInfo: '/service/info',
     userAuth: '/user/auth'

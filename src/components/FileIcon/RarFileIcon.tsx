@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const RarFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -17,5 +17,5 @@ export const RarFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M31.3,39.82H30v2.86H28.41V34.86h2.9a3.23,3.23,0,0,1,2.14.62,2.12,2.12,0,0,1,.75,1.74,2.42,2.42,0,0,1-.34,1.34,2.38,2.38,0,0,1-1,.85L34.5,42.6v.08H32.77ZM30,38.51h1.3a1.32,1.32,0,0,0,.94-.31,1.1,1.1,0,0,0,.33-.85,1.17,1.17,0,0,0-.31-.87,1.32,1.32,0,0,0-1-.32H30Z'
         fill='#fff' />
     </svg>
-  );
-};
+  )
+}

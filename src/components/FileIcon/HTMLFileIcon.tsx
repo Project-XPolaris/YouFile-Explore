@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const HTMLFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -11,5 +11,5 @@ export const HTMLFileIcon = ({ className }: { className?: string }): React.React
         d='M18.93,36.14,15.42,33.3l3.51-2.84a.65.65,0,0,0,0-.94.66.66,0,0,0-.95,0l-4.05,3.24a.78.78,0,0,0-.2.54.62.62,0,0,0,.2.47L18,37a.66.66,0,0,0,.95,0,.57.57,0,0,0,0-.87Zm14.86-3.38-4.05-3.24a.66.66,0,0,0-.95,0,.65.65,0,0,0,0,.94L32.3,33.3l-3.51,2.84a.65.65,0,0,0,0,.94.66.66,0,0,0,.95,0l4.05-3.24a.71.71,0,0,0,.2-.47.8.8,0,0,0-.2-.61Zm-5.2-8.38a.7.7,0,0,0-.95.27L19.2,40.93c-.2.34-.13.81.27.88a.74.74,0,0,0,1-.27l8.37-16.21a.74.74,0,0,0-.2-.95Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

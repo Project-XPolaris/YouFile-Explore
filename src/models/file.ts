@@ -1,39 +1,55 @@
 import { createModel } from 'hox'
-import { useState } from 'react'
-import { copyFile as copyFileService, deleteFile as deleteFileService, renameFile } from '../api/file'
+import { useEffect, useState } from 'react'
+import { copyFile as copyFileService, deleteFile as deleteFileService } from '../api/file'
 import useHomeModel from '../page/Home/model'
 import { createSMBFolder } from '../api/yousmb'
 import { undefinedOrString } from '../utils/string'
 import { booleanToYesNo } from '../utils/boolean'
 import { createDirectory } from '../api/dir'
 import { convertPath } from '../utils/path'
-import useAppModel from './app'
-export interface CopyFile {
+import { DefaultWindowShare } from '../window'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../electron/channels'
+import { newMoveFileTask } from '../api/task'
+
+export interface ClipboardFile {
   name : string
   path:string
   type:string
+  directory:string
 }
 const FileModel = () => {
-  const [copyFile, setCopyFile] = useState<CopyFile[] | undefined>()
-  const [moveFile, setMoveFile] = useState<CopyFile[] | undefined>()
+  const [clipboardFile, setClipboardFile] = useState<ClipboardFile[] | undefined>(ipcRenderer.sendSync(ChannelNames.getClipboard).items ?? [])
+  const [clipboardAction, setClipboardAction] = useState<string>('Copy')
   const homeModel = useHomeModel()
-  const appModel = useAppModel()
+  useEffect(() => {
+    ipcRenderer.on(ChannelNames.clipboardUpdated, (event, { items, action }) => {
+      console.log({ items, action })
+      setClipboardFile(items)
+      setClipboardAction(action)
+    })
+  }, [])
   const pasteFile = () => {
-    if (copyFile && homeModel.currentPath) {
-      copyFileService(copyFile.map(it => ({
+    if (clipboardFile && homeModel.currentPath) {
+      copyFileService(clipboardFile.map(it => ({
         src: it.path,
         dest: `${homeModel.currentPath}/${it.name}`
       })))
+      ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Copy' })
     }
   }
   const move = async () => {
-    if (moveFile && homeModel.currentPath && appModel.info) {
-      for (const item of moveFile) {
-        const movePath = [homeModel.currentPath, item.name].join(appModel.info.sep)
-        await renameFile(item.path, movePath)
-      }
-      await homeModel.loadContent()
+    console.log('Call move')
+    const info = DefaultWindowShare.getSystemInfo()
+    console.log(info)
+    if (clipboardFile && homeModel.currentPath && info) {
+      console.log('ready to move')
+      await newMoveFileTask(clipboardFile.map(it => ({
+        src: it.path,
+        dest: [homeModel.currentPath, it.name].join(info.sep)
+      })))
     }
+    ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Move' })
   }
   const addSMBFolder = async (data:any) => {
     if (homeModel.currentPath) {
@@ -67,7 +83,7 @@ const FileModel = () => {
     }
   }
   return {
-    copyFile, setCopyFile, pasteFile, addSMBFolder, mkdir, deleteFile, moveFile, setMoveFile, move
+    clipboardFile, setClipboardFile, pasteFile, addSMBFolder, mkdir, deleteFile, move, clipboardAction
   }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const LuaFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,7 +12,7 @@ export const LuaFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M22.4,28.17A10.07,10.07,0,1,0,32.63,38.24,10.15,10.15,0,0,0,22.4,28.17Zm2.93,3a3.72,3.72,0,0,1,2.61,1.06,3.68,3.68,0,1,1-5.21,0,3.71,3.71,0,0,1,2.6-1.06Z'
         transform='translate(0.01)' fill='#fff' />
       <path d='M30.25,26.38a3.68,3.68,0,1,0,3.67-3.61,3.64,3.64,0,0,0-3.67,3.61Z' transform='translate(0.01)'
-            fill='#fff' />
+        fill='#fff' />
     </svg>
-  );
-};
+  )
+}

@@ -1,3 +1,6 @@
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../electron/channels'
+
 const FavouriteKey = 'favourite'
 export interface FavouriteItem {
   apiUrl:string
@@ -9,6 +12,13 @@ export class FavouriteManager {
   private static instance: FavouriteManager;
   items : FavouriteItem[] = []
   private constructor () {
+    const raw = localStorage.getItem(FavouriteKey)
+    if (raw) {
+      this.items = JSON.parse(raw)
+    }
+  }
+
+  public reload (): void {
     const raw = localStorage.getItem(FavouriteKey)
     if (raw) {
       this.items = JSON.parse(raw)
@@ -28,6 +38,7 @@ export class FavouriteManager {
 
   private saveData () {
     localStorage.setItem(FavouriteKey, JSON.stringify(this.items))
+    ipcRenderer.send(ChannelNames.favouriteUpdate, {})
   }
 
   public addFavourite (item: { name:string, path:string, type:string }):void {

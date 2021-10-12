@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const TxtFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -10,5 +10,5 @@ export const TxtFileIcon = ({ className }: { className?: string }): React.ReactE
       <path d='M49.76,16.92H35.83a3.06,3.06,0,0,1-3-3V0Z' transform='translate(0.01)' fill='#fff' opacity='0.5' />
       <path d='M33.39,28h-6.1V44.6h-4.1V28h-6V24.69H33.39Z' transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

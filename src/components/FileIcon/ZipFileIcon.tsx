@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const ZipFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -15,5 +15,5 @@ export const ZipFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M27.9,39.92v2.76H26.29V34.86h3.05a3.61,3.61,0,0,1,1.55.32,2.43,2.43,0,0,1,1,.92,2.52,2.52,0,0,1,.36,1.35,2.26,2.26,0,0,1-.79,1.81,3.28,3.28,0,0,1-2.18.66Zm0-1.3h1.44a1.39,1.39,0,0,0,1-.3,1.08,1.08,0,0,0,.34-.86,1.27,1.27,0,0,0-.34-.93,1.26,1.26,0,0,0-.93-.37H27.9Z'
         fill='#fff' />
     </svg>
-  );
-};
+  )
+}

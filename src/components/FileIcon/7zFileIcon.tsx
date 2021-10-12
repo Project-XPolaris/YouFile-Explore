@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const SevenZFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,5 +12,5 @@ export const SevenZFileIcon = ({ className }: { className?: string }): React.Rea
       <path d='M24.1,35.72l-3,7H19.43l3-6.57H18.58V34.86H24.1Z' fill='#fff' />
       <path d='M26.94,41.43h2.84v1.25H25v-1l2.73-3.61H25V36.87h4.65v.91Z' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

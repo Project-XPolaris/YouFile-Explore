@@ -1,5 +1,4 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import theme from '../../theme';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,6 +58,6 @@ const useStyles = makeStyles((theme: Theme) =>
       ...theme.typography.body2,
       fontSize: 12
     }
-  }),
-);
-export default useStyles;
+  })
+)
+export default useStyles

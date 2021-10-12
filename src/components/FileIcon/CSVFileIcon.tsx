@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const CSVFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -15,5 +15,5 @@ export const CSVFileIcon = ({ className }: { className?: string }): React.ReactE
         transform='translate(0.01)' fill='#fff' />
       <path d='M31.89,39.55l1.93-6.41h2l-3,8.53H31l-3-8.53H30Z' transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const SwiftFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,5 +12,5 @@ export const SwiftFileIcon = ({ className }: { className?: string }): React.Reac
         d='M30.77,43.05c-2.73,1.57-6.47,1.73-10.25.11A15.85,15.85,0,0,1,13.31,37,12.59,12.59,0,0,0,16,38.62c3.9,1.82,7.79,1.69,10.53,0a55.83,55.83,0,0,1-9.69-10.08,11.18,11.18,0,0,1-1.29-1.74c9.58,7,9.16,8.78,2.79-1.17a65.47,65.47,0,0,0,10.91,9l.41.25a8.67,8.67,0,0,0,.31-.9c.91-3.3-.13-7.08-2.41-10.2,5.26,3.18,8.39,9.16,7.08,14.17a1.36,1.36,0,0,0-.06.45c2.6,3.27,1.9,6.69,1.57,6-1.4-2.77-4-1.91-5.35-1.35Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

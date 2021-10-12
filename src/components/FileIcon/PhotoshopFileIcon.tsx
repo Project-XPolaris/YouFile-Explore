@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const PhotoshopFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -15,5 +15,5 @@ export const PhotoshopFileIcon = ({ className }: { className?: string }): React.
         d='M22.86,23.45a2,2,0,0,1,.88-.22,2.08,2.08,0,0,1,.88.22l10.15,5.89a.86.86,0,0,1,.44.75.87.87,0,0,1-.44.75L24.53,36.77a2,2,0,0,1-.88.22,2,2,0,0,1-.88-.22L12.62,30.88a.85.85,0,0,1,0-1.49Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

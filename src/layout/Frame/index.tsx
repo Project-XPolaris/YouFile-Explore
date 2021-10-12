@@ -1,10 +1,9 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { electronApp, electronRemote } from '../../remote'
 import useLayoutModel from '../../models/layout'
 import TaskDrawer from './parts/TaskDrawer'
-import { useInterval } from 'ahooks';
-import useTasksModel from '../../models/tasks';
+import { useInterval } from 'ahooks'
+import useTasksModel from '../../models/tasks'
 
 const useStyles = makeStyles((theme) => ({
   main: {},

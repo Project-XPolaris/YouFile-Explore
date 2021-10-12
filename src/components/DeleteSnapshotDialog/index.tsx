@@ -1,4 +1,4 @@
-import useStyles from './style';
+import useStyles from './style'
 import {
   Button,
   Dialog,
@@ -6,16 +6,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogProps,
-  DialogTitle,
-} from '@material-ui/core';
-import React from 'react';
+  DialogTitle
+} from '@material-ui/core'
+import React from 'react'
 
 export interface DeleteSnapshotDialogPropsType {
   onDelete:() => void
 }
 
-const DeleteSnapshotDialog = ({onDelete,...other}: DeleteSnapshotDialogPropsType & DialogProps) => {
-  const classes = useStyles();
+const DeleteSnapshotDialog = ({ onDelete, ...other }: DeleteSnapshotDialogPropsType & DialogProps) => {
+  const classes = useStyles()
   return (
     <Dialog { ...other }>
       <DialogTitle>
@@ -32,14 +32,14 @@ const DeleteSnapshotDialog = ({onDelete,...other}: DeleteSnapshotDialogPropsType
         </Button>
         <Button onClick={(e) => {
           if (other.onClose) {
-            other.onClose(e, 'backdropClick');
+            other.onClose(e, 'backdropClick')
           }
         }}>
           Cancel
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default DeleteSnapshotDialog;
+export default DeleteSnapshotDialog

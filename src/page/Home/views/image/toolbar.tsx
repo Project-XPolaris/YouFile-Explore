@@ -1,15 +1,8 @@
 import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
-import { IconButton, Menu, MenuItem, Paper, Typography } from '@material-ui/core'
-import { ExitToApp, FileCopy, ListAlt, Notes } from '@material-ui/icons'
+import { Paper, Typography } from '@material-ui/core'
 import useHomeModel from '../../model'
-import PopoverImageButton from '../../../../components/PopoverImageButton'
-import CopyPopover from '../../../../layout/Frame/parts/CopyPopover'
-import useFileModel from '../../../../models/file'
-import usePopoverController from '../../../../hooks/PopoverController'
-import CutPopover from '../../../../layout/Frame/parts/CutPopover'
-import useLayoutModel from '../../../../models/layout'
 
 const useStyles = makeStyles({
   main: {
@@ -50,7 +43,6 @@ const useStyles = makeStyles({
 
 const ImageToolbar = ():ReactElement => {
   const classes = useStyles()
-  const homeModel = useHomeModel()
   return (
     <Paper className={classes.main}>
       <div className={classes.leading}>

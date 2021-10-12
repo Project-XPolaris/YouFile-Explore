@@ -1,4 +1,3 @@
-import useStyles from './style';
 import {
   Button,
   Dialog,
@@ -6,16 +5,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogProps,
-  DialogTitle,
-} from '@material-ui/core';
-import React from 'react';
+  DialogTitle
+} from '@material-ui/core'
+import React, { ReactElement } from 'react'
 
 export interface RollbackSnapshotDialogPropsType {
   onRollback:() => void
 }
 
-const RollbackSnapshotDialog = ({onRollback,...other}: RollbackSnapshotDialogPropsType & DialogProps) => {
-  const classes = useStyles();
+const RollbackSnapshotDialog = ({ onRollback, ...other }: RollbackSnapshotDialogPropsType & DialogProps):ReactElement => {
   return (
     <Dialog { ...other }>
       <DialogTitle>
@@ -32,14 +30,14 @@ const RollbackSnapshotDialog = ({onRollback,...other}: RollbackSnapshotDialogPro
         </Button>
         <Button onClick={(e) => {
           if (other.onClose) {
-            other.onClose(e, 'backdropClick');
+            other.onClose(e, 'backdropClick')
           }
         }}>
           Cancel
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default RollbackSnapshotDialog;
+export default RollbackSnapshotDialog

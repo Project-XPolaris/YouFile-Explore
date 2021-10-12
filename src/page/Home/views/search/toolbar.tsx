@@ -93,7 +93,7 @@ const SearchToolbar = ():ReactElement => {
       </div>
       <div className={classes.content}>
         {
-          fileModel.copyFile &&
+          fileModel.clipboardFile && fileModel.clipboardFile.length > 0 && fileModel.clipboardAction === 'Copy' &&
           <PopoverImageButton icon={<FileCopy className={classes.actionIcon} />} controller={copyPopoverController}>
             <CopyPopover onPaste={() => {
               copyPopoverController.setAnchorEl(null)
@@ -102,7 +102,7 @@ const SearchToolbar = ():ReactElement => {
           </PopoverImageButton>
         }
         {
-          fileModel.moveFile &&
+          fileModel.clipboardFile && fileModel.clipboardFile.length > 0 && fileModel.clipboardAction === 'Move' &&
           <PopoverImageButton icon={<ExitToApp className={classes.actionIcon} />} controller={movePopoverController}>
             <CutPopover onMove={() => {
               movePopoverController.setAnchorEl(null)

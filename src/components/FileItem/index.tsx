@@ -1,11 +1,11 @@
 import React, { useRef } from 'react'
-import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
+import { ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import FileIcon from '../FileIcon'
 import { FileNode } from '../../page/Home/tree'
 import clsx from 'clsx'
 import { useClickAway } from 'ahooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { FolderIcon } from '../FileIcon/FolderIcon';
+import { FolderIcon } from '../FileIcon/FolderIcon'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

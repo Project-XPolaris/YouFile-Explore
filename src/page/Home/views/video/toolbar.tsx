@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import theme from '../../../../theme';
-import { Paper, Typography } from '@material-ui/core';
-import useHomeModel from '../../model';
+import React, { ReactElement } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import theme from '../../../../theme'
+import { Paper, Typography } from '@material-ui/core'
+import useHomeModel from '../../model'
 
 const useStyles = makeStyles({
   main: {

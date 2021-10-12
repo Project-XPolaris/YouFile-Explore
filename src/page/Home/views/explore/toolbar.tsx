@@ -1,10 +1,12 @@
-import React, { MutableRefObject, ReactElement, useEffect, useRef, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import theme from '../../../../theme';
-import { Breadcrumbs, ButtonBase, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core';
+import React, { MutableRefObject, ReactElement, useEffect, useRef, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import theme from '../../../../theme'
+import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
 import {
   ArrowBack,
   ArrowForwardIos,
+  Check,
+  CreateNewFolder,
   ExitToApp,
   Favorite,
   FileCopy,
@@ -12,25 +14,23 @@ import {
   MoreVert,
   Notes,
   Refresh,
-  Search,
-  Check,
-  CreateNewFolder, NavigateNext, Storage,
-} from '@material-ui/icons';
-import useHomeModel from '../../model';
-import PopoverImageButton from '../../../../components/PopoverImageButton';
-import CopyPopover from '../../../../layout/Frame/parts/CopyPopover';
-import useFileModel from '../../../../models/file';
-import usePopoverController from '../../../../hooks/PopoverController';
-import CutPopover from '../../../../layout/Frame/parts/CutPopover';
-import useLayoutModel from '../../../../models/layout';
-import SearchPopover from '../../../../layout/Frame/parts/SearchPopover';
-import useAppModel from '../../../../models/app';
-import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon';
-import { remountFstab } from '../../../../api/mount';
-import { useSnackbar } from 'notistack';
-import { useSize } from 'ahooks';
-import { getCollapsePath, PathPart } from '../../../../utils/path';
-import { createDataset, deleteDataset } from '../../../../api/dir';
+  Storage
+} from '@material-ui/icons'
+import useHomeModel from '../../model'
+import PopoverImageButton from '../../../../components/PopoverImageButton'
+import CopyPopover from '../../../../layout/Frame/parts/CopyPopover'
+import useFileModel from '../../../../models/file'
+import usePopoverController from '../../../../hooks/PopoverController'
+import CutPopover from '../../../../layout/Frame/parts/CutPopover'
+import useLayoutModel from '../../../../models/layout'
+import { remountFstab } from '../../../../api/mount'
+import { useSnackbar } from 'notistack'
+import { useSize } from 'ahooks'
+import { getCollapsePath, PathPart } from '../../../../utils/path'
+import { createDataset, deleteDataset } from '../../../../api/dir'
+import { DefaultWindowShare } from '../../../../window'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../../../../electron/channels'
 
 const useStyles = makeStyles({
   main: {
@@ -44,22 +44,22 @@ const useStyles = makeStyles({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     alignItems: 'center',
-    display: 'flex',
+    display: 'flex'
   },
   leading: {
     alignItems: 'center',
     display: 'flex',
     width: theme.spacing(30 - 4),
     height: theme.spacing(8),
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2)
   },
   backIcon: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.contrastText
   },
   content: {
     flexGrow: 1,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   nav: {
     flexGrow: 1,
@@ -68,7 +68,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
   part: {
     ...theme.typography.body1,
@@ -77,23 +77,24 @@ const useStyles = makeStyles({
     fontSize: 14,
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: '#EEEEEE',
+      backgroundColor: '#EEEEEE'
     },
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
-    borderRadius: 4,
+    borderRadius: 4
   },
   sep: {
-    fontSize: 10,
+    fontSize: 10
   },
   actionIcon: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.contrastText
   },
   menuIcon: {
     marginRight: theme.spacing(2),
-  },
+    color: 'rgba(0,0,0,0.6)'
+  }
 
-});
+})
 
 interface HomeToolbarPropsType {
   onSelectAll: () => void
@@ -101,58 +102,61 @@ interface HomeToolbarPropsType {
   onCreateNewDirectory: () => void
 }
 
-const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: HomeToolbarPropsType): ReactElement => {
-  const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
-  const homeModel = useHomeModel();
-  const fileModel = useFileModel();
-  const layoutModel = useLayoutModel();
-  const appModel = useAppModel();
-  const refPath: MutableRefObject<HTMLDivElement | null> | null = useRef(null);
-  const pathSize = useSize(refPath);
-  const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null);
-  const [moreMenuAnchor, setMoreMenuAnchor] = React.useState(null);
-  const copyPopoverController = usePopoverController();
-  const movePopoverController = usePopoverController();
-  const searchPopoverController = usePopoverController();
+const HomeToolbar = ({
+  onSelectAll,
+  onReverseSelect,
+  onCreateNewDirectory
+}: HomeToolbarPropsType): ReactElement => {
+  const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
+  const homeModel = useHomeModel()
+  const fileModel = useFileModel()
+  const layoutModel = useLayoutModel()
+  const refPath: MutableRefObject<HTMLDivElement | null> | null = useRef(null)
+  const pathSize = useSize(refPath)
+  const [viewTypeMenuAnchor, setViewTypeMenuAnchor] = React.useState(null)
+  const [moreMenuAnchor, setMoreMenuAnchor] = React.useState(null)
+  const copyPopoverController = usePopoverController()
+  const movePopoverController = usePopoverController()
   const handleViewTypeMenuClick = (event: any) => {
-    setViewTypeMenuAnchor(event.currentTarget);
-  };
+    setViewTypeMenuAnchor(event.currentTarget)
+  }
 
   const handleViewTypeMenuClose = () => {
-    setViewTypeMenuAnchor(null);
-  };
+    setViewTypeMenuAnchor(null)
+  }
   const handleMoreMenuClick = (event: any) => {
-    setMoreMenuAnchor(event.currentTarget);
-  };
+    setMoreMenuAnchor(event.currentTarget)
+  }
 
   const handleMoreMenuClose = () => {
-    setMoreMenuAnchor(null);
-  };
+    setMoreMenuAnchor(null)
+  }
   const handlerAddToFavourite = () => {
-    if (!homeModel.currentPath || !appModel.info) {
-      return;
+    const info = DefaultWindowShare.getSystemInfo()
+    if (!homeModel.currentPath || !info) {
+      return
     }
-    const name = homeModel.currentPath.split(appModel.info.sep).pop();
+    const name = homeModel.currentPath.split(info.sep).pop()
     if (!name) {
-      return;
+      return
     }
     homeModel.addFavourite({
       name,
       path: homeModel.currentPath,
-      type: 'Directory',
-    });
-  };
+      type: 'Directory'
+    })
+  }
   const handlerAsDataset = async () => {
     if (!homeModel.currentPath) {
-      return;
+      return
     }
     await createDataset(homeModel.currentPath)
     await homeModel.refresh()
   }
   const handlerRemoveDataset = async () => {
     if (!homeModel.currentPath) {
-      return;
+      return
     }
     await deleteDataset(homeModel.currentPath)
     await homeModel.refresh()
@@ -167,25 +171,42 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
         onClose={handleViewTypeMenuClose}
       >
         <MenuItem onClick={() => {
-          homeModel.setViewType('List');
-          handleViewTypeMenuClose();
+          homeModel.setViewType('List')
+          handleViewTypeMenuClose()
         }}>List</MenuItem>
         <MenuItem onClick={() => {
-          homeModel.setViewType('Medium');
-          handleViewTypeMenuClose();
+          homeModel.setViewType('Medium')
+          handleViewTypeMenuClose()
         }}>Medium Icon</MenuItem>
       </Menu>
-    );
-  };
-  const [navChip, setNavChip] = useState<PathPart[]>([]);
-  useEffect(() => {
-    const elm = refPath.current;
-    if (!elm) {
-      return;
+    )
+  }
+  const getBreadcrumbs = () => {
+    const info = DefaultWindowShare.getSystemInfo()
+    if (info === undefined) {
+      return []
     }
-    setNavChip(getCollapsePath(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})), (elm.clientWidth / 8.2539) - 1,(42 / 8.2539) - 1))
+    if (homeModel.currentPath) {
+      const parts = homeModel.currentPath.split(info.sep)
+      if (parts[parts.length - 1] === '') {
+        parts.pop()
+      }
+      return parts
+    }
+    return []
+  }
+  const [navChip, setNavChip] = useState<PathPart[]>([])
+  useEffect(() => {
+    const elm = refPath.current
+    if (!elm) {
+      return
+    }
+    setNavChip(getCollapsePath(getBreadcrumbs().map((it, idx) => ({
+      name: it,
+      idx
+    })), (elm.clientWidth / 8.2539) - 1, (42 / 8.2539) - 1))
     // setNavChip(homeModel.getBreadcrumbs().map((it,idx) => ({name:it,idx})))
-  }, [pathSize, homeModel.currentPath]);
+  }, [pathSize, homeModel.currentPath])
   const renderMoreMenu = () => {
     return (
       <Menu
@@ -196,54 +217,57 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
       >
         <MenuItem
           onClick={() => {
-            handleMoreMenuClose();
-            handlerAddToFavourite();
+            handleMoreMenuClose()
+            handlerAddToFavourite()
           }}
         ><Favorite className={classes.menuIcon} />Add to favourite</MenuItem>
         <MenuItem
           onClick={() => {
-            handleMoreMenuClose();
-            onCreateNewDirectory();
+            handleMoreMenuClose()
+            onCreateNewDirectory()
           }}
         ><CreateNewFolder className={classes.menuIcon} />New directory</MenuItem>
         <Divider />
         <MenuItem
           onClick={() => {
-            handleMoreMenuClose();
-            onSelectAll();
+            handleMoreMenuClose()
+            onSelectAll()
           }}
         ><Check className={classes.menuIcon} />Select all</MenuItem>
         <MenuItem
           onClick={() => {
-            handleMoreMenuClose();
-            onReverseSelect();
+            handleMoreMenuClose()
+            onReverseSelect()
           }}
         ><Refresh className={classes.menuIcon} />Reverse select</MenuItem>
         <Divider />
         <MenuItem
           onClick={async () => {
-            handleMoreMenuClose();
-            await remountFstab();
+            handleMoreMenuClose()
+            await remountFstab()
             enqueueSnackbar('Remount success', {
               variant: 'success',
-              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-            });
+              anchorOrigin: {
+                horizontal: 'right',
+                vertical: 'bottom'
+              }
+            })
           }}
         ><Refresh className={classes.menuIcon} />Remount</MenuItem>
         <Divider />
         <MenuItem
           onClick={() => {
-            handleMoreMenuClose();
+            handleMoreMenuClose()
             if (!homeModel.datasetInfo) {
-              handlerAsDataset();
-            }else{
+              handlerAsDataset()
+            } else {
               handlerRemoveDataset()
             }
           }}
-        ><Storage className={classes.menuIcon} />{homeModel.datasetInfo ? "Remove dataset" : "As dataset"}</MenuItem>
+        ><Storage className={classes.menuIcon} />{homeModel.datasetInfo ? 'Remove dataset' : 'As dataset'}</MenuItem>
       </Menu>
-    );
-  };
+    )
+  }
   return (
     <Paper className={classes.main}>
       {viewTypeMenu()}
@@ -262,7 +286,7 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
       </div>
       <div className={classes.content}>
         <Paper className={classes.nav} ref={refPath}>
-          <Breadcrumbs  separator={<ArrowForwardIos className={classes.sep} />}>
+          <Breadcrumbs separator={<ArrowForwardIos className={classes.sep} />}>
             {
               navChip.map((it, idx) => {
                 return (
@@ -274,35 +298,47 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
 
                     {it.name}
                   </div>
-                );
+                )
               })
             }
           </Breadcrumbs>
         </Paper>
         {
-          fileModel.copyFile && fileModel.copyFile.length > 0 &&
+          fileModel.clipboardFile && fileModel.clipboardFile.length > 0 && fileModel.clipboardAction === 'Copy' &&
           <PopoverImageButton icon={<FileCopy className={classes.actionIcon} />} controller={copyPopoverController}>
-            <CopyPopover onPaste={() => {
-              copyPopoverController.setAnchorEl(null);
-              fileModel.setCopyFile(undefined);
-            }} />
+            <CopyPopover
+              onPaste={() => {
+                fileModel.pasteFile()
+                copyPopoverController.setAnchorEl(null)
+              }}
+              onClearAll={() => {
+                ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Copy' })
+                copyPopoverController.setAnchorEl(null)
+              }}
+            />
           </PopoverImageButton>
         }
         {
-          fileModel.moveFile && fileModel.moveFile.length > 0 &&
+          fileModel.clipboardFile && fileModel.clipboardFile.length > 0 && fileModel.clipboardAction === 'Move' &&
           <PopoverImageButton icon={<ExitToApp className={classes.actionIcon} />} controller={movePopoverController}>
-            <CutPopover onMove={() => {
-              movePopoverController.setAnchorEl(null);
-              fileModel.setMoveFile(undefined);
-            }} />
+            <CutPopover
+              onMove={() => {
+                movePopoverController.setAnchorEl(null)
+                fileModel.move()
+              }}
+              onClearAll={() => {
+                ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Copy' })
+                copyPopoverController.setAnchorEl(null)
+              }}
+            />
           </PopoverImageButton>
         }
-        <PopoverImageButton icon={<Search className={classes.actionIcon} />} controller={searchPopoverController}>
-          <SearchPopover onSearch={(key: string) => {
-            searchPopoverController.setAnchorEl(null);
-            homeModel.searchFile(key);
-          }} />
-        </PopoverImageButton>
+        {/* <PopoverImageButton icon={<Search className={classes.actionIcon} />} controller={searchPopoverController}> */}
+        {/*  <SearchPopover onSearch={(key: string) => { */}
+        {/*    searchPopoverController.setAnchorEl(null) */}
+        {/*    homeModel.searchFile(key) */}
+        {/*  }} /> */}
+        {/* </PopoverImageButton> */}
         <IconButton
           onClick={() => layoutModel.switchDialog('global/taskDrawer')}
         >
@@ -316,6 +352,6 @@ const HomeToolbar = ({ onSelectAll, onReverseSelect, onCreateNewDirectory }: Hom
         </IconButton>
       </div>
     </Paper>
-  );
-};
-export default HomeToolbar;
+  )
+}
+export default HomeToolbar

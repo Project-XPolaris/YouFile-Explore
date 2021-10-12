@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const ImgFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -11,5 +11,5 @@ export const ImgFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M25.47,39.08A3.62,3.62,0,1,1,28,38a3.61,3.61,0,0,1-2.56,1.06m0-18.09A14.48,14.48,0,1,0,35.7,25.23,14.46,14.46,0,0,0,25.47,21Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

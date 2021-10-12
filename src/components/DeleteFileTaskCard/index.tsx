@@ -1,14 +1,11 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, IconButton, LinearProgress, Menu, MenuItem, Paper } from '@material-ui/core'
-import theme from '../../theme'
 import clsx from 'clsx'
 import { Delete, MoreVert } from '@material-ui/icons'
 import { DeleteFileOutput, Task } from '../../api/task'
 import { fileSize } from 'humanize-plus'
 import { getPathBasename } from '../../utils/path'
-import useStyles from './style';
-
+import useStyles from './style'
 
 interface DeleteFileTaskCardPropsType {
   className?: string
@@ -44,10 +41,10 @@ const DeleteFileTaskCard = ({ className, task, onStop }: DeleteFileTaskCardProps
     )
   }
   const getTaskName = () => {
-    if (task.output.src.length === 1) {
-      return getPathBasename(task.output.src[0])
+    if (task.output.files.length === 1) {
+      return getPathBasename(task.output.files[0].name)
     } else {
-      return `${getPathBasename(task.output.src[0])} and other ${task.output.src.length - 1} tasks`
+      return `${getPathBasename(task.output.files[0].name)} and other ${task.output.files.length - 1} tasks`
     }
   }
   return (
@@ -78,7 +75,7 @@ const DeleteFileTaskCard = ({ className, task, onStop }: DeleteFileTaskCardProps
               Count:
             </div>
             <div className={classes.text2}>
-              {task.output.complete}/{task.output.file_count}
+              {task.output.complete}/{task.output.fileCount}
             </div>
           </div>
           <div className={classes.field}>
@@ -91,7 +88,7 @@ const DeleteFileTaskCard = ({ className, task, onStop }: DeleteFileTaskCardProps
           </div>
         </div>
         <div className={classes.text}>
-          {getPathBasename(task.output.current_delete)}
+          {getPathBasename(task.output.currentDelete)}
         </div>
         <LinearProgress variant='determinate' value={task.output.progress * 100} />
       </div>

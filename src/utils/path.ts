@@ -21,7 +21,7 @@ export interface PathPart {
   name:string
 }
 
-export const getCollapsePath = (list:PathPart[],maxLength:number,gap:number):PathPart[] => {
+export const getCollapsePath = (list:PathPart[], maxLength:number, gap:number):PathPart[] => {
   if (list.length === 0) {
     return []
   }
@@ -32,8 +32,8 @@ export const getCollapsePath = (list:PathPart[],maxLength:number,gap:number):Pat
     return []
   }
   if (last.name.length > maxLength) {
-    const lastName  = last.name.slice(0,maxLength - 3) + "..."
-    return [{name:lastName,idx:last.idx}]
+    const lastName = last.name.slice(0, maxLength - 3) + '...'
+    return [{ name: lastName, idx: last.idx }]
   }
   // swap: first to end
   // const start = list.shift()
@@ -41,15 +41,14 @@ export const getCollapsePath = (list:PathPart[],maxLength:number,gap:number):Pat
   //   list.push(start)
   // }
 
-
-  const pick:PathPart[] = [];
-  let totalLength = last.name.length;
+  const pick:PathPart[] = []
+  let totalLength = last.name.length
   for (let idx = list.length - 1; idx >= 0; idx--) {
     const part = list[idx]
-    totalLength +=  part.name.length + gap + 16
+    totalLength += part.name.length + gap + 16
     pick.unshift(part)
     if (totalLength > maxLength) {
-      break;
+      break
     }
   }
   // if (pick.length > 1) {

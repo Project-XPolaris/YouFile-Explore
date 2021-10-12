@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const PngFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,5 +12,5 @@ export const PngFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M12.88,23.86h4.87v4.87H12.88Zm9.74,0h4.86v4.87H22.62Zm9.73,0h4.87v4.87H32.35Zm-14.6,4.87h4.87V33.6H17.75Zm9.73,0h4.87V33.6H27.48Zm-9.73,9.74h4.87v4.87H17.75Zm9.73,0h4.87v4.87H27.48ZM12.88,33.6h4.87v4.87H12.88Zm9.74,0h4.86v4.87H22.62Zm9.73,0h4.87v4.87H32.35ZM12.88,43.34h4.87v4.87H12.88Zm9.74,0h4.86v4.87H22.62Zm9.73,0h4.87v4.87H32.35Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

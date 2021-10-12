@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const Bz2FileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -17,5 +17,5 @@ export const Bz2FileIcon = ({ className }: { className?: string }): React.ReactE
         d='M33.75,42.68H28.39V41.61l2.53-2.69a5.86,5.86,0,0,0,.77-1,1.61,1.61,0,0,0,.25-.81,1.22,1.22,0,0,0-.26-.82,1,1,0,0,0-.75-.3,1,1,0,0,0-.83.36,1.47,1.47,0,0,0-.31,1H28.24A2.56,2.56,0,0,1,28.58,36a2.37,2.37,0,0,1,1-.92A2.88,2.88,0,0,1,31,34.75a2.75,2.75,0,0,1,1.88.58A2,2,0,0,1,33.5,37a2.61,2.61,0,0,1-.3,1.18,6.37,6.37,0,0,1-1,1.4l-1.78,1.88h3.36Z'
         fill='#fff' />
     </svg>
-  );
-};
+  )
+}

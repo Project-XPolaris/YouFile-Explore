@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const OggFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -20,5 +20,5 @@ export const OggFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M23.14,22.84v10a4.57,4.57,0,0,0-3.89-.37,4.66,4.66,0,0,0,2.31,9,4.78,4.78,0,0,0,3.91-4.78V25.18H27.8a2.34,2.34,0,1,0,0-4.67H25.47A2.34,2.34,0,0,0,23.14,22.84Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

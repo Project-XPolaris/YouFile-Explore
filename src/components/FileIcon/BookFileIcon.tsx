@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const BookFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -11,5 +11,5 @@ export const BookFileIcon = ({ className }: { className?: string }): React.React
         d='M30.56,22.39H16.87a2.28,2.28,0,0,0-2.28,2.28V42.92a2.28,2.28,0,0,0,2.28,2.28H30.56a2.28,2.28,0,0,0,2.28-2.28V24.67a2.28,2.28,0,0,0-2.28-2.28ZM16.87,24.67h5.7V33.8l-2.85-1.71L16.87,33.8Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

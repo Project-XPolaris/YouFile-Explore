@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const CppFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -8,7 +8,7 @@ export const CppFileIcon = ({ className }: { className?: string }): React.ReactE
         transform='translate(0.01)' fill='#005494' />
       <path d='M49.76,16.92H35.83a3.06,3.06,0,0,1-3-3V0Z' transform='translate(0.01)' fill='#fff' opacity='0.5' />
       <path d='M28.57,38.72A4.61,4.61,0,0,1,20,36.39,4.62,4.62,0,0,1,28.53,34l4-2.3A9.25,9.25,0,1,0,32.64,41Z'
-            transform='translate(0.01)' fill='#fff' fill-rule='evenodd' />
+        transform='translate(0.01)' fill='#fff' fillRule='evenodd' />
       <polygon
         points='32.28 35.69 31.39 35.69 31.39 34.79 30.49 34.79 30.49 35.69 29.59 35.69 29.59 36.59 30.49 36.59 30.49 37.49 31.39 37.49 31.39 36.59 32.28 36.59 32.28 35.69'
         fill='#fff' />
@@ -16,5 +16,5 @@ export const CppFileIcon = ({ className }: { className?: string }): React.ReactE
         points='35.65 35.69 34.75 35.69 34.75 34.79 33.85 34.79 33.85 35.69 32.96 35.69 32.96 36.59 33.85 36.59 33.85 37.49 34.75 37.49 34.75 36.59 35.65 36.59 35.65 35.69'
         fill='#fff' />
     </svg>
-  );
-};
+  )
+}

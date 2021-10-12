@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const CSharpFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -14,5 +14,5 @@ export const CSharpFileIcon = ({ className }: { className?: string }): React.Rea
         d='M24.21,27a10.43,10.43,0,0,1,9,5.22v0L28.7,34.82a5.2,5.2,0,0,0-4.43-2.56h-.06A5.21,5.21,0,1,0,28.75,40l0,0,4.54,2.64a10.48,10.48,0,0,1-8.94,5.23h-.12a10.46,10.46,0,0,1,0-20.91Z'
         transform='translate(0.01 0.09)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

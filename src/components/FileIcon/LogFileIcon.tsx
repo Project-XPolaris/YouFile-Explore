@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const LogFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -9,7 +9,7 @@ export const LogFileIcon = ({ className }: { className?: string }): React.ReactE
         transform='translate(0.01)' fill='#7ac9d1' />
       <path d='M49.76,16.92H35.83a3.06,3.06,0,0,1-3-3V0Z' transform='translate(0.01)' fill='#fff' opacity='0.5' />
       <path d='M12,44.48H26.69V48.4H12V44.48M12,29.9H37.8v3.92H12Zm0-7.29H37.8v3.92H12ZM12,37.2H37.8v3.92H12Z'
-            transform='translate(0.01)' fill='#fff' />
+        transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

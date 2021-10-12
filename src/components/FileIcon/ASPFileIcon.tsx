@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const ASPFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -8,8 +8,8 @@ export const ASPFileIcon = ({ className }: { className?: string }): React.ReactE
         transform='translate(0.01)' fill='#ebbe39' />
       <path d='M49.76,16.92H35.83a3.06,3.06,0,0,1-3-3V0Z' transform='translate(0.01)' fill='#fff' opacity='0.5' />
       <path d='M20.27,24.17l-9.52,9.52,9.52,9.52,3.62-3.58L18,33.69l5.93-5.93Z' transform='translate(0.01)'
-            fill='#fff' />
+        fill='#fff' />
       <path d='M37,23.23l2,.92-10.38,20-2-.92Z' transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

@@ -1,24 +1,26 @@
-import { createModel } from 'hox';
-import { DatasetInfo, FileItem, getDatasetInfo, readDir } from '../../api/dir';
-import { useEffect, useState } from 'react';
-import { FileNode } from './tree';
-import { fetchSmbConfig } from '../../api/yousmb';
-import { useUpdate } from 'ahooks';
-import useAppModel from '../../models/app';
+import { createModel } from 'hox'
+import { DatasetInfo, FileItem, getDatasetInfo, readDir } from '../../api/dir'
+import { useEffect, useState } from 'react'
+import { FileNode } from './tree'
+import { fetchSmbConfig } from '../../api/yousmb'
+import { useUpdate } from 'ahooks'
 import {
   CopyFileOutput,
-  DeleteFileOutput,
-  fetchTaskById,
-  newSearchFileTask, newUnarchiveTask,
+  DeleteFileOutput, ExtractFileOutput,
+  fetchTaskById, MoveFileOutput,
+  newSearchFileTask,
+  newUnarchiveTask,
   SearchFileOutput,
   SearchFileResult,
-  Task,
-} from '../../api/task';
-import { DefaultApiWebsocket } from '../../api/websocket/client';
-import { NotificationMessage } from '../../api/websocket/event';
-import { renameFile } from '../../api/file';
-import { useTabsController } from './hooks/tab';
-import { FavouriteItem, FavouriteManager } from '../../favourite';
+  Task
+} from '../../api/task'
+import { DefaultApiWebsocket } from '../../api/websocket/client'
+import { NotificationMessage } from '../../api/websocket/event'
+import { renameFile } from '../../api/file'
+import { FavouriteItem, FavouriteManager } from '../../favourite'
+import { DefaultWindowShare } from '../../window'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../../electron/channels'
 
 export interface SearchResult {
   id: string;
@@ -27,140 +29,166 @@ export interface SearchResult {
 
 export type ViewType = 'List' | 'Medium';
 export type Mode = 'display' | 'search' | 'blank' | 'image' | 'video'
-const ignoreSmbSectionNames = ['global', 'printers', 'print$'];
+const ignoreSmbSectionNames = ['global', 'printers', 'print$']
 const HomeModel = () => {
-  const appModel = useAppModel();
-  const [currentPath, setCurrentPath] = useState<string | undefined>();
-  const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([]);
-  const [currentContent, setCurrentContent] = useState<FileNode[]>([]);
-  const [viewType, setViewType] = useState<ViewType>('Medium');
-  const [mode, setMode] = useState<Mode>('blank');
-  const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
-  const [searchId, setSearchId] = useState<string | undefined>();
-  const [favorite, setFavourite] = useState<FavouriteItem[]>();
-  const [imageViewUrl, setImageViewUrl] = useState<string | undefined>();
-  const [videoViewUrl, setVideoViewUrl] = useState<string | undefined>();
-  const [datasetInfo, setDatasetInfo] = useState<DatasetInfo>();
-  const tabController = useTabsController({
-    onTabChange: (tab) => {
-      switch (tab.type) {
-        case 'Explore':
-          setMode('display');
-          setCurrentPath(tab.path);
-          break;
-        case 'Search':
-          setMode('search');
-          setSearchId(tab.id);
-          break;
-        case 'Start':
-          setMode('blank');
-          break;
-        case 'Image':
-          setMode('image');
-          setImageViewUrl(tab.target);
-          break;
-        case 'Video':
-          setMode('video');
-          setVideoViewUrl(tab.target);
-          break;
-      }
-    },
-    onEmptyTab: () => {
-      setMode('blank');
-    },
-  });
-  const update = useUpdate();
+  const [currentPath, setCurrentPath] = useState<string | undefined>(DefaultWindowShare.getLoadPath())
+  const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
+  const [currentContent, setCurrentContent] = useState<FileNode[]>([])
+  const [viewType, setViewType] = useState<ViewType>('Medium')
+  const [mode, setMode] = useState<Mode>(DefaultWindowShare.getLoadPath() ? 'display' : 'blank')
+  const [searchResult, setSearchResult] = useState<SearchResult[]>([])
+  const [searchId, setSearchId] = useState<string | undefined>()
+  const [favorite, setFavourite] = useState<FavouriteItem[]>()
+  const [imageViewUrl, setImageViewUrl] = useState<string | undefined>()
+  const [videoViewUrl, setVideoViewUrl] = useState<string | undefined>()
+  const [datasetInfo, setDatasetInfo] = useState<DatasetInfo>()
+  const update = useUpdate()
   const onSearchCompleteHandler = async (event: NotificationMessage) => {
-    const id = event.id;
+    const id = event.id
     if (!id) {
-      return;
+      return
     }
-    const task: Task<SearchFileOutput> = await fetchTaskById(id);
+    const task: Task<SearchFileOutput> = await fetchTaskById(id)
     setSearchResult(searchResult.map(it => {
       if (it.id === task.id) {
         return {
           ...it,
-          result: task.output.result,
-        };
+          result: task.output.result
+        }
       }
-      return it;
-    }));
-  };
+      return it
+    }))
+  }
+  const openDirectory = (openPath: string) => {
+    setCurrentPath(openPath)
+    if (mode !== 'display') {
+      setMode('display')
+    }
+  }
   const onCopyFileCompleteHandler = async (event: NotificationMessage) => {
-    const id = event.id;
-    console.log(event.id);
+    const id = event.id
     if (!id) {
-      return;
+      return
     }
-    const task: Task<CopyFileOutput> = await fetchTaskById(id);
+    const task: Task<CopyFileOutput> = await fetchTaskById(id)
     if (!currentPath) {
-      return;
+      return
     }
-    task.output.list.forEach(item => {
-      if (item.dest.indexOf(currentPath) !== -1) {
-        console.log('refresh content');
-        loadContent();
+    for (const copyOption of task.output.files) {
+      if (copyOption.dest.directory === currentPath) {
+        loadContent()
+        break
       }
-    });
-  };
+    }
+  }
+  const onMoveFileCompleteHandler = async (event: NotificationMessage) => {
+    const id = event.id
+    if (!id) {
+      return
+    }
+    const task: Task<MoveFileOutput> = await fetchTaskById(id)
+    if (!currentPath) {
+      return
+    }
+    for (const moveOption of task.output.files) {
+      if (moveOption.dest.directory === currentPath) {
+        loadContent()
+        return
+      }
+    }
+    for (const moveOption of task.output.files) {
+      if (moveOption.source.directory === currentPath) {
+        loadContent()
+        return
+      }
+    }
+  }
   const onDeleteFileDoneHandler = async (event: NotificationMessage) => {
-    const id = event.id;
-    console.log(event.id);
+    const id = event.id
     if (!id) {
-      return;
+      return
     }
-    const task: Task<DeleteFileOutput> = await fetchTaskById(id);
+    const task: Task<DeleteFileOutput> = await fetchTaskById(id)
     if (!currentPath) {
-      return;
+      return
     }
-    task.output.src.forEach(item => {
-      if (item.indexOf(currentPath) !== -1) {
-        console.log('refresh content');
-        loadContent();
-      }
-    });
-  };
-  const onUnarchiveFileDoneHandler = async (event: NotificationMessage & { target: string, dir: string }) => {
-    if (currentPath) {
-      if (event.dir.startsWith(currentPath)) {
-        await loadContent();
+    for (const deleteSrc of task.output.files) {
+      if (deleteSrc.directory === currentPath) {
+        loadContent()
+        break
       }
     }
-  };
+  }
+  const onUnarchiveFileDoneHandler = async (event: NotificationMessage) => {
+    const id = event.id
+    if (!id) {
+      return
+    }
+    const task: Task<ExtractFileOutput> = await fetchTaskById(id)
+    if (!currentPath) {
+      return
+    }
+    for (const file of task.output.files) {
+      if (file.destDirectory === currentPath) {
+        await loadContent()
+        break
+      }
+    }
+  }
   const onGenerateThumbnailsDoneHandler = async (event: NotificationMessage & { path: string }) => {
     if (currentPath) {
       if (event.path.startsWith(currentPath)) {
-        loadContent('0');
+        loadContent('0')
       }
     }
-  };
-  DefaultApiWebsocket.connect();
+  }
+  // DefaultApiWebsocket.connect()
   DefaultApiWebsocket.addListener('homeModel', {
-    onMessage(data: string) {
-      const event: NotificationMessage & any = JSON.parse(data);
-      console.log(event);
+    onMessage (data: string) {
+      const event: NotificationMessage & any = JSON.parse(data)
+      console.log(event)
       if (event.event === 'SearchTaskComplete') {
-        onSearchCompleteHandler(event);
+        onSearchCompleteHandler(event)
       }
       if (event.event === 'CopyTaskComplete') {
-        onCopyFileCompleteHandler(event);
+        onCopyFileCompleteHandler(event)
       }
       if (event.event === 'DeleteTaskDone') {
-        onDeleteFileDoneHandler(event);
+        onDeleteFileDoneHandler(event)
       }
       if (event.event === 'UnarchiveFileComplete') {
-        onUnarchiveFileDoneHandler(event);
+        onUnarchiveFileDoneHandler(event)
       }
       if (event.event === 'GenerateThumbnailComplete') {
-        onGenerateThumbnailsDoneHandler(event);
+        onGenerateThumbnailsDoneHandler(event)
       }
-    },
-  });
+    }
+  })
+
+  useEffect(() => {
+    ipcRenderer.on(ChannelNames.notificationCopyTaskComplete, (event, payload) => {
+      onCopyFileCompleteHandler(payload)
+    })
+    ipcRenderer.on(ChannelNames.notificationDeleteTaskComplete, (event, payload) => {
+      onDeleteFileDoneHandler(payload)
+    })
+    ipcRenderer.on(ChannelNames.notificationExtractTaskComplete, (event, payload) => {
+      onUnarchiveFileDoneHandler(payload)
+    })
+    ipcRenderer.on(ChannelNames.directoryUpdated, (event, { dirPath }) => {
+      if (currentPath && currentPath === dirPath) {
+        refresh()
+      }
+    })
+    ipcRenderer.on(ChannelNames.notificationMoveTaskComplete, (event, payload) => {
+      onMoveFileCompleteHandler(payload)
+    })
+  }, [currentPath])
   const initData = async () => {
     // await fTree.loadByPath(dirPath)
-    await appModel.loadInfo();
-    await loadSmbDirs();
-  };
+    // await appModel.loadInfo()
+    await loadSmbDirs()
+  }
   const generateNode = (source: FileItem): FileNode => {
     return {
       name: source.name,
@@ -169,151 +197,156 @@ const HomeModel = () => {
       parent: undefined,
       type: source.type,
       thumbnail: source.getThumbnailsUrl(),
-      target: source.getTarget(),
-    };
-  };
+      target: source.getTarget()
+    }
+  }
   const loadContent = async (thumbnail = '1') => {
     if (currentPath === undefined) {
-      setCurrentContent([]);
-      return;
+      setCurrentContent([])
+      return
     }
-    const response = await readDir(currentPath, thumbnail);
-    setCurrentContent(response.map(it => generateNode(it)));
-  };
+    const response = await readDir(currentPath, thumbnail)
+    setCurrentContent(response.map(it => generateNode(it)))
+  }
   const refreshDatasetInfo = async () => {
     if (!currentPath) {
-      return;
+      return
     }
-    const dataset:any = await getDatasetInfo(currentPath);
+    const dataset: any = await getDatasetInfo(currentPath)
     if (dataset.status && dataset.status !== 200) {
-      setDatasetInfo(undefined);
-      return;
+      setDatasetInfo(undefined)
+      return
     }
     if (dataset.success) {
-      setDatasetInfo(dataset);
+      setDatasetInfo(dataset)
     }
-  };
+  }
   const refreshContent = async () => {
     if (!currentPath) {
-      return;
+      return
     }
-    await loadContent();
-    await refreshDatasetInfo();
-    const root = appModel?.info?.root_paths.find(it => it.path === currentPath);
-    if (root) {
-      tabController.setCurrentTabFolder(root.name, currentPath);
-    } else {
-      const parts = getBreadcrumbs();
-      tabController.setCurrentTabFolder(parts.pop() ?? 'new tab', currentPath);
-    }
-  };
+    await loadContent()
+    // await refreshDatasetInfo()
+    // const root = appModel?.info?.root_paths.find(it => it.path === currentPath)
+    // if (root) {
+    //   tabController.setCurrentTabFolder(root.name, currentPath)
+    // } else {
+    //   const parts = getBreadcrumbs()
+    //   tabController.setCurrentTabFolder(parts.pop() ?? 'new tab', currentPath)
+    // }
+  }
   useEffect(() => {
-    refreshContent();
-  }, [currentPath]);
+    console.log(currentPath)
+    refreshContent()
+  }, [currentPath])
   const refresh = () => {
-    refreshContent();
-  };
+    refreshContent()
+  }
   const loadFile = async (path: string) => {
-    setCurrentPath(path);
-  };
+    setCurrentPath(path)
+  }
   const onBack = async () => {
-    if (appModel.info?.sep === undefined || currentPath === undefined) {
-      return;
+    const info = DefaultWindowShare.getSystemInfo()
+    if (info?.sep === undefined || currentPath === undefined) {
+      return
     }
-    const parts = getBreadcrumbs();
+    const parts = getBreadcrumbs()
     if (parts.length === 1) {
       // root path
-      return;
+      return
     }
-    parts.pop();
-    let targetPath = parts.join(appModel.info.sep);
-    if (!targetPath.endsWith(appModel.info.sep)) {
-      targetPath += appModel.info.sep;
+    parts.pop()
+    let targetPath = parts.join(info.sep)
+    if (!targetPath.endsWith(info.sep)) {
+      targetPath += info.sep
     }
-    setCurrentPath(targetPath);
-  };
+    setCurrentPath(targetPath)
+  }
   const onNavChipClick = (index: number) => {
-    if (appModel.info?.sep === undefined) {
-      return;
+    const info = DefaultWindowShare.getSystemInfo()
+    if (info?.sep === undefined) {
+      return
     }
-    const parts = getBreadcrumbs().slice(0, index + 1);
-    let targetPath = parts.join(appModel.info.sep);
-    if (!targetPath.endsWith(appModel.info.sep)) {
-      targetPath += appModel.info.sep;
+    const parts = getBreadcrumbs().slice(0, index + 1)
+    let targetPath = parts.join(info.sep)
+    if (!targetPath.endsWith(info.sep)) {
+      targetPath += info.sep
     }
-    setCurrentPath(targetPath);
-  };
+    setCurrentPath(targetPath)
+  }
   const getBreadcrumbs = () => {
-    if (appModel.info === undefined) {
-      return [];
+    const info = DefaultWindowShare.getSystemInfo()
+    if (info === undefined) {
+      return []
     }
     if (currentPath) {
-      const parts = currentPath.split(appModel.info.sep);
+      const parts = currentPath.split(info.sep)
       if (parts[parts.length - 1] === '') {
-        parts.pop();
+        parts.pop()
       }
-      return parts;
+      return parts
     }
-    return [];
-  };
+    return []
+  }
   const loadSmbDirs = async () => {
-    const response = await fetchSmbConfig();
+    const response = await fetchSmbConfig()
     if (!response) {
-      setSmbDirs([]);
-      return;
+      setSmbDirs([])
+      return
     }
     const dirs: { name: string, path: string }[] = response.sections.filter(it => ignoreSmbSectionNames.find(ignoreName => ignoreName === it.name) === undefined).map(dir => ({
       name: dir.name,
-      path: dir.fields.path,
-    }));
-    setSmbDirs(dirs);
-    update();
-  };
+      path: dir.fields.path
+    }))
+    setSmbDirs(dirs)
+    update()
+  }
   const searchFile = async (searchKey: string) => {
     if (!currentPath) {
-      return;
+      return
     }
-    const response = await newSearchFileTask(currentPath, searchKey);
-    console.log(response);
+    const response = await newSearchFileTask(currentPath, searchKey)
+    console.log(response)
     searchResult.push({
       id: response.id,
-      result: [],
-    });
-    setSearchResult([...searchResult]);
-    tabController.newSearchTab(getBreadcrumbs().pop() ?? '', response.id);
-  };
+      result: []
+    })
+    setSearchResult([...searchResult])
+    // tabController.newSearchTab(getBreadcrumbs().pop() ?? '', response.id)
+  }
   const rename = async (path: string, name: string) => {
-    const renamePath = [currentPath, name].join(appModel.info?.sep);
-    await renameFile(path, renamePath);
-    await loadContent();
-  };
+    const info = DefaultWindowShare.getSystemInfo()
+    const renamePath = [currentPath, name].join(info?.sep)
+    await renameFile(path, renamePath)
+    ipcRenderer.send(ChannelNames.directoryUpdate, currentPath)
+  }
   const getSearchResult = (): SearchFileResult[] => {
     if (!searchId) {
-      return [];
+      return []
     }
-    const result = searchResult.find(it => it.id === searchId);
+    const result = searchResult.find(it => it.id === searchId)
     if (result) {
-      return result.result;
+      return result.result
     }
-    return [];
-  };
+    return []
+  }
   const addFavourite = (item: { name: string, path: string, type: string }) => {
-    FavouriteManager.getInstance().addFavourite(item);
-    setFavourite([...FavouriteManager.getInstance().items]);
-  };
+    FavouriteManager.getInstance().addFavourite(item)
+    setFavourite([...FavouriteManager.getInstance().items])
+  }
   const removeFavourite = (path: string) => {
-    FavouriteManager.getInstance().removeFavourite(path);
-    setFavourite([...FavouriteManager.getInstance().items]);
-  };
+    FavouriteManager.getInstance().removeFavourite(path)
+    setFavourite([...FavouriteManager.getInstance().items])
+  }
   const unarchiveInPlace = async (source: string, { password }: { password?: string }) => {
     await newUnarchiveTask([
       {
         input: source,
         inPlace: true,
-        password,
-      },
-    ]);
-  };
+        password
+      }
+    ])
+  }
   return {
     initData,
     loadFile,
@@ -334,7 +367,6 @@ const HomeModel = () => {
     searchResult,
     searchFile,
     rename,
-    tabController,
     searchId,
     getSearchResult,
     addFavourite,
@@ -344,7 +376,8 @@ const HomeModel = () => {
     videoViewUrl,
     datasetInfo,
     refreshDatasetInfo,
-  };
-};
-const useHomeModel = createModel(HomeModel);
-export default useHomeModel;
+    openDirectory
+  }
+}
+const useHomeModel = createModel(HomeModel)
+export default useHomeModel

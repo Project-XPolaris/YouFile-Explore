@@ -1,10 +1,10 @@
-import React, { ReactElement } from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import FstabPage from '../../page/Fstab';
-import LoginPage from '../../page/Login';
-import StartPage from '../../page/Start';
-import HomePage from '../../page/Home';
-import FrameLayout from '../Frame';
+import React, { ReactElement } from 'react'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import FstabPage from '../../page/Fstab'
+import LoginPage from '../../page/Login'
+import StartPage from '../../page/Start'
+import HomePage from '../../page/Home'
+import FrameLayout from '../Frame'
 
 const RouterLayout = (): ReactElement => {
   return (
@@ -27,6 +27,6 @@ const RouterLayout = (): ReactElement => {
         </Route>
       </Switch>
     </Router>
-  );
-};
-export default RouterLayout;
+  )
+}
+export default RouterLayout

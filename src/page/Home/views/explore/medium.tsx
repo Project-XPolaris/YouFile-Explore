@@ -6,7 +6,6 @@ import { FileNode } from '../../tree'
 import { red } from '@material-ui/core/colors'
 import { FlexGrid } from '../../../../components/FlexGrid'
 import { FileContext, FileContextMenuController } from '../../hooks/fileContentMenu'
-import { allowOpenImage, allowOpenVideo } from './index'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -16,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   mediumItem: {
     width: 120,
     height: 120,
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   row: {
     display: 'flex'
@@ -68,15 +67,7 @@ export default function MediumView ({
               className={classes.mediumItem}
               onDoubleClick={() => {
                 if (it.type === 'Directory') {
-                  homeModel.tabController.setCurrentTabFolder(it.name, it.path)
-                  homeModel.setCurrentPath(it.path)
-                  return
-                }
-                if (allowOpenImage.find(ext => it.name.toLowerCase().endsWith(ext)) !== undefined) {
-                  homeModel.tabController.openImageViewTab(it.name, it.path, it.target)
-                }
-                if (allowOpenVideo.find(ext => it.name.toLowerCase().endsWith(ext)) !== undefined) {
-                  homeModel.tabController.openVideoTab(it.name, it.path, it.target)
+                  homeModel.openDirectory(it.path)
                 }
               }}
               onContextClick={(x, y) => {

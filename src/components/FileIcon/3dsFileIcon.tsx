@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const ThreeDsFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -21,5 +21,5 @@ export const ThreeDsFileIcon = ({ className }: { className?: string }): React.Re
       <polygon points='23.67 39.97 28.52 44.77 34.44 32.98 23.67 39.97' fill='#fff' />
       <polygon points='34.44 32.98 23.67 32.98 23.67 39.97 34.44 32.98' fill='#fff' opacity='0.9' />
     </svg>
-  );
-};
+  )
+}

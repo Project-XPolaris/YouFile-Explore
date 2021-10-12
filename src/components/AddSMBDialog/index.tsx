@@ -31,7 +31,6 @@ const AddSMBDialog = ({ open = false, onClose, onOk }: AddSMBDialogPropsType):Re
   const { register, handleSubmit } = useForm()
   const onSubmit = (data:any) => {
     onOk(data)
-    console.log(data)
   }
 
   return (

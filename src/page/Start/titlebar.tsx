@@ -1,11 +1,12 @@
 import React, { ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { electronApp, electronRemote } from '../../remote'
 import { IconButton } from '@material-ui/core'
 import MinimizeSharpIcon from '@material-ui/icons/MinimizeSharp'
 import CheckBoxOutlineBlankSharpIcon from '@material-ui/icons/CheckBoxOutlineBlankSharp'
 import ClearSharpIcon from '@material-ui/icons/ClearSharp'
 import { Folder } from '@material-ui/icons'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../../electron/channels'
 
 const useStyles = makeStyles((theme) => ({
   main: {},
@@ -68,18 +69,13 @@ const useStyles = makeStyles((theme) => ({
 export default function StartTitleBar ():ReactElement {
   const classes = useStyles()
   const onClose = () => {
-    electronApp.exit()
+    ipcRenderer.send(ChannelNames.closeWindow, {})
   }
   const onMin = () => {
-    electronRemote.BrowserWindow.getFocusedWindow().minimize()
+    ipcRenderer.send(ChannelNames.hideWindow, {})
   }
   const onMax = () => {
-    const currentWindow = electronRemote.BrowserWindow.getFocusedWindow()
-    if (currentWindow.isMaximized()) {
-      currentWindow.unmaximize()
-    } else {
-      currentWindow.maximize()
-    }
+    ipcRenderer.send(ChannelNames.switchWindowsSize, {})
   }
   return (
     <div className={classes.header}>

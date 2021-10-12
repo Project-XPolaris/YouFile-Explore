@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const PowerPointFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -12,5 +12,5 @@ export const PowerPointFileIcon = ({ className }: { className?: string }): React
         d='M14.62,23.9H26.5c4.75,0,6.26,3.18,6.26,6.58,0,3.24-1.89,6.54-6.21,6.54H18.67v8.1H14.62Zm4.05,9.82H25.2c2.33,0,3.57-.7,3.57-3.18a2.91,2.91,0,0,0-3.24-3.24H18.67Z'
         transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

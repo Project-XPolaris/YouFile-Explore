@@ -1,26 +1,26 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import useStyles from './style';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core'
+import React, { ReactElement, useEffect, useState } from 'react'
+import useStyles from './style'
 
 export interface LoginDialogPropsType {
-  onLogin:(username:string,password:string) => void
+  onLogin:(username:string, password:string) => void
   onCancel:() => void
   open?:boolean
 }
 
-const LoginDialog = ({open = false,onCancel,onLogin}: LoginDialogPropsType) => {
-  const classes = useStyles();
-  const [username,setUsername] = useState<string>()
-  const [password,setPassword] = useState<string>()
+const LoginDialog = ({ open = false, onCancel, onLogin }: LoginDialogPropsType):ReactElement => {
+  const classes = useStyles()
+  const [username, setUsername] = useState<string>()
+  const [password, setPassword] = useState<string>()
   useEffect(() => {
     setUsername(undefined)
     setPassword(undefined)
-  },[open])
+  }, [open])
   const okHandler = () => {
     if (!username || !password) {
       return
     }
-    onLogin(username,password)
+    onLogin(username, password)
   }
   return (
     <Dialog open={open} maxWidth={'lg'} onClose={onCancel}>
@@ -44,7 +44,7 @@ const LoginDialog = ({open = false,onCancel,onLogin}: LoginDialogPropsType) => {
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default LoginDialog;
+export default LoginDialog

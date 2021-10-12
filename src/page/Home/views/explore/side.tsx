@@ -10,13 +10,14 @@ import {
   ListItemText,
   ListSubheader
 } from '@material-ui/core'
-import { Delete, Eject, Folder } from '@material-ui/icons'
-import useAppModel from '../../../../models/app'
+import { Delete, Folder } from '@material-ui/icons'
 import { DiskFileIcon } from '../../../../components/FileIcon/DiskFileIcon'
 import FolderIcon from '@material-ui/icons/Folder'
 import { FavouriteManager } from '../../../../favourite'
-import useMountModel from '../../../../models/mount'
-import { MountFolderFileIcon } from '../../../../components/FileIcon/MountFolderFileIcon'
+import { DefaultWindowShare } from '../../../../window'
+import { ipcRenderer } from 'electron'
+import { ChannelNames } from '../../../../../electron/channels'
+import { useUpdate } from 'ahooks'
 
 const useStyles = makeStyles(() => ({
   main: {
@@ -28,8 +29,12 @@ const useStyles = makeStyles(() => ({
 const HomeSide = (): React.ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
-  const appModel = useAppModel()
-  const mountModel = useMountModel()
+  const info = DefaultWindowShare.getSystemInfo()
+  const update = useUpdate()
+  ipcRenderer.on(ChannelNames.favouriteUpdated, () => {
+    FavouriteManager.getInstance().reload()
+    update()
+  })
   return (
     <div className={classes.main}>
       {
@@ -59,14 +64,13 @@ const HomeSide = (): React.ReactElement => {
       }
       <List subheader={<ListSubheader>System</ListSubheader>} dense>
         {
-          appModel.info?.root_paths?.map(it => {
+          info?.root_paths?.map(it => {
             return (
               <ListItem
                 id={it.path}
                 key={it.path}
                 button onClick={() => {
-                  homeModel.setCurrentPath(it.path)
-                  homeModel.tabController.setCurrentTabFolder(it.name, it.path)
+                  homeModel.openDirectory(it.path)
                 }}
               >
                 <ListItemIcon>

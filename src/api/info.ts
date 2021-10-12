@@ -15,10 +15,10 @@ export const fetchInfo = async (): Promise<SystemInfo> => {
 }
 
 export type ServiceInfo = {
-  "auth": boolean,
-  "name": string,
-  "success": boolean,
-  "youPlusPath": boolean
+  'auth': boolean,
+  'name': string,
+  'success': boolean,
+  'youPlusPath': boolean
 }
 export const fetchServiceInfo = async ():Promise<ServiceInfo> => {
   return apiRequest.get(ApplicationConfig.apiPaths.serviceInfo, {})

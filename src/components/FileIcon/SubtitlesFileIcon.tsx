@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const SubtitlesFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -13,5 +13,5 @@ export const SubtitlesFileIcon = ({ className }: { className?: string }): React.
         transform='translate(0.01)' fill='#fff' />
       <rect x='0.56' y='17.69' width='49' height='42' fill='none' />
     </svg>
-  );
-};
+  )
+}

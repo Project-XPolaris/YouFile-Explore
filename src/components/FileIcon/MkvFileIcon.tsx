@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const MkvFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -15,8 +15,8 @@ export const MkvFileIcon = ({ className }: { className?: string }): React.ReactE
         d='M16,46.94,17.8,52.1l1.81-5.16h1.93v7.11H20.07V52.11l.14-3.35L18.3,54.05h-1l-1.91-5.29.14,3.35v1.94H14.06V46.94Z'
         transform='translate(0.01)' fill='#fff' />
       <path d='M25,51.2l-.76.82v2H22.82V46.94h1.46v3.23l.65-.89,1.81-2.34h1.8L26,50.1l2.59,3.95H26.87Z'
-            transform='translate(0.01)' fill='#fff' />
+        transform='translate(0.01)' fill='#fff' />
       <path d='M31.79,52.29l1.61-5.35H35l-2.47,7.11H31l-2.47-7.11h1.63Z' transform='translate(0.01)' fill='#fff' />
     </svg>
-  );
-};
+  )
+}

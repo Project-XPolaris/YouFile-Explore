@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const EmptyFileIcon = ({ className }: { className?: string }): React.ReactElement => {
   return (
@@ -8,5 +8,5 @@ export const EmptyFileIcon = ({ className }: { className?: string }): React.Reac
         transform='translate(0.01)' fill='#e5e5e5' />
       <path d='M49.76,16.92H35.83a3.06,3.06,0,0,1-3-3V0Z' transform='translate(0.01)' fill='#ccc' />
     </svg>
-  );
-};
+  )
+}
