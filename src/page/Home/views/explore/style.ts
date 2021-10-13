@@ -48,6 +48,16 @@ const useStyles = makeStyles({
   datasetPopover: {
     width: theme.spacing(30),
     height: theme.spacing(60)
+  },
+  centerContent: {
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  loadingContainer: {
+    textAlign: 'center',
+    width: theme.spacing(30)
   }
 })
 export default useStyles

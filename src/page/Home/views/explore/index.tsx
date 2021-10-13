@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Paper } from '@material-ui/core'
+import { LinearProgress, Paper, Typography } from '@material-ui/core'
 import HomeSide from './side'
 import useHomeModel from '../../model'
 import MediumView from './medium'
@@ -24,7 +24,7 @@ import {
   CreateSnapshotDialog,
   DatasetPopup,
   DeleteSnapshotDialog,
-  RollbackSnapshotDialog,
+  RollbackSnapshotDialog
 } from '../../../../components'
 import { createDatasetSnapshot, deleteDatasetSnapshot, rollbackDatasetSnapshot, Snapshot } from '../../../../api/dir'
 import { ipcRenderer } from 'electron'
@@ -221,7 +221,20 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
           onAsMountPoint={() => layoutModel.switchDialog('home/addMount')}
         />
         {
-          homeModel.viewType === 'List' &&
+          homeModel.isContentLoading &&
+          <div className={classes.centerContent}>
+            <div className={classes.loadingContainer}>
+              <Typography variant={'h6'}>
+                Loading
+              </Typography>
+              <div>
+                <LinearProgress />
+              </div>
+            </div>
+          </div>
+        }
+        {
+          !homeModel.isContentLoading && homeModel.viewType === 'List' &&
           <ExploreListView
             onRename={onRename}
             onItemClick={handleListClick}
@@ -245,7 +258,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
           />
         }
         {
-          homeModel.viewType === 'Medium' &&
+          !homeModel.isContentLoading && homeModel.viewType === 'Medium' &&
           <MediumView
             onRename={onRename}
             onItemClick={handleItemClick}

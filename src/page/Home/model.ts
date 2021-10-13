@@ -42,6 +42,7 @@ const HomeModel = () => {
   const [imageViewUrl, setImageViewUrl] = useState<string | undefined>()
   const [videoViewUrl, setVideoViewUrl] = useState<string | undefined>()
   const [datasetInfo, setDatasetInfo] = useState<DatasetInfo>()
+  const [isContentLoading, setIsContentLoading] = useState<boolean>(false)
   const update = useUpdate()
   const onSearchCompleteHandler = async (event: NotificationMessage) => {
     const id = event.id
@@ -205,7 +206,9 @@ const HomeModel = () => {
       setCurrentContent([])
       return
     }
+    setIsContentLoading(true)
     const response = await readDir(currentPath, thumbnail)
+    setIsContentLoading(false)
     setCurrentContent(response.map(it => generateNode(it)))
   }
   const refreshDatasetInfo = async () => {
@@ -226,14 +229,6 @@ const HomeModel = () => {
       return
     }
     await loadContent()
-    // await refreshDatasetInfo()
-    // const root = appModel?.info?.root_paths.find(it => it.path === currentPath)
-    // if (root) {
-    //   tabController.setCurrentTabFolder(root.name, currentPath)
-    // } else {
-    //   const parts = getBreadcrumbs()
-    //   tabController.setCurrentTabFolder(parts.pop() ?? 'new tab', currentPath)
-    // }
   }
   useEffect(() => {
     console.log(currentPath)
@@ -376,7 +371,8 @@ const HomeModel = () => {
     videoViewUrl,
     datasetInfo,
     refreshDatasetInfo,
-    openDirectory
+    openDirectory,
+    isContentLoading
   }
 }
 const useHomeModel = createModel(HomeModel)
