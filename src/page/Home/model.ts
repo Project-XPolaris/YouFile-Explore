@@ -30,12 +30,14 @@ export interface SearchResult {
 export type ViewType = 'List' | 'Medium';
 export type Mode = 'display' | 'search' | 'blank' | 'image' | 'video'
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
+export type ContentOrder = 'Name asc' | 'Name desc' | 'Size asc' | 'Size desc'
 const HomeModel = () => {
   const [currentPath, setCurrentPath] = useState<string | undefined>(DefaultWindowShare.getLoadPath())
   const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
   const [currentContent, setCurrentContent] = useState<FileNode[]>([])
   const [viewType, setViewType] = useState<ViewType>('Medium')
   const [mode, setMode] = useState<Mode>(DefaultWindowShare.getLoadPath() ? 'display' : 'blank')
+  const [contentOrder, setContentOrder] = useState<ContentOrder>('Name asc')
   const [searchResult, setSearchResult] = useState<SearchResult[]>([])
   const [searchId, setSearchId] = useState<string | undefined>()
   const [favorite, setFavourite] = useState<FavouriteItem[]>()
@@ -44,6 +46,19 @@ const HomeModel = () => {
   const [datasetInfo, setDatasetInfo] = useState<DatasetInfo>()
   const [isContentLoading, setIsContentLoading] = useState<boolean>(false)
   const update = useUpdate()
+  const getOrderContent = (content:FileNode[], order:ContentOrder):FileNode[] => {
+    console.log(order)
+    if (order === 'Name asc') {
+      return content.sort((left, right) => left.name.localeCompare(right.name))
+    } else if (order === 'Name desc') {
+      return content.sort((left, right) => (left.name.localeCompare(right.name)) * -1)
+    } else if (order === 'Size asc') {
+      return content.sort((left, right) => left.size > right.size ? 1 : -1)
+    } else if (order === 'Size desc') {
+      return content.sort((left, right) => left.size < right.size ? 1 : -1)
+    }
+    return content
+  }
   const onSearchCompleteHandler = async (event: NotificationMessage) => {
     const id = event.id
     if (!id) {
@@ -198,18 +213,18 @@ const HomeModel = () => {
       parent: undefined,
       type: source.type,
       thumbnail: source.getThumbnailsUrl(),
-      target: source.getTarget()
+      target: source.getTarget(),
+      size: source.size
     }
   }
   const loadContent = async (thumbnail = '1') => {
     if (currentPath === undefined) {
-      setCurrentContent([])
       return
     }
     setIsContentLoading(true)
     const response = await readDir(currentPath, thumbnail)
     setIsContentLoading(false)
-    setCurrentContent(response.map(it => generateNode(it)))
+    setCurrentContent(getOrderContent(response.map(it => generateNode(it)), contentOrder))
   }
   const refreshDatasetInfo = async () => {
     if (!currentPath) {
@@ -342,6 +357,10 @@ const HomeModel = () => {
       }
     ])
   }
+  const setOrder = (order:ContentOrder) => {
+    setCurrentContent([...getOrderContent(currentContent, order)])
+    setContentOrder(order)
+  }
   return {
     initData,
     loadFile,
@@ -372,7 +391,9 @@ const HomeModel = () => {
     datasetInfo,
     refreshDatasetInfo,
     openDirectory,
-    isContentLoading
+    isContentLoading,
+    contentOrder,
+    setOrder
   }
 }
 const useHomeModel = createModel(HomeModel)

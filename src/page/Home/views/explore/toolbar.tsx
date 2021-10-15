@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
 import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
 import {
-  ArrowBack,
-  ArrowForwardIos,
+  ArrowBack, ArrowDownward,
+  ArrowForwardIos, ArrowUpward,
   Check,
   CreateNewFolder,
   ExitToApp,
@@ -14,7 +14,7 @@ import {
   MoreVert,
   Notes,
   Refresh,
-  Storage
+  Storage, TextRotateUp, TextRotationDown,
 } from '@material-ui/icons'
 import useHomeModel from '../../model'
 import PopoverImageButton from '../../../../components/PopoverImageButton'
@@ -240,6 +240,35 @@ const HomeToolbar = ({
             onReverseSelect()
           }}
         ><Refresh className={classes.menuIcon} />Reverse select</MenuItem>
+        <Divider />
+        <MenuItem
+          selected={homeModel.contentOrder === 'Name asc'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setOrder('Name asc')
+          }}
+        ><TextRotateUp className={classes.menuIcon} />Name asc</MenuItem>
+        <MenuItem
+          selected={homeModel.contentOrder === 'Name desc'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setOrder('Name desc')
+          }}
+        ><TextRotationDown className={classes.menuIcon} />Name desc</MenuItem>
+        <MenuItem
+          selected={homeModel.contentOrder === 'Size asc'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setOrder('Size asc')
+          }}
+        ><ArrowUpward className={classes.menuIcon} />Size asc</MenuItem>
+        <MenuItem
+          selected={homeModel.contentOrder === 'Size desc'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setOrder('Size desc')
+          }}
+        ><ArrowDownward className={classes.menuIcon} />Size desc</MenuItem>
         <Divider />
         <MenuItem
           onClick={async () => {
