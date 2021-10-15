@@ -27,7 +27,7 @@ export interface SearchResult {
   result: SearchFileResult[];
 }
 
-export type ViewType = 'List' | 'Medium';
+export type ViewType = 'List' | 'Medium' | 'DetailList';
 export type Mode = 'display' | 'search' | 'blank' | 'image' | 'video'
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
 export type ContentOrder = 'Name asc' | 'Name desc' | 'Size asc' | 'Size desc'
@@ -35,7 +35,7 @@ const HomeModel = () => {
   const [currentPath, setCurrentPath] = useState<string | undefined>(DefaultWindowShare.getLoadPath())
   const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
   const [currentContent, setCurrentContent] = useState<FileNode[]>([])
-  const [viewType, setViewType] = useState<ViewType>('Medium')
+  const [viewType, setViewType] = useState<ViewType>('DetailList')
   const [mode, setMode] = useState<Mode>(DefaultWindowShare.getLoadPath() ? 'display' : 'blank')
   const [contentOrder, setContentOrder] = useState<ContentOrder>('Name asc')
   const [searchResult, setSearchResult] = useState<SearchResult[]>([])
@@ -300,7 +300,7 @@ const HomeModel = () => {
   }
   const loadSmbDirs = async () => {
     const response = await fetchSmbConfig()
-    if (!response) {
+    if (!response.sections) {
       setSmbDirs([])
       return
     }

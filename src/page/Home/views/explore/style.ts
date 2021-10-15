@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     flex: '1 1'
   },
   container: {
-    backgroundColor: '#F9F9F9',
+    backgroundColor: 'white',
     width: '100%',
     overflowX: 'hidden',
     display: 'flex',

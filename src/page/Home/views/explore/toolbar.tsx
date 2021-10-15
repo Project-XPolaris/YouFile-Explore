@@ -3,8 +3,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../../../theme'
 import { Breadcrumbs, Divider, IconButton, Menu, MenuItem, Paper } from '@material-ui/core'
 import {
-  ArrowBack, ArrowDownward,
-  ArrowForwardIos, ArrowUpward,
+  Apps,
+  ArrowBack,
+  ArrowDownward,
+  ArrowForwardIos,
+  ArrowUpward,
   Check,
   CreateNewFolder,
   ExitToApp,
@@ -12,9 +15,12 @@ import {
   FileCopy,
   ListAlt,
   MoreVert,
-  Notes,
   Refresh,
-  Storage, TextRotateUp, TextRotationDown,
+  Reorder,
+  Storage,
+  TextRotateUp,
+  TextRotationDown,
+  ViewList,
 } from '@material-ui/icons'
 import useHomeModel from '../../model'
 import PopoverImageButton from '../../../../components/PopoverImageButton'
@@ -161,26 +167,6 @@ const HomeToolbar = ({
     await deleteDataset(homeModel.currentPath)
     await homeModel.refresh()
   }
-  const viewTypeMenu = () => {
-    return (
-      <Menu
-        id='viewTypeMenu'
-        anchorEl={viewTypeMenuAnchor}
-        keepMounted
-        open={Boolean(viewTypeMenuAnchor)}
-        onClose={handleViewTypeMenuClose}
-      >
-        <MenuItem onClick={() => {
-          homeModel.setViewType('List')
-          handleViewTypeMenuClose()
-        }}>List</MenuItem>
-        <MenuItem onClick={() => {
-          homeModel.setViewType('Medium')
-          handleViewTypeMenuClose()
-        }}>Medium Icon</MenuItem>
-      </Menu>
-    )
-  }
   const getBreadcrumbs = () => {
     const info = DefaultWindowShare.getSystemInfo()
     if (info === undefined) {
@@ -271,6 +257,37 @@ const HomeToolbar = ({
         ><ArrowDownward className={classes.menuIcon} />Size desc</MenuItem>
         <Divider />
         <MenuItem
+          onClick={() => {
+            homeModel.setViewType('List')
+            handleViewTypeMenuClose()
+          }}
+          selected={homeModel.viewType === 'List'}
+        >
+          <ViewList className={classes.menuIcon} />
+          List
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            homeModel.setViewType('Medium')
+            handleViewTypeMenuClose()
+          }}
+          selected={homeModel.viewType === 'Medium'}
+        >
+          <Apps className={classes.menuIcon} />
+          Medium Icon
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            homeModel.setViewType('DetailList')
+            handleViewTypeMenuClose()
+          }}
+          selected={homeModel.viewType === 'DetailList'}
+        >
+          <Reorder className={classes.menuIcon} />
+          Detail
+        </MenuItem>
+        <Divider />
+        <MenuItem
           onClick={async () => {
             handleMoreMenuClose()
             await remountFstab()
@@ -299,7 +316,6 @@ const HomeToolbar = ({
   }
   return (
     <Paper className={classes.main}>
-      {viewTypeMenu()}
       {renderMoreMenu()}
       <div className={classes.leading}>
         <IconButton
@@ -341,7 +357,10 @@ const HomeToolbar = ({
                 copyPopoverController.setAnchorEl(null)
               }}
               onClearAll={() => {
-                ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Copy' })
+                ipcRenderer.send(ChannelNames.setClipboard, {
+                  items: [],
+                  action: 'Copy'
+                })
                 copyPopoverController.setAnchorEl(null)
               }}
             />
@@ -356,7 +375,10 @@ const HomeToolbar = ({
                 fileModel.move()
               }}
               onClearAll={() => {
-                ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Copy' })
+                ipcRenderer.send(ChannelNames.setClipboard, {
+                  items: [],
+                  action: 'Copy'
+                })
                 copyPopoverController.setAnchorEl(null)
               }}
             />
@@ -372,9 +394,6 @@ const HomeToolbar = ({
           onClick={() => layoutModel.switchDialog('global/taskDrawer')}
         >
           <ListAlt className={classes.actionIcon} />
-        </IconButton>
-        <IconButton aria-label='delete' onClick={handleViewTypeMenuClick}>
-          <Notes fontSize='inherit' className={classes.actionIcon} />
         </IconButton>
         <IconButton onClick={handleMoreMenuClick}>
           <MoreVert className={classes.actionIcon} />

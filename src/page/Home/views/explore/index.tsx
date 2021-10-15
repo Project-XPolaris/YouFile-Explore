@@ -29,6 +29,7 @@ import {
 import { createDatasetSnapshot, deleteDatasetSnapshot, rollbackDatasetSnapshot, Snapshot } from '../../../../api/dir'
 import { ipcRenderer } from 'electron'
 import { ChannelNames } from '../../../../../electron/channels'
+import ExploreDetailListView from './detail'
 
 interface ExploreViewPropsType {
 
@@ -232,6 +233,30 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
               </div>
             </div>
           </div>
+        }
+        {
+          !homeModel.isContentLoading && homeModel.viewType === 'DetailList' &&
+          <ExploreDetailListView
+            onRename={onRename}
+            onItemClick={handleItemClick}
+            selectPaths={itemSelectController.selectPaths}
+            onItemClickAway={() => {
+              if (!selectMode && itemSelectController.selectPaths.length !== 0) {
+                itemSelectController.setSelect([])
+              }
+            }}
+            onContextClick={(x, y, file) => {
+              fileContextMenuController.openMenu({
+                left: x,
+                top: y,
+                name: file.name,
+                type: file.type,
+                path: file.path
+              })
+            }}
+            fileContextMenuController={fileContextMenuController}
+            onCopy={handlerCopy}
+          />
         }
         {
           !homeModel.isContentLoading && homeModel.viewType === 'List' &&
