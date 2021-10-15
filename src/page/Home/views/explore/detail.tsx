@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 export interface ExploreDetailListViewPropsType {
   onRename:(file:FileNode) => void
   onItemClick:(file:FileNode) => void
+  onOpenItem:(file:FileNode) => void
   onItemClickAway:() => void
   selectPaths:string[]
   onCopy:(file:FileContext) => void
@@ -46,7 +47,14 @@ export interface DataField {
   title:string
   width:number
 }
-const ExploreDetailListView = ({ onItemClickAway, onItemClick, selectPaths, onContextClick, fileContextMenuController }: ExploreDetailListViewPropsType) : ReactElement => {
+const ExploreDetailListView = ({
+  onItemClickAway,
+  onItemClick,
+  selectPaths,
+  onContextClick,
+  fileContextMenuController,
+  onOpenItem
+}: ExploreDetailListViewPropsType) : ReactElement => {
   const homeModel = useHomeModel()
   const classes = useStyles()
   const [fields, setFields] = useState<DataField[]>([
@@ -80,11 +88,7 @@ const ExploreDetailListView = ({ onItemClickAway, onItemClick, selectPaths, onCo
         style={style}
         item={item}
         fields={fields}
-        onDoubleClick={() => {
-          if (item.type === 'Directory') {
-            homeModel.openDirectory(item.path)
-          }
-        }}
+        onDoubleClick={() => onOpenItem(item)}
         onClick={() => onItemClick(item)}
         onContextClick={(x, y) => {
           onContextClick(x, y, item)

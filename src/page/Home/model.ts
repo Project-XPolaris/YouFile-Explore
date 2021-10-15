@@ -206,7 +206,7 @@ const HomeModel = () => {
     await loadSmbDirs()
   }
   const generateNode = (source: FileItem): FileNode => {
-    return {
+    return new FileNode({
       name: source.name,
       path: source.path,
       children: undefined,
@@ -215,7 +215,7 @@ const HomeModel = () => {
       thumbnail: source.getThumbnailsUrl(),
       target: source.getTarget(),
       size: source.size
-    }
+    })
   }
   const loadContent = async (thumbnail = '1') => {
     if (currentPath === undefined) {
@@ -393,7 +393,8 @@ const HomeModel = () => {
     openDirectory,
     isContentLoading,
     contentOrder,
-    setOrder
+    setOrder,
+    setImageViewUrl
   }
 }
 const useHomeModel = createModel(HomeModel)

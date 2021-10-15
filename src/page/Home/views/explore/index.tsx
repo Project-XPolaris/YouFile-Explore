@@ -30,6 +30,7 @@ import { createDatasetSnapshot, deleteDatasetSnapshot, rollbackDatasetSnapshot, 
 import { ipcRenderer } from 'electron'
 import { ChannelNames } from '../../../../../electron/channels'
 import ExploreDetailListView from './detail'
+import ImageViewDrawer from './parts/ImageView/ImageView'
 
 interface ExploreViewPropsType {
 
@@ -65,7 +66,6 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
     if (!file) {
       return
     }
-
     if (itemSelectController.selectPaths.length > 0) {
       for (const selectPath of itemSelectController.selectPaths) {
         const parts = selectPath.split('.')
@@ -201,6 +201,19 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
     }
     return homeModel.currentContent.find(it => it.path === itemSelectController.selectPaths[0])?.name ?? ''
   }
+  const onOpenItem = (item:FileNode) => {
+    if (item.type === 'Directory') {
+      homeModel.openDirectory(item.path)
+      return
+    }
+    const ext = item.path.split('.').pop()
+    if (ext) {
+      if (allowOpenImage.find(it => it === ext)) {
+        homeModel.setImageViewUrl(item.path)
+        return
+      }
+    }
+  }
   const renderDisplayMode = () => {
     return (
       <>
@@ -256,6 +269,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
             }}
             fileContextMenuController={fileContextMenuController}
             onCopy={handlerCopy}
+            onOpenItem={onOpenItem}
           />
         }
         {
@@ -376,6 +390,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
   }
   return (
     <div className={classes.main}>
+      <ImageViewDrawer />
       <DatasetPopup
         open={Boolean(datasetPopoverAnchor)}
         anchorEl={datasetPopoverAnchor}
@@ -460,7 +475,6 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
           </div>
         </div>
       </div>
-
     </div>
   )
 }
