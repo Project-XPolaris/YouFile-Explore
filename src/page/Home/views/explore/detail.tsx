@@ -126,12 +126,13 @@ const ExploreDetailListView = ({
         }
       </div>
       <div style={{ flex: 1 }}>
-        <AutoSizer>
+        <AutoSizer >
           {({
             height,
             width
           }) => (
             <List
+              style={{ outline: 'none' }}
               width={width}
               height={height}
               rowCount={homeModel.currentContent.length}

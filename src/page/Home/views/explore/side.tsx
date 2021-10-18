@@ -23,6 +23,9 @@ const useStyles = makeStyles(() => ({
   main: {
     width: '100%',
     height: 'calc(100% - 64px)'
+  },
+  subHeader:{
+    backgroundColor: 'white'
   }
 }))
 
@@ -39,10 +42,10 @@ const HomeSide = (): React.ReactElement => {
     <div className={classes.main}>
       {
         FavouriteManager.getInstance().items.length > 0 &&
-        <List subheader={<ListSubheader>Favourite</ListSubheader>} dense>
+        <List subheader={<ListSubheader className={classes.subHeader}>Favourite</ListSubheader>} dense>
           {
             FavouriteManager.getInstance().getItems().map(item => (
-              <ListItem button onClick={() => homeModel.setCurrentPath(item.path)} key={item.path}>
+              <ListItem button onClick={() => homeModel.openDirectory(item.path)} key={item.path}>
                 <ListItemIcon>
                   <Folder />
                 </ListItemIcon>
@@ -62,7 +65,7 @@ const HomeSide = (): React.ReactElement => {
           }
         </List>
       }
-      <List subheader={<ListSubheader>System</ListSubheader>} dense>
+      <List subheader={<ListSubheader className={classes.subHeader}>System</ListSubheader>} dense>
         {
           info?.root_paths?.map(it => {
             return (
@@ -89,10 +92,10 @@ const HomeSide = (): React.ReactElement => {
       </List>
       {
         homeModel.smbDirs.length > 0 &&
-        <List subheader={<ListSubheader>Share Folder</ListSubheader>} dense>
+        <List subheader={<ListSubheader className={classes.subHeader}>Share Folder</ListSubheader>} dense>
           {
             homeModel.smbDirs.map(smbDir => (
-              <ListItem id={smbDir.name} button onClick={() => homeModel.setCurrentPath(smbDir.path)} key={smbDir.name}>
+              <ListItem id={smbDir.name} button onClick={() => homeModel.openDirectory(smbDir.path)} key={smbDir.name}>
                 <ListItemIcon>
                   <Folder />
                 </ListItemIcon>

@@ -125,7 +125,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
       itemSelectController.switchSelect(file.path)
     } else {
       if (file.type === 'Directory') {
-        homeModel.setCurrentPath(file.path)
+        homeModel.openDirectory(file.path)
       }
     }
   }
@@ -438,10 +438,10 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
         onClose={switchExtractDialog}
         onOK={({ password }) => {
           switchExtractDialog()
-          if (!fileContextMenuController.file) {
+          if (!itemSelectController.selectPaths) {
             return
           }
-          homeModel.unarchiveInPlace(fileContextMenuController.file.path, { password })
+          homeModel.unarchiveInPlace(itemSelectController.selectPaths, { password })
         }}
       />
       <CreateSnapshotDialog

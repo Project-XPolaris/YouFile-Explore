@@ -56,6 +56,7 @@ const ExploreListView = ({ onItemClickAway, onItemClick, selectPaths, onContextC
           width
         }) => (
           <List
+            style={{ outline: 'none' }}
             width={width}
             height={height}
             rowCount={homeModel.currentContent.length}

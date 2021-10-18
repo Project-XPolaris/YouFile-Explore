@@ -353,7 +353,7 @@ const HomeToolbar = ({
           <ArrowBack className={classes.backIcon} />
         </IconButton>
         <IconButton
-          onClick={() => homeModel.loadContent()}
+          onClick={homeModel.refresh}
         >
           <Refresh className={classes.backIcon} />
         </IconButton>

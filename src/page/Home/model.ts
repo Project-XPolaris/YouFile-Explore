@@ -22,6 +22,7 @@ import { DefaultWindowShare } from '../../window'
 import { ipcRenderer } from 'electron'
 import { ChannelNames } from '../../../electron/channels'
 import { flatMap, groupBy } from 'lodash'
+import { DefaultFileContentStorage } from '../../store/content';
 
 export interface SearchResult {
   id: string;
@@ -40,11 +41,7 @@ const HomeModel = () => {
   const [viewType, setViewType] = useState<ViewType>('DetailList')
   const [mode, setMode] = useState<Mode>(DefaultWindowShare.getLoadPath() ? 'display' : 'blank')
   const [contentOrder, setContentOrder] = useState<ContentOrder>('Name asc')
-  const [searchResult, setSearchResult] = useState<SearchResult[]>([])
-  const [searchId, setSearchId] = useState<string | undefined>()
-  const [favorite, setFavourite] = useState<FavouriteItem[]>()
   const [imageViewUrl, setImageViewUrl] = useState<string | undefined>()
-  const [videoViewUrl, setVideoViewUrl] = useState<string | undefined>()
   const [datasetInfo, setDatasetInfo] = useState<DatasetInfo>()
   const [isContentLoading, setIsContentLoading] = useState<boolean>(false)
   const [contentGroupBy, setContentGroupBy] = useState<ContentGroupBy>('NoGroup')
@@ -87,24 +84,22 @@ const HomeModel = () => {
     })
     return flatMap(groups)
   }
-  const onSearchCompleteHandler = async (event: NotificationMessage) => {
-    const id = event.id
-    if (!id) {
+
+  const loadContent = async ({ force,targetDirectory = currentPath }:{ force:boolean,targetDirectory?:string }) => {
+    if (targetDirectory === undefined) {
       return
     }
-    const task: Task<SearchFileOutput> = await fetchTaskById(id)
-    setSearchResult(searchResult.map(it => {
-      if (it.id === task.id) {
-        return {
-          ...it,
-          result: task.output.result
-        }
-      }
-      return it
-    }))
+    setIsContentLoading(true)
+    const response = await DefaultFileContentStorage.readFileContent(targetDirectory,force)
+    setIsContentLoading(false)
+    setCurrentContent(getOrderContent(response.map(it => generateNode(it)), contentOrder,contentGroupBy))
+  }
+  const refresh = () => {
+    loadContent({force:true})
   }
   const openDirectory = (openPath: string) => {
     setCurrentPath(openPath)
+    loadContent({force:false,targetDirectory:openPath})
     if (mode !== 'display') {
       setMode('display')
     }
@@ -120,7 +115,7 @@ const HomeModel = () => {
     }
     for (const copyOption of task.output.files) {
       if (copyOption.dest.directory === currentPath) {
-        loadContent()
+        refresh()
         break
       }
     }
@@ -136,13 +131,13 @@ const HomeModel = () => {
     }
     for (const moveOption of task.output.files) {
       if (moveOption.dest.directory === currentPath) {
-        loadContent()
+        refresh()
         return
       }
     }
     for (const moveOption of task.output.files) {
       if (moveOption.source.directory === currentPath) {
-        loadContent()
+        refresh()
         return
       }
     }
@@ -158,7 +153,7 @@ const HomeModel = () => {
     }
     for (const deleteSrc of task.output.files) {
       if (deleteSrc.directory === currentPath) {
-        loadContent()
+        refresh()
         break
       }
     }
@@ -174,40 +169,12 @@ const HomeModel = () => {
     }
     for (const file of task.output.files) {
       if (file.destDirectory === currentPath) {
-        await loadContent()
+        refresh()
         break
       }
     }
   }
-  const onGenerateThumbnailsDoneHandler = async (event: NotificationMessage & { path: string }) => {
-    if (currentPath) {
-      if (event.path.startsWith(currentPath)) {
-        loadContent('0')
-      }
-    }
-  }
-  // DefaultApiWebsocket.connect()
-  DefaultApiWebsocket.addListener('homeModel', {
-    onMessage (data: string) {
-      const event: NotificationMessage & any = JSON.parse(data)
-      console.log(event)
-      if (event.event === 'SearchTaskComplete') {
-        onSearchCompleteHandler(event)
-      }
-      if (event.event === 'CopyTaskComplete') {
-        onCopyFileCompleteHandler(event)
-      }
-      if (event.event === 'DeleteTaskDone') {
-        onDeleteFileDoneHandler(event)
-      }
-      if (event.event === 'UnarchiveFileComplete') {
-        onUnarchiveFileDoneHandler(event)
-      }
-      if (event.event === 'GenerateThumbnailComplete') {
-        onGenerateThumbnailsDoneHandler(event)
-      }
-    }
-  })
+
 
   useEffect(() => {
     ipcRenderer.on(ChannelNames.notificationCopyTaskComplete, (event, payload) => {
@@ -229,9 +196,7 @@ const HomeModel = () => {
     })
   }, [currentPath])
   const initData = async () => {
-    // await fTree.loadByPath(dirPath)
-    // await appModel.loadInfo()
-    await loadSmbDirs()
+    // await loadSmbDirs()
   }
   const generateNode = (source: FileItem): FileNode => {
     return new FileNode({
@@ -246,15 +211,6 @@ const HomeModel = () => {
       modifyTime: source.modifyTime
     })
   }
-  const loadContent = async (thumbnail = '1') => {
-    if (currentPath === undefined) {
-      return
-    }
-    setIsContentLoading(true)
-    const response = await readDir(currentPath, thumbnail)
-    setIsContentLoading(false)
-    setCurrentContent(getOrderContent(response.map(it => generateNode(it)), contentOrder, contentGroupBy))
-  }
   const refreshDatasetInfo = async () => {
     if (!currentPath) {
       return
@@ -268,22 +224,15 @@ const HomeModel = () => {
       setDatasetInfo(dataset)
     }
   }
-  const refreshContent = async () => {
-    if (!currentPath) {
-      return
-    }
-    await loadContent()
-  }
-  useEffect(() => {
-    console.log(currentPath)
-    refreshContent()
-  }, [currentPath])
-  const refresh = () => {
-    refreshContent()
-  }
-  const loadFile = async (path: string) => {
-    setCurrentPath(path)
-  }
+
+
+  // useEffect(() => {
+  //   refreshContent()
+  // }, [currentPath])
+
+  // const loadFile = async (path: string) => {
+  //   setCurrentPath(path)
+  // }
   const onBack = async () => {
     const info = DefaultWindowShare.getSystemInfo()
     if (info?.sep === undefined || currentPath === undefined) {
@@ -299,7 +248,7 @@ const HomeModel = () => {
     if (!targetPath.endsWith(info.sep)) {
       targetPath += info.sep
     }
-    setCurrentPath(targetPath)
+    openDirectory(targetPath)
   }
   const onNavChipClick = (index: number) => {
     const info = DefaultWindowShare.getSystemInfo()
@@ -311,7 +260,7 @@ const HomeModel = () => {
     if (!targetPath.endsWith(info.sep)) {
       targetPath += info.sep
     }
-    setCurrentPath(targetPath)
+    openDirectory(targetPath)
   }
   const getBreadcrumbs = () => {
     const info = DefaultWindowShare.getSystemInfo()
@@ -344,14 +293,7 @@ const HomeModel = () => {
     if (!currentPath) {
       return
     }
-    const response = await newSearchFileTask(currentPath, searchKey)
-    console.log(response)
-    searchResult.push({
-      id: response.id,
-      result: []
-    })
-    setSearchResult([...searchResult])
-    // tabController.newSearchTab(getBreadcrumbs().pop() ?? '', response.id)
+    // const response = await newSearchFileTask(currentPath, searchKey)
   }
   const rename = async (path: string, name: string) => {
     const info = DefaultWindowShare.getSystemInfo()
@@ -359,32 +301,18 @@ const HomeModel = () => {
     await renameFile(path, renamePath)
     ipcRenderer.send(ChannelNames.directoryUpdate, currentPath)
   }
-  const getSearchResult = (): SearchFileResult[] => {
-    if (!searchId) {
-      return []
-    }
-    const result = searchResult.find(it => it.id === searchId)
-    if (result) {
-      return result.result
-    }
-    return []
-  }
   const addFavourite = (item: { name: string, path: string, type: string }) => {
     FavouriteManager.getInstance().addFavourite(item)
-    setFavourite([...FavouriteManager.getInstance().items])
   }
   const removeFavourite = (path: string) => {
     FavouriteManager.getInstance().removeFavourite(path)
-    setFavourite([...FavouriteManager.getInstance().items])
   }
-  const unarchiveInPlace = async (source: string, { password }: { password?: string }) => {
-    await newUnarchiveTask([
-      {
-        input: source,
-        inPlace: true,
-        password
-      }
-    ])
+  const unarchiveInPlace = async (sources: string[], { password }: { password?: string }) => {
+    await newUnarchiveTask(sources.map(it => ({
+      input: it,
+      inPlace: true,
+      password
+    })));
   }
   const setOrder = (order:ContentOrder) => {
     setCurrentContent([...getOrderContent(currentContent, order, contentGroupBy)])
@@ -396,7 +324,6 @@ const HomeModel = () => {
   }
   return {
     initData,
-    loadFile,
     loadContent,
     currentPath,
     getBreadcrumbs,
@@ -405,22 +332,17 @@ const HomeModel = () => {
     loadSmbDirs,
     currentContent,
     smbDirs,
-    setCurrentPath,
     refresh,
     viewType,
     setViewType,
     mode,
     setMode,
-    searchResult,
     searchFile,
     rename,
-    searchId,
-    getSearchResult,
     addFavourite,
     removeFavourite,
     unarchiveInPlace,
     imageViewUrl,
-    videoViewUrl,
     datasetInfo,
     refreshDatasetInfo,
     openDirectory,
