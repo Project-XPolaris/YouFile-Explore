@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
-import theme from '../../theme'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   main: {
     width: '100%',
     borderRadius: theme.spacing(1),
@@ -57,5 +56,5 @@ const useStyles = makeStyles({
     ...theme.typography.body2,
     fontSize: 12
   }
-})
+}))
 export default useStyles

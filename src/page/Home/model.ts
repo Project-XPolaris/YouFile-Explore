@@ -21,6 +21,7 @@ import { FavouriteItem, FavouriteManager } from '../../favourite'
 import { DefaultWindowShare } from '../../window'
 import { ipcRenderer } from 'electron'
 import { ChannelNames } from '../../../electron/channels'
+import { flatMap, groupBy } from 'lodash'
 
 export interface SearchResult {
   id: string;
@@ -30,7 +31,8 @@ export interface SearchResult {
 export type ViewType = 'List' | 'Medium' | 'DetailList';
 export type Mode = 'display' | 'search' | 'blank' | 'image' | 'video'
 const ignoreSmbSectionNames = ['global', 'printers', 'print$']
-export type ContentOrder = 'Name asc' | 'Name desc' | 'Size asc' | 'Size desc'
+export type ContentOrder = 'Name asc' | 'Name desc' | 'Size asc' | 'Size desc' | 'Modify asc' | 'Modify desc'
+export type ContentGroupBy = 'Type' | 'NoGroup'
 const HomeModel = () => {
   const [currentPath, setCurrentPath] = useState<string | undefined>(DefaultWindowShare.getLoadPath())
   const [smbDirs, setSmbDirs] = useState<{ name: string, path: string }[]>([])
@@ -45,19 +47,45 @@ const HomeModel = () => {
   const [videoViewUrl, setVideoViewUrl] = useState<string | undefined>()
   const [datasetInfo, setDatasetInfo] = useState<DatasetInfo>()
   const [isContentLoading, setIsContentLoading] = useState<boolean>(false)
+  const [contentGroupBy, setContentGroupBy] = useState<ContentGroupBy>('NoGroup')
   const update = useUpdate()
-  const getOrderContent = (content:FileNode[], order:ContentOrder):FileNode[] => {
-    console.log(order)
-    if (order === 'Name asc') {
-      return content.sort((left, right) => left.name.localeCompare(right.name))
-    } else if (order === 'Name desc') {
-      return content.sort((left, right) => (left.name.localeCompare(right.name)) * -1)
-    } else if (order === 'Size asc') {
-      return content.sort((left, right) => left.size > right.size ? 1 : -1)
-    } else if (order === 'Size desc') {
-      return content.sort((left, right) => left.size < right.size ? 1 : -1)
+  const getOrderContent = (content:FileNode[], order:ContentOrder, group:ContentGroupBy):FileNode[] => {
+    let groups:{[key:string]:FileNode[]} = {}
+    switch (group) {
+      case 'Type':
+        groups = groupBy<FileNode>(content, (node) => {
+          if (node.type === 'Directory') {
+            return 'Directory'
+          }
+          const ext = node.name.split('.').pop()
+          if (!ext) {
+            return ''
+          }
+          return ext
+        })
+        break
+      default:
+        groups = {
+          '': content
+        }
     }
-    return content
+
+    Object.getOwnPropertyNames(groups).forEach(groupName => {
+      if (order === 'Name asc') {
+        groups[groupName] = groups[groupName].sort((left, right) => left.name.localeCompare(right.name))
+      } else if (order === 'Name desc') {
+        groups[groupName] = groups[groupName].sort((left, right) => (left.name.localeCompare(right.name)) * -1)
+      } else if (order === 'Size asc') {
+        groups[groupName] = groups[groupName].sort((left, right) => left.size > right.size ? 1 : -1)
+      } else if (order === 'Size desc') {
+        groups[groupName] = groups[groupName].sort((left, right) => left.size < right.size ? 1 : -1)
+      } else if (order === 'Modify asc') {
+        groups[groupName] = groups[groupName].sort((left, right) => left.modifyTime.unix() > right.modifyTime.unix() ? 1 : -1)
+      } else if (order === 'Modify desc') {
+        groups[groupName] = groups[groupName].sort((left, right) => left.modifyTime.unix() < right.modifyTime.unix() ? 1 : -1)
+      }
+    })
+    return flatMap(groups)
   }
   const onSearchCompleteHandler = async (event: NotificationMessage) => {
     const id = event.id
@@ -214,7 +242,8 @@ const HomeModel = () => {
       type: source.type,
       thumbnail: source.getThumbnailsUrl(),
       target: source.getTarget(),
-      size: source.size
+      size: source.size,
+      modifyTime: source.modifyTime
     })
   }
   const loadContent = async (thumbnail = '1') => {
@@ -224,7 +253,7 @@ const HomeModel = () => {
     setIsContentLoading(true)
     const response = await readDir(currentPath, thumbnail)
     setIsContentLoading(false)
-    setCurrentContent(getOrderContent(response.map(it => generateNode(it)), contentOrder))
+    setCurrentContent(getOrderContent(response.map(it => generateNode(it)), contentOrder, contentGroupBy))
   }
   const refreshDatasetInfo = async () => {
     if (!currentPath) {
@@ -358,8 +387,12 @@ const HomeModel = () => {
     ])
   }
   const setOrder = (order:ContentOrder) => {
-    setCurrentContent([...getOrderContent(currentContent, order)])
+    setCurrentContent([...getOrderContent(currentContent, order, contentGroupBy)])
     setContentOrder(order)
+  }
+  const setGroupBy = (groupBy:ContentGroupBy) => {
+    setCurrentContent([...getOrderContent(currentContent, contentOrder, groupBy)])
+    setContentGroupBy(groupBy)
   }
   return {
     initData,
@@ -394,7 +427,9 @@ const HomeModel = () => {
     isContentLoading,
     contentOrder,
     setOrder,
-    setImageViewUrl
+    setImageViewUrl,
+    contentGroupBy,
+    setGroupBy
   }
 }
 const useHomeModel = createModel(HomeModel)

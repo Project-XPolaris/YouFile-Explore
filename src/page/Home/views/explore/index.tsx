@@ -195,6 +195,18 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
   const handleExtract = () => {
     switchExtractDialog()
   }
+  const onClipboardTarget = () => {
+    const file = fileContextMenuController.file
+    if (!file) {
+      return
+    }
+    if (fileModel.clipboardAction === 'Copy') {
+      fileModel.pasteFile({ targetPath: file.path })
+    }
+    if (fileModel.clipboardAction === 'Move') {
+      fileModel.move({ targetPath: file.path })
+    }
+  }
   const getBottomInfoText = () => {
     if (itemSelectController.selectPaths.length > 1) {
       return `select ${itemSelectController.selectPaths.length} items`
@@ -210,7 +222,6 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
     if (ext) {
       if (allowOpenImage.find(it => it === ext)) {
         homeModel.setImageViewUrl(item.path)
-        return
       }
     }
   }
@@ -232,6 +243,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
           onDelete={handlerDelete}
           onMove={handlerMove}
           onExtract={handleExtract}
+          onClipboardTo={onClipboardTarget}
           onAsMountPoint={() => layoutModel.switchDialog('home/addMount')}
         />
         {

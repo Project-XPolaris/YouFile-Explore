@@ -20,7 +20,7 @@ export interface ClipboardFile {
 }
 const FileModel = () => {
   const [clipboardFile, setClipboardFile] = useState<ClipboardFile[] | undefined>(ipcRenderer.sendSync(ChannelNames.getClipboard).items ?? [])
-  const [clipboardAction, setClipboardAction] = useState<string>('Copy')
+  const [clipboardAction, setClipboardAction] = useState<'Copy' | 'Move'>('Copy')
   const homeModel = useHomeModel()
   useEffect(() => {
     ipcRenderer.on(ChannelNames.clipboardUpdated, (event, { items, action }) => {
@@ -29,24 +29,21 @@ const FileModel = () => {
       setClipboardAction(action)
     })
   }, [])
-  const pasteFile = () => {
+  const pasteFile = ({ targetPath = homeModel.currentPath }) => {
     if (clipboardFile && homeModel.currentPath) {
       copyFileService(clipboardFile.map(it => ({
         src: it.path,
-        dest: `${homeModel.currentPath}/${it.name}`
+        dest: `${targetPath}/${it.name}`
       })))
       ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Copy' })
     }
   }
-  const move = async () => {
-    console.log('Call move')
+  const move = async ({ targetPath = homeModel.currentPath }) => {
     const info = DefaultWindowShare.getSystemInfo()
-    console.log(info)
     if (clipboardFile && homeModel.currentPath && info) {
-      console.log('ready to move')
       await newMoveFileTask(clipboardFile.map(it => ({
         src: it.path,
-        dest: [homeModel.currentPath, it.name].join(info.sep)
+        dest: [targetPath, it.name].join(info.sep)
       })))
     }
     ipcRenderer.send(ChannelNames.setClipboard, { items: [], action: 'Move' })

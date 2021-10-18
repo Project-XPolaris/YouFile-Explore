@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
       ...theme.typography.subtitle1,
       color: '#bcbcbc',
       margin: theme.spacing(2)
+    },
+    icon: {
+      width: 32,
+      height: 32
     }
   })
 )

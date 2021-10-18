@@ -9,6 +9,7 @@ export class FileItem {
   size:number
   thumbnail?:string
   isDataset:boolean
+  modifyTime:string
   constructor (raw:any) {
     this.name = raw.name
     this.type = raw.type
@@ -16,6 +17,7 @@ export class FileItem {
     this.size = raw.size
     this.thumbnail = raw.thumbnail
     this.isDataset = raw.isDataset
+    this.modifyTime = raw.modifyTime
   }
 
   getThumbnailsUrl ():string | undefined {

@@ -9,7 +9,7 @@ import {
   ArrowForwardIos,
   ArrowUpward,
   Check,
-  CreateNewFolder,
+  CreateNewFolder, Description,
   ExitToApp,
   Favorite,
   FileCopy,
@@ -19,7 +19,7 @@ import {
   Reorder,
   Storage,
   TextRotateUp,
-  TextRotationDown,
+  TextRotationDown, Texture,
   ViewList,
 } from '@material-ui/icons'
 import useHomeModel from '../../model'
@@ -255,6 +255,35 @@ const HomeToolbar = ({
             homeModel.setOrder('Size desc')
           }}
         ><ArrowDownward className={classes.menuIcon} />Size desc</MenuItem>
+        <MenuItem
+          selected={homeModel.contentOrder === 'Modify asc'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setOrder('Modify asc')
+          }}
+        ><ArrowUpward className={classes.menuIcon} />Modify time oldest</MenuItem>
+        <MenuItem
+          selected={homeModel.contentOrder === 'Modify desc'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setOrder('Modify desc')
+          }}
+        ><ArrowDownward className={classes.menuIcon} />Modify time newest</MenuItem>
+        <Divider />
+        <MenuItem
+          selected={homeModel.contentGroupBy === 'NoGroup'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setGroupBy('NoGroup')
+          }}
+        ><Texture className={classes.menuIcon} />No group</MenuItem>
+        <MenuItem
+          selected={homeModel.contentGroupBy === 'Type'}
+          onClick={() => {
+            handleMoreMenuClose()
+            homeModel.setGroupBy('Type')
+          }}
+        ><Description className={classes.menuIcon} />File type group</MenuItem>
         <Divider />
         <MenuItem
           onClick={() => {
@@ -353,7 +382,7 @@ const HomeToolbar = ({
           <PopoverImageButton icon={<FileCopy className={classes.actionIcon} />} controller={copyPopoverController}>
             <CopyPopover
               onPaste={() => {
-                fileModel.pasteFile()
+                fileModel.pasteFile({})
                 copyPopoverController.setAnchorEl(null)
               }}
               onClearAll={() => {
@@ -372,7 +401,7 @@ const HomeToolbar = ({
             <CutPopover
               onMove={() => {
                 movePopoverController.setAnchorEl(null)
-                fileModel.move()
+                fileModel.move({})
               }}
               onClearAll={() => {
                 ipcRenderer.send(ChannelNames.setClipboard, {

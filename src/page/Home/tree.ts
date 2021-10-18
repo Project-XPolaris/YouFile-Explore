@@ -1,3 +1,5 @@
+import moment, { Moment } from 'moment'
+
 export class FileNode {
   name: string
   path: string
@@ -7,8 +9,9 @@ export class FileNode {
   target:string
   parent:FileNode | undefined
   children: FileNode[] | undefined
+  modifyTime:Moment
   constructor ({
-    name, path, target, size, parent, children, type, thumbnail
+    name, path, target, size, parent, children, type, thumbnail, modifyTime
   }:{name: string
     path: string
     type: string
@@ -16,7 +19,9 @@ export class FileNode {
     thumbnail?:string
     target:string
     parent:FileNode | undefined
-    children: FileNode[] | undefined}) {
+    children: FileNode[] | undefined
+    modifyTime:string
+  }) {
     this.name = name
     this.path = path
     this.type = type
@@ -25,5 +30,6 @@ export class FileNode {
     this.target = target
     this.parent = parent
     this.children = children
+    this.modifyTime = moment(modifyTime, 'YYYY-MM-DD HH:mm:ss')
   }
 }

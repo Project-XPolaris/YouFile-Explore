@@ -10,6 +10,7 @@ import { FileNode } from '../../tree'
 import useMountModel from '../../../../models/mount'
 import { ipcRenderer } from 'electron'
 import { ChannelNames } from '../../../../../electron/channels'
+import useFileModel from '../../../../models/file'
 
 const ExtractExtensions = [
   'zip', 'rar', 'tar', 'bz', 'bz2', 'gz', '7z'
@@ -21,6 +22,7 @@ export interface FileContextMenuPropsType {
   onMove: (file: FileContext) => void
   onDelete: (file: FileContext) => void
   onExtract: (file: FileContext) => void
+  onClipboardTo:(file:FileContext, action: 'Copy' | 'Move') => void
   onSelectAll: () => void
   onReverseSelect: () => void
   onAsMountPoint: () => void
@@ -45,26 +47,62 @@ const FileContextMenu = ({
   onSelectAll,
   onAsMountPoint,
   onReverseSelect,
+  onClipboardTo,
   onMove,
   onExtract
 }: FileContextMenuPropsType): ReactElement => {
   const classes = useStyles()
   const homeModel = useHomeModel()
   const mountModel = useMountModel()
+  const fileModel = useFileModel()
   const handleContextClose = () => {
     controller.closeMenu()
   }
   const mountPoint = mountModel.mountList.find(it => it.file === controller.file?.path)
-  const canExtract = () => {
-    if (!controller.file) {
-      return false
+
+  const icon = {
+    Copy: <FileCopy className={clsx(classes.menuIcon, classes.copyIcon)} />,
+    Move: <ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)} />
+  }
+  const menuText = {
+    Copy: 'Paste to directory',
+    Move: 'Move to directory'
+  }
+  const renderClipboardTargetMenu = () => {
+    if (controller.file?.type !== 'Directory' || (fileModel.clipboardFile?.length ?? 0) === 0) {
+      return null
     }
+    return (
+      <MenuItem onClick={() => {
+        if (!controller.file) {
+          return
+        }
+        onClipboardTo(controller.file, fileModel.clipboardAction)
+        handleContextClose()
+      }}>{ icon[fileModel.clipboardAction] }{ menuText[fileModel.clipboardAction] }</MenuItem>
+    )
+  }
+  const renderArchiveFileContext = () => {
+    if (!controller.file) {
+      return null
+    }
+    let extensionFlag = false
     for (const extension of ExtractExtensions) {
       if (controller.file.name.endsWith(extension)) {
-        return true
+        extensionFlag = true
       }
     }
-    return false
+    if (!extensionFlag) {
+      return null
+    }
+    return (
+      <MenuItem onClick={() => {
+        if (controller.file) {
+          onExtract(controller.file)
+        }
+        handleContextClose()
+      }}><Unarchive className={clsx(classes.menuIcon, classes.copyIcon)} />Extract here</MenuItem>
+    )
   }
   return (
     <Menu
@@ -138,17 +176,12 @@ const FileContextMenu = ({
           handleContextClose()
         }}><Folder className={clsx(classes.menuIcon, classes.copyIcon)} />Open in new window</MenuItem>
       }
-
-      <Divider />
       {
-        canExtract() && <MenuItem onClick={() => {
-          if (controller.file) {
-            onExtract(controller.file)
-          }
-          handleContextClose()
-        }}><Unarchive className={clsx(classes.menuIcon, classes.copyIcon)} />Extract here</MenuItem>
+        renderClipboardTargetMenu()
       }
-
+      {
+        renderArchiveFileContext()
+      }
     </Menu>
   )
 }

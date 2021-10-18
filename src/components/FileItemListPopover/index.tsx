@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react'
-import useStyles from '../../layout/Frame/parts/CopyPopover/style'
 import FolderIcon from '@material-ui/icons/Folder'
 import FileIcon from '../FileIcon'
 import { useVirtualList } from 'ahooks'
 import { Avatar, Card, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core'
 import { ClearAll } from '@material-ui/icons'
+import useStyles from './style'
 
 export interface FileItemListPopoverItem {
   name: string
@@ -21,12 +21,12 @@ export interface FileItemListPopoverPropsType {
 
 const FileItemListPopover = ({ items, onClearAll, actions, emptyHint = 'Empty' }: FileItemListPopoverPropsType) : ReactElement => {
   const classes = useStyles()
-  const renderIcon = (name: string, type: string) => {
-    if (type === 'Directory') {
-      return <FolderIcon />
+  const renderIcon = (item:FileItemListPopoverItem) => {
+    if (item.type === 'Directory') {
+      return <FolderIcon className={classes.icon}/>
     }
-    if (type === 'File') {
-      return <FileIcon fileName={name} />
+    if (item.type === 'File') {
+      return <FileIcon fileName={item.name} className={classes.icon}/>
     }
   }
   const {
@@ -61,15 +61,13 @@ const FileItemListPopover = ({ items, onClearAll, actions, emptyHint = 'Empty' }
               }
             </div>
             <div className={classes.container} {...containerProps}>
-              <List className={classes.content} {...wrapperProps}>
+              <List className={classes.content} {...wrapperProps} dense>
                 {
                   list.map(it => {
                     return (
                       <ListItem key={it.data.path}>
                         <ListItemAvatar>
-                          <Avatar>
-                            {renderIcon(it.data.name, it.data.type)}
-                          </Avatar>
+                          {renderIcon(it.data)}
                         </ListItemAvatar>
                         <ListItemText
                           primary={it.data.name}

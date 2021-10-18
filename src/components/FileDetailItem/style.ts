@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 32,
       padding: 8
     },
-    selected:{
+    selected: {
       backgroundColor: 'rgba(0,0,0,0.05)'
     }
   })
