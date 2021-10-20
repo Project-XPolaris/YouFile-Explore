@@ -6,8 +6,7 @@ import { useDoubleClick } from '../../hooks/DoubleClick'
 import { FileNode } from '../../page/Home/tree'
 import { FolderIcon } from '../FileIcon/FolderIcon'
 import FileIcon from '../FileIcon'
-import { DataField } from '../../page/Home/views/explore/detail'
-import { DefaultWindowShare, WindowShare } from '../../window'
+import { DataField } from '../../page/Home/views/explore/parts/DetailListView'
 
 export interface FileDetailItemPropsType {
   className?: string

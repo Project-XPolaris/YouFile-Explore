@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LinearProgress, Paper, Typography } from '@material-ui/core'
 import HomeSide from './side'
 import useHomeModel from '../../model'
@@ -29,7 +29,7 @@ import {
 import { createDatasetSnapshot, deleteDatasetSnapshot, rollbackDatasetSnapshot, Snapshot } from '../../../../api/dir'
 import { ipcRenderer } from 'electron'
 import { ChannelNames } from '../../../../../electron/channels'
-import ExploreDetailListView from './detail'
+import ExploreDetailListView from './parts/DetailListView'
 import ImageViewDrawer from './parts/ImageView/ImageView'
 
 interface ExploreViewPropsType {
@@ -100,7 +100,9 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
   }, {
     events: ['keydown']
   })
-
+  useEffect(() => {
+    console.log(itemSelectController.selectPaths)
+  },[itemSelectController.selectPaths])
   const handleItemClick = (file: FileNode) => {
     if (isShiftHold && itemSelectController.selectPaths.length !== 0) {
       const pos1 = homeModel.currentContent.findIndex(it => it.path === itemSelectController.selectPaths[0])
@@ -225,6 +227,18 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
       }
     }
   }
+  const onContextClickHandler = (x:number, y:number, file:FileNode) => {
+    if (!itemSelectController.selectPaths.find(it => it === file.path)) {
+      itemSelectController.setSelect([file.path])
+    }
+    fileContextMenuController.openMenu({
+      left: x,
+      top: y,
+      name: file.name,
+      type: file.type,
+      path: file.path
+    })
+  }
   const renderDisplayMode = () => {
     return (
       <>
@@ -270,15 +284,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
                 itemSelectController.setSelect([])
               }
             }}
-            onContextClick={(x, y, file) => {
-              fileContextMenuController.openMenu({
-                left: x,
-                top: y,
-                name: file.name,
-                type: file.type,
-                path: file.path
-              })
-            }}
+            onContextClick={onContextClickHandler}
             fileContextMenuController={fileContextMenuController}
             onCopy={handlerCopy}
             onOpenItem={onOpenItem}
@@ -295,15 +301,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
                 itemSelectController.setSelect([])
               }
             }}
-            onContextClick={(x, y, file) => {
-              fileContextMenuController.openMenu({
-                left: x,
-                top: y,
-                name: file.name,
-                type: file.type,
-                path: file.path
-              })
-            }}
+            onContextClick={onContextClickHandler}
             fileContextMenuController={fileContextMenuController}
             onCopy={handlerCopy}
           />
@@ -319,15 +317,7 @@ const ExploreView = ({ }: ExploreViewPropsType): React.ReactElement => {
                 itemSelectController.setSelect([])
               }
             }}
-            onContextClick={(x, y, file) => {
-              fileContextMenuController.openMenu({
-                left: x,
-                top: y,
-                name: file.name,
-                type: file.type,
-                path: file.path
-              })
-            }}
+            onContextClick={onContextClickHandler}
             onCopy={handlerCopy}
             fileContextMenuController={fileContextMenuController}
           />

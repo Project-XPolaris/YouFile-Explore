@@ -144,7 +144,6 @@ const FileContextMenu = ({
         }
         onMove(controller.file)
       }}><ExitToApp className={clsx(classes.menuIcon, classes.copyIcon)} />Move</MenuItem>
-      <Divider />
       <MenuItem onClick={() => {
         onSelectAll()
         handleContextClose()
@@ -153,7 +152,6 @@ const FileContextMenu = ({
         onReverseSelect()
         handleContextClose()
       }}><Refresh className={clsx(classes.menuIcon, classes.copyIcon)} />Reverse select</MenuItem>
-      <Divider />
       {
         controller.file?.type === 'Directory'
           ? mountPoint
